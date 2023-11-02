@@ -1,0 +1,27 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+
+# name: incident-management-frontend.$(Date:yyyy-MM-dd)$(Rev:.r)
+name: incident-management-frontend-latest
+
+variables:
+  tag: $(Build.BuildNumber)
+
+resources:
+  repositories:
+    - repository: templates   
+      type: git
+      name: VPlatform-Microservices/pipeline-templates
+      ref: main
+
+jobs:
+  - template: nodejs-template.yaml@templates
+    parameters:
+      agent: 'LinuxAgent-PRD-SS3-LIN0001'
+      ContainerRegistry: $(containerRegistry)
+      serviceName: $(serviceName)
+      tag: $(tag)
+      deploymentPath: $(deploymentPath)
