@@ -27,21 +27,3 @@ src
 |
 +-- styles            # all the applications css develop here.
 ```
-
-A feature module could have the following structure:
-
-```sh
-src/<featurename>
-|
-+-- dtos         # DTOs for request and response classes.
-|
-+-- models       # Model are stored here.
-|
-+-- interfaces   # Interfaces are stored here.
-|
-+-- utilities    # utility functions for a specific feature.
-|
-+-- types        # typescript types for TS specific feature domain.
-|
-+-- constants    # Constants like procedure names are stored here
-```

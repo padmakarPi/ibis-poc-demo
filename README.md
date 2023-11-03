@@ -21,7 +21,7 @@ $ npm install
 $ npm install <module_name>
 ```
 
-### For using the shared utilities, Click here(https://dev.azure.com/vgroupframework/VPlatform-Apps/_artifacts/feed/common-utilities/Npm/@vplatform%2Fshared-components/overview/1.0.2) for installation
+### For using the shared utilities, Click here(https://dev.azure.com/vgroupframework/VPlatform-Apps/_artifacts/feed/common-utilities/Npm/@vplatform%2Fshared-components) for installation
 
 ### Before writing your code, change the `Vplatform-Frontend-Template` to your actual project name.
 
