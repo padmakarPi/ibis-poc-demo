@@ -1,19 +1,19 @@
 export interface DBResponse<T> {
-    recordsets: T[]
-    recordset: T[]
-    output: any
-    rowsAffected: number[]
-    returnValue: number
-  }
+	recordsets: T[];
+	recordset: T[];
+	output: any;
+	rowsAffected: number[];
+	returnValue: number;
+}
 
 export interface GenericResponse<T> {
-    result: DBResponse<T>
-    statusCode: number
-    message: string
-  }
+	result: DBResponse<T>;
+	statusCode: number;
+	message: string;
+}
 
 export interface GenericResponseWithOutRecordSet<T> {
-    result: T
-    statusCode: number
-    message: string
-  }
+	result: T;
+	statusCode: number;
+	message: string;
+}

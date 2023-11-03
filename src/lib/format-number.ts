@@ -1,8 +1,10 @@
 export const formatNumber = (value: number) => {
-  const options = {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  };
+	const options = {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2,
+	};
 
-  return Number.isNaN(value) ? 0.00 : Number(value).toLocaleString('en', options);
+	return Number.isNaN(value)
+		? 0.0
+		: Number(value).toLocaleString("en", options);
 };

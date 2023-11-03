@@ -8,6 +8,7 @@ package.json
 README.md
 package-lock.json
 .next/*
+.eslintrc.json
 .prettierrc
 .vscode/settings.json
 tsconfig.json
