@@ -81,7 +81,7 @@ $ npm run build
 
 ### Error Handling
 
-- Pending
+- For Error Handling we have implemented error.tsx for global error handling.
 
 ### Error logging
 
