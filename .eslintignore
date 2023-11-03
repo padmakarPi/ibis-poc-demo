@@ -13,3 +13,4 @@ package-lock.json
 tsconfig.json
 node_modules/*
 public/*
+.vscode
