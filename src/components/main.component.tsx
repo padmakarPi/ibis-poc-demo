@@ -5,7 +5,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import Head from 'next/head';
 import { persistor, store } from '@/redux/store.redux';
 
-export function Main(props: any) {
+export default function Main(props: any) {
   return (
     <div>
       <Provider store={store}>
@@ -20,5 +20,3 @@ export function Main(props: any) {
     </div>
   );
 }
-
-export default Main;
