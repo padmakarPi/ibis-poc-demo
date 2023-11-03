@@ -3,7 +3,8 @@ export const calculateMaxHeight = (arrayLength: number, maxLength = 252) => {
 
   if (!arrayLength) return oneRowHeight;
 
-  const calculateHeight = (arrayLength * oneRowHeight) > maxLength ? maxLength : arrayLength * oneRowHeight;
+  const calculateHeight = (arrayLength * oneRowHeight) > maxLength
+    ? maxLength : arrayLength * oneRowHeight;
 
   return calculateHeight;
 };

@@ -4,5 +4,5 @@ export const formatNumber = (value: number) => {
     maximumFractionDigits: 2,
   };
 
-  return isNaN(value) ? 0.00 : Number(value).toLocaleString('en', options);
+  return Number.isNaN(value) ? 0.00 : Number(value).toLocaleString('en', options);
 };

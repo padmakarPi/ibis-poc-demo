@@ -1,7 +1,6 @@
 import Cookies from 'js-cookie';
 
 export class CookieService {
-
   setCookie(key: string, data: any) {
     try {
       Cookies.set(key, data, { expires: 365, path: '/' });

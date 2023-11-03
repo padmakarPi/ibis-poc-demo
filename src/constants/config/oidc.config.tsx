@@ -8,6 +8,7 @@ const OIDC_CONFIG = {
   scope: process.env.NEXT_PUBLIC_CLIENT_SCOPE,
 };
 
+// eslint-disable-next-line import/no-mutable-exports
 let userManager: any = {};
 if (typeof window !== 'undefined') {
   if (window && window.location.origin) {

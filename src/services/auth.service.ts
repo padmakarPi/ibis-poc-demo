@@ -11,9 +11,6 @@ export default class AuthService {
 
   private userManager = userManager;
 
-  constructor() {
-  }
-
   public getUser(): Promise<User | null> {
     return this.userManager.getUser();
   }
@@ -58,11 +55,11 @@ export default class AuthService {
         },
         body: data,
       }).then((response) => response.json())
-        .then((data) => {
-          if (data) {
+        .then((respData) => {
+          if (respData) {
             const tokenData: TokenData = {
-              ...data,
-              expireAt: this.getCurrentTimePlusSeconds(data.expires_in),
+              ...respData,
+              expireAt: this.getCurrentTimePlusSeconds(respData.expires_in),
             };
             setLocalStorage(COMMON_METADATA.TOKEN_STORE_KEY, JSON.stringify(tokenData));
             resolve(tokenData);
@@ -96,16 +93,16 @@ export default class AuthService {
         body: data,
       })
         .then((response) => response.json())
-        .then((data) => {
-          if (data) {
-            if (data?.error) {
+        .then((responseData) => {
+          if (responseData) {
+            if (responseData?.error) {
               setLocalStorage(COMMON_METADATA.TOKEN_STORE_KEY, '');
               this.logout();
               return;
             }
             const tokenData: TokenData = {
-              ...data,
-              expireAt: this.getCurrentTimePlusSeconds(data.expires_in),
+              ...responseData,
+              expireAt: this.getCurrentTimePlusSeconds(responseData.expires_in),
             };
             setLocalStorage(COMMON_METADATA.TOKEN_STORE_KEY, JSON.stringify(tokenData));
             resolve(tokenData);
@@ -137,5 +134,6 @@ export default class AuthService {
       await authService.refreshAuthorizationToken(tokenData.refresh_token);
       return this.getToken();
     }
+    return null;
   };
 }

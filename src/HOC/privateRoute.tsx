@@ -6,7 +6,7 @@ import { selectAuthState } from '@/redux/reducers/auth.reducer'; // Replace with
 // Define the login route
 const loginRoute = '/';
 
-const withPrivateRoute = <P extends object>(WrappedComponent: ComponentType<P>) => {
+export const withPrivateRoute = <P extends object>(WrappedComponent: ComponentType<P>) => {
   const PrivateRoute: React.FC<P> = (props) => {
     const router = useRouter();
     const authData = useSelector(selectAuthState);
@@ -30,5 +30,3 @@ const withPrivateRoute = <P extends object>(WrappedComponent: ComponentType<P>) 
 
   return PrivateRoute;
 };
-
-export default withPrivateRoute;

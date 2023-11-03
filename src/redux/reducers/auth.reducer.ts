@@ -23,10 +23,10 @@ export const authSlice = createSlice({
   reducers: {
     // Action to set the authentication status
     setAuthState(state, action) {
-      state.authState = action.payload;
+      return { ...state, authState: action.payload };
     },
-    resetAuthState(state, action) {
-      state.authState = initialState.authState;
+    resetAuthState(state) {
+      return { ...state, authState: initialState.authState };
     },
   },
 });

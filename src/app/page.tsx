@@ -43,7 +43,8 @@ export default function Home() {
           sid: parseData.profile.sid,
           access_token: parseData.access_token,
           expires_at: parseData.expires_at,
-          profile: (parseData?.profile?.Portals && JSON.parse(parseData?.profile?.Portals)) ? JSON.parse(parseData?.profile?.Portals) : [],
+          profile: (parseData?.profile?.Portals && JSON.parse(parseData?.profile?.Portals))
+            ? JSON.parse(parseData?.profile?.Portals) : [],
         }));
         setRedirectTo('home');
       } else {

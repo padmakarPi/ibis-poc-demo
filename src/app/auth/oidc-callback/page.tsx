@@ -7,6 +7,7 @@ import { userManager } from '@/constants/config/oidc.config';
 import AuthService from '@/services/auth.service';
 import { CookieService } from '@/services/cookie.service';
 import { setAuthState } from '@/redux/reducers/auth.reducer';
+import { OmniTokenData } from '@/interfaces/omni-token-data.interface';
 
 function CallbackPage() {
   const router = useRouter();
@@ -15,17 +16,25 @@ function CallbackPage() {
   const [email, setEmail] = useState('');
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    userManager.signinRedirectCallback().then(() => {
-      getUserData();
+  const setUserDataToCookies = (user: any) => {
+    const cookieStoreData : OmniTokenData = {
+      access_token: user?.access_token,
+      expires_at: user?.expires_at,
+      id_token: user?.id_token,
+      refresh_token: user?.refresh_token,
+      session_state: user?.session_state,
+      token_type: user?.token_type,
+      state: user?.state,
+      scope: user?.scope,
+      profile: user?.profile,
+    };
+    Object.keys(cookieStoreData).forEach((key: string) => {
+      const value = cookieStoreData[key as keyof OmniTokenData];
+      if (value) {
+        cookieService.setCookie(key, JSON.stringify(value));
+      }
     });
-  }, []);
-
-  useEffect(() => {
-    if (email) {
-      getMSTSToken(email);
-    }
-  }, [email]);
+  };
 
   const getUserData = async () => {
     const userData = await authService.getUser();
@@ -40,34 +49,28 @@ function CallbackPage() {
         sid: userData.profile.sid,
         access_token: userData.access_token,
         expires_at: userData.expires_at,
-        profile: (userData?.profile?.Portals && JSON.parse(userData?.profile?.Portals)) ? JSON.parse(userData?.profile?.Portals) : [],
+        profile: (userData?.profile?.Portals && JSON.parse(userData?.profile?.Portals))
+          ? JSON.parse(userData?.profile?.Portals) : [],
       }));
     }
   };
 
-  const setUserDataToCookies = (user: any) => {
-    const cookieStoreData = {
-      access_token: user?.access_token,
-      expires_at: user?.expires_at,
-      id_token: user?.id_token,
-      refresh_token: user?.refresh_token,
-      session_state: user?.session_state,
-      token_type: user?.token_type,
-      state: user?.state,
-      scope: user?.scope,
-      profile: user?.profile,
-    };
-    for (const [key, value] of Object.entries(cookieStoreData)) {
-      if (value) {
-        cookieService.setCookie(key, JSON.stringify(value));
-      }
-    }
-  };
+  useEffect(() => {
+    userManager.signinRedirectCallback().then(() => {
+      getUserData();
+    });
+  }, []);
 
-  const getMSTSToken = async (email: string) => {
-    await authService.loginAuthorization(email);
+  const getMSTSToken = async (_email: string) => {
+    await authService.loginAuthorization(_email);
     router.push('/home');
   };
+
+  useEffect(() => {
+    if (email) {
+      getMSTSToken(email);
+    }
+  }, [email]);
 
   return <div>Processing OIDC callback...</div>;
 }

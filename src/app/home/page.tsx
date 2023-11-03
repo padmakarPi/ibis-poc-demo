@@ -1,6 +1,6 @@
 'use client';
 
-import withPrivateRoute from '@/HOC/privateRoute';
+import { withPrivateRoute } from '@/HOC/privateRoute';
 
 function Home1() {
   return (

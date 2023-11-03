@@ -4,7 +4,7 @@
         "es2021": true
     },
     "extends": [
-        "airbnb",
+        "airbnb-base",
         "airbnb/hooks",
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
@@ -24,14 +24,14 @@
         "react"
     ],
     "rules": {
-        "no-console": "error",
+        "no-console": "off",
         "react/require-default-props": "off",
-        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-explicit-any": "off",
         "react/prop-types": "off", // If you're using TypeScript, prop-types are not needed
         "@typescript-eslint/explicit-module-boundary-types": "off", // Allows you to skip explicit return types in TypeScript
         "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }], // Only .tsx files for JSX
         "import/extensions": [
-          "error",
+          "off",
           "ignorePackages",
           {
             "js": "never",
@@ -45,7 +45,8 @@
         "react/jsx-props-no-spreading": "off", // Allowing spread props
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
-        "import/prefer-default-export": "off"
+        "import/prefer-default-export": "off",
+        "class-methods-use-this": "off"
       },
       "settings": {
         "import/resolver": {
