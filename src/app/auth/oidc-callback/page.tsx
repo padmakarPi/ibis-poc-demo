@@ -7,7 +7,7 @@ import { userManager } from "@/constants/config/oidc.config";
 import AuthService from "@/services/auth.service";
 import { CookieService } from "@/services/cookie.service";
 import { setAuthState } from "@/redux/reducers/auth.reducer";
-import { OmniTokenData } from "@/interfaces/omni-token-data.interface";
+import { OmniTokenData } from "@/interfaces/common/omni-token-data.interface";
 
 function CallbackPage() {
 	const router = useRouter();

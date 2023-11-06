@@ -7,7 +7,7 @@ import {
 import { CookieService } from "@/services/cookie.service";
 import { userManager } from "@/constants/config/oidc.config";
 import { COMMON_METADATA } from "@/constants/metadata/common.metadata";
-import { TokenData } from "@/interfaces/token-data.interface";
+import { TokenData } from "@/interfaces/common/token-data.interface";
 
 export default class AuthService {
 	private cookieService = new CookieService();

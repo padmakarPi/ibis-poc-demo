@@ -35,7 +35,7 @@
         "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }], // Only .tsx files for JSX
         "import/extensions": [
           "off",
-          "ignorePackages",
+          "never",
           {
             "js": "never",
             "jsx": "never",
