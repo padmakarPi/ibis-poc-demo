@@ -41,6 +41,12 @@ src
 |
 +-- interfaces        # all the applications interfaces develop here.
 |    |
+|    +-- api         
+|       |
+|       +-- requests    # all api request paramas interfaces should be here.
+|       |
+|       +-- responses    # all api request interfaces should be here. 
+|    |
 |    +-- config         # all the application common interfaces should be here.
 |    |
 |    +-- state         # all the application redux state interfaces should be here.
