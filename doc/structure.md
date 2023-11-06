@@ -47,7 +47,7 @@ src
 |       |
 |       +-- responses    # all api request interfaces should be here. 
 |    |
-|    +-- config         # all the application common interfaces should be here.
+|    +-- common         # all the application common interfaces should be here.
 |    |
 |    +-- state         # all the application redux state interfaces should be here.
 |
