@@ -63,25 +63,25 @@ src
 ```
 
 
-Q&A:
+## FAQ
 
-1) why we use tsx for components
- => Typesefety, jsx support,
- => tsx is a file syntax extension used by React and here you can use CSS and Html as well. You should use tsx files when rendering a React component.
+#### why we use tsx for components
+ - Typesefety, jsx support,
+ - tsx is a file syntax extension used by React and here you can use CSS and Html as well. You should use tsx files when rendering a React component.
 
-2) why we use .ts file for non component file.
- => basically on the non component file we don't need to use jsx features.
+#### why we use .ts file for non component file.
+ - basically on the non component file we don't need to use jsx features.
 
-3) what is the purpose of lib folder?
-=> lib contains general reusable code and utilities. services has integrations.
-=> lib code is synchronous. services involve async data fetching.
-=> lib functions are app-specific. Services can be more generic.
-=> Services often use lib utilities under the hood.
+#### what is the purpose of lib folder?
+ - lib contains general reusable code and utilities. services has integrations.
+ - lib code is synchronous. services involve async data fetching.
+ - lib functions are app-specific. Services can be more generic.
+ - Services often use lib utilities under the hood.
 
-4) what is the purpose of service folder.
-=> Contains integration with external services such as making API calls.
-=> Anything involving async operations and data fetching.
-=> Requests to backend APIs or external services.
+#### what is the purpose of service folder.
+ - Contains integration with external services such as making API calls.
+ - Anything involving async operations and data fetching.
+ - Requests to backend APIs or external services.
 
-5) what is the folder structure for new routes.
-=> folder sturure for route page. we use routeName/page.tsx (becuse of in future we will able to add new child route as well like: feature/new route)
+#### what is the folder structure for new routes.
+ - folder sturure for route page. we use routeName/page.tsx (becuse of in future we will able to add new child route as well like: feature/new route)
