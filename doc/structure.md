@@ -62,6 +62,37 @@ src
 |    +-- MUI         # all the application MUI style should be here should be here(file name should be component name So easy for readbility).
 ```
 
+# Project Components Overview
+
+This project utilizes three types of components categorized based on the folder structure and their intended usage across the application.
+
+## 1. Page Components
+### Description:
+Page components represent individual pages or features within the application. These components are specific to a particular page or feature and are meant to encapsulate the logic, layout, and functionality of that page.
+
+### Characteristics:
+- Each page component is designed to be used exclusively by a single page or feature.
+- These components handle the rendering and behavior of the respective page they are associated with.
+- Located in the "pages" directory.
+
+## 2. Common Components (Project Level)
+### Description:
+Common components are shared components used across multiple pages or features within the project. These components are project-specific and are not intended to be part of a separate common package.
+
+### Characteristics:
+- These components are designed for reusability within the project and can be included in multiple pages or features.
+- They encapsulate functionalities or UI elements used consistently across different parts of the project.
+- Located in a designated directory within the project structure, separate from global or package-specific components.
+
+## 3. NPM Package Components
+### Description:
+Components classified as NPM packages are designed for reusability beyond the current project. These components are meant to be standalone packages that can be shared and used across multiple projects or applications.
+
+### Characteristics:
+- Intended for broader reuse across various projects and applications.
+- These components are packaged and published as an npm package, making them available for use in different projects.
+- Maintained separately and stored in a dedicated repository or directory as an independent package.
+
 
 ## FAQ
 
@@ -85,3 +116,14 @@ src
 
 #### what is the folder structure for new routes.
  - folder sturure for route page. we use routeName/page.tsx (becuse of in future we will able to add new child route as well like: feature/new route)
+
+#### what is difrence between lib and service folder.
+  - we have diffrent approach for both folders.
+  ##### lib (Library) Folder:
+  - The "lib" folder in a Next.js project could contain shared code, utilities, or helper functions that are used across multiple parts of the application.
+  - It might store generic functionalities or services that are not specific to any particular feature but serve as a common set of tools or utilities for the application.
+
+  ##### Services Folder:
+  - The "services" folder might typically contain code that handles communication with external services, APIs, or databases.
+  - It often contains modules or functions that encapsulate API calls, database interactions, or other types of services.
+  - In a Next.js project, the "services" folder might contain logic related to data fetching, authentication, or any interaction with external entities.
