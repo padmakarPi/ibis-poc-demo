@@ -36,31 +36,27 @@ function Home() {
 	}, []);
 	return (
 		<main>
-			<div style={{ height: "100vh", backgroundColor: "white" }}>
-				<div>
-					<h2>Welcome to FrontEnd Template</h2>
-					{data ? (
-						<>
-							<Table>
-								<TableHead>
-									<TableRow>
-										<TableCell>VesselId</TableCell>
-										<TableCell>VesselName</TableCell>
-									</TableRow>
-								</TableHead>
-								<TableBody>
-									{data.map((el, index) => (
-										<TableRow key={index}>
-											<TableCell>{el.VesselId}</TableCell>
-											<TableCell>{el.VesselName}</TableCell>
-										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-						</>
-					) : null}
-				</div>
-			</div>
+			<h2>Welcome to FrontEnd Template</h2>
+			{data ? (
+				<>
+					<Table>
+						<TableHead>
+							<TableRow>
+								<TableCell>VesselId</TableCell>
+								<TableCell>VesselName</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{data.map((el, index) => (
+								<TableRow key={index}>
+									<TableCell>{el.VesselId}</TableCell>
+									<TableCell>{el.VesselName}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</>
+			) : null}
 		</main>
 	);
 }
