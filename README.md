@@ -87,15 +87,18 @@ $ npm run build
 
 - we have integrated pre commit hook that will chech eslint and prettier error.
 
-### eslint
+### Eslint
 - we have implemneted prettier with ./.eslintrc.json file you can check and update rules as per requirement
 - we have implemneted default eslint with airbnb-base you can check more on this URL(https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb)
 - also you can fix eslint error using npm run lint:fix
 
-### prettier
+### Prettier
 - we have implemneted prettier with ./.prettierrc file you can check and update rules as per requirement
 - also you can fix prettier error using npm run format:fix
 
 ### Error logging
 
 - Pending
+
+### Dark Mode
+- we have implemented dark mode functionality with MUi theme For more details  Click here [🗄️ MUI Theme](https://mui.com/material-ui/customization/theming/)
