@@ -47,7 +47,7 @@ $ npm run build
 
 ### Private Route
 
-- The Private Route Higher-Order Component (HOC) allows developers to protect routes within the application, ensuring access control and authentication for specific components. This documentation provides a guide on how to use and implement the withPrivateRoute HOC effectively within your project.
+- The Private Route Higher-Order Component (HOC) allows developers to protect routes within the application, ensuring access control and authentication for specific components. This documentation provides a guide on how to use and implement the withPrivateRoute HOC effectively within your project.(example: src\app\home\page.tsx)
 
 ### Axios Connection(Interceptor added as default)
 
@@ -73,6 +73,23 @@ $ npm run build
 #### Creating a New Store
 - To create a new store, add a new reducer within the src\redux\reducers folder. Reducers define how the application's state changes in response to actions sent to the store. Once the reducer is created, combine it with existing reducers within the rootReducer.
 
+#### FYI:
+- For update data on store.
+```SH
+import { useDispatch } from "react-redux";
+const dispatch = useDispatch();
+dispatch(setStoreMedthod(<data>));
+```
+- For More information you can refer this file(src\app\page.tsx)
+
+- For get data from state
+```SH
+import { useSelector } from "react-redux";
+import { selectAuthState } from "@/redux/reducers/auth.reducer";
+const authData = useSelector(selectAuthState);
+```
+- For More information you can refer this file(src\components\common\HOC\privateRoute.tsx)
+
 ### DockerFile
 
 - Docker is a configuration management tool that is used to automate the deployment of software in lightweight containers. These containers help applications to work efficiently in different environments.
@@ -81,7 +98,7 @@ $ npm run build
 
 ### Error Handling
 
-- For Error Handling we have implemented error.tsx for global error handling.
+- For Error Handling we have implemented error.tsx for global error handling.(src\app\error.tsx)
 
 ### Husky
 
@@ -102,3 +119,7 @@ $ npm run build
 
 ### Dark Mode
 - we have implemented dark mode functionality with MUi theme For more details  Click here [🗄️ MUI Theme](https://mui.com/material-ui/customization/theming/)
+
+#### Example: 
+you can check our existing implementation on this page
+(src\components\common\theme.update.component.tsx)
