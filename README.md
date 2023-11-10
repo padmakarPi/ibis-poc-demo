@@ -119,7 +119,9 @@ const authData = useSelector(selectAuthState);
 
 ### Dark Mode
 - we have implemented dark mode functionality with MUi theme For more details  Click here [🗄️ MUI Theme](https://mui.com/material-ui/customization/theming/)
+- you can check our existing implementation on this page
+- (src\components\common\theme.update.component.tsx)
 
-#### Example: 
-you can check our existing implementation on this page
-(src\components\common\theme.update.component.tsx)
+
+### Routing 
+- we have implemented routing example with posts folder(src\app\posts).
