@@ -42,6 +42,7 @@ export default function Home() {
 				parseData.id_token
 			) {
 				authService.storeUser(parseData);
+				cookieService.setCookie("isAuthenticated", true);
 				dispatch(
 					setAuthState({
 						isAuthenticated: true,

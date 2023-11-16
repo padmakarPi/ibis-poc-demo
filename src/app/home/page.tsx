@@ -8,7 +8,6 @@ import {
 	TableRow,
 	TableCell,
 } from "@mui/material";
-import { withPrivateRoute } from "@/components/common/HOC";
 import { getVesselList } from "@/services/vessel.service";
 import { IVesselListResponse } from "@/interfaces";
 
@@ -61,4 +60,4 @@ function Home() {
 	);
 }
 
-export default withPrivateRoute(Home);
+export default Home;

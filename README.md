@@ -46,8 +46,9 @@ $ npm run build
 
 
 ### Private Route
-
-- The Private Route Higher-Order Component (HOC) allows developers to protect routes within the application, ensuring access control and authentication for specific components. This documentation provides a guide on how to use and implement the withPrivateRoute HOC effectively within your project.(example: src\app\home\page.tsx)
+- Our implementation includes middleware for private routes, which verifies whether the user is authenticated. If the user is not authenticated, they are redirected to the login page.
+- The middleware is configured to protect all default routes.
+- To make a route public, update the configuration in the src\middleware.tsx file as needed.
 
 ### Axios Connection(Interceptor added as default)
 

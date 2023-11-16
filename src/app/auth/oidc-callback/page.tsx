@@ -34,6 +34,7 @@ function CallbackPage() {
 				cookieService.setCookie(key, JSON.stringify(value));
 			}
 		});
+		cookieService.setCookie("isAuthenticated", true);
 	};
 
 	const getUserData = async () => {
