@@ -14,4 +14,5 @@ tsconfig.json
 node_modules/*
 public/*
 .vscode
-doc/structure.md
+docs/*
+docker-compose.yaml
