@@ -11,7 +11,7 @@ Welcome to the VPlatform Frontend Template Project. This project template will s
 
 ## Project Structure
 
-- A structure file is addded inside doc which states the basic folder structure followed in the project. Click here [🗄️ Project Structure](doc/structure.md)
+- A structure file is addded inside doc which states the basic folder structure followed in the project. Click here [🗄️ Project Structure](docs/structure.md)
 
 ## Installation Process
 
@@ -96,6 +96,8 @@ const authData = useSelector(selectAuthState);
 - Docker is a configuration management tool that is used to automate the deployment of software in lightweight containers. These containers help applications to work efficiently in different environments.
 - A Docker Image is a read-only file with a bunch of instructions. When these instructions are executed, it creates a Docker container.
 - Dockerfile is a simple text file that consists of instructions to build Docker images.
+
+#### Docker Usage [Guide](./docs/docker/docker-usage.md)
 
 ### Error Handling
 
