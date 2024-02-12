@@ -4,10 +4,15 @@ Welcome to the VPlatform Frontend Template Project. This project template will s
 
 ## Table Of Contents:
 
+- Development Branch
 - Project Structure
 - Installation process
 - Running the app
 - Features
+
+## Development Branch
+
+The `DEV` branch is the primary development branch. It is the place where ongoing development work takes place. Contributors are encouraged to create branches based on `DEV` for new features or bug fixes.
 
 ## Project Structure
 
