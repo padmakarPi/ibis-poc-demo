@@ -1,8 +1,7 @@
+import Providers from "@/redux/provider";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Main from "@/components/common/main.component";
-import { Container } from "@mui/material";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,11 +17,8 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<link rel="icon" href="/favicon.svg" sizes="any" />
 			<body className={inter.className}>
-				<Container>
-					<Main>{children}</Main>
-				</Container>
+				<Providers>{children}</Providers>
 			</body>
 		</html>
 	);

@@ -1,0 +1,2308 @@
+[
+    {
+      "palette": {
+        "modes": {
+          "Light": {
+            "outlinedBorder": {
+              "$scopes": [
+                "STROKE_COLOR"
+              ],
+              "$type": "color",
+              "$value": "rgba(5, 46, 43, 50)"
+            },
+            "focusVisible": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "rgba(5, 46, 43, 30)"
+            },
+            "focus": {
+              "$scopes": [
+                "SHAPE_FILL",
+                "FRAME_FILL"
+              ],
+              "$type": "color",
+              "$value": "rgba(5, 46, 43, 12)"
+            },
+            "selected": {
+              "$scopes": [
+                "SHAPE_FILL",
+                "FRAME_FILL"
+              ],
+              "$type": "color",
+              "$value": "rgba(5, 46, 43, 8)"
+            },
+            "hover": {
+              "$scopes": [
+                "SHAPE_FILL",
+                "FRAME_FILL"
+              ],
+              "$type": "color",
+              "$value": "rgba(5, 46, 43, 4)"
+            },
+            "contrast": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#f5f5f5"
+            },
+            "light": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#00704b"
+            },
+            "dark": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#031c1a"
+            },
+            "main": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#052e2b"
+            },
+            "_native": {
+              "scrollbar-bg": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$libraryName": "",
+                "$collectionName": "material/colors",
+                "$value": "{grey.200}"
+              }
+            },
+            "elevation": {
+              "outlined": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#e0e0e0"
+              }
+            },
+            "components": {
+              "switch": {
+                "knowFillDisabled": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.100}"
+                },
+                "knobFillEnabled": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.50}"
+                },
+                "slideFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#020a08"
+                }
+              },
+              "chip": {
+                "defaultFocusFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 20)"
+                },
+                "defaultCloseFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#020a08"
+                },
+                "defaultHoverFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 12)"
+                },
+                "defaultEnabledBorder": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.400}"
+                }
+              },
+              "alert": {
+                "warning": {
+                  "color": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#663c00"
+                  },
+                  "background": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#fff4e5"
+                  }
+                },
+                "success": {
+                  "color": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#1e4620"
+                  },
+                  "background": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#edf7ed"
+                  }
+                },
+                "error": {
+                  "background": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#fdeded"
+                  },
+                  "color": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#5f2120"
+                  }
+                },
+                "info": {
+                  "background": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#e5f6fd"
+                  },
+                  "color": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#014361"
+                  }
+                }
+              },
+              "breadcrumbs": {
+                "collapseFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.100}"
+                }
+              },
+              "backdrop": {
+                "fill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 75)"
+                }
+              },
+              "stepper": {
+                "connector": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.400}"
+                }
+              },
+              "tooltip": {
+                "fill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(97, 97, 97, 90)"
+                }
+              },
+              "appBar": {
+                "defaultFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.100}"
+                }
+              },
+              "snackbar": {
+                "fill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#323232"
+                }
+              },
+              "rating": {
+                "activeFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#ffb400"
+                },
+                "enabledBorder": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 23)"
+                }
+              },
+              "input": {
+                "filled": {
+                  "hoverFill": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "rgba(2, 10, 8, 9)"
+                  },
+                  "enabledFill": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "rgba(2, 10, 8, 6)"
+                  }
+                },
+                "outlined": {
+                  "enabledBorder": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "rgba(2, 10, 8, 23)"
+                  },
+                  "hoverBorder": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#020a08"
+                  }
+                },
+                "standard": {
+                  "enabledBorder": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "rgba(2, 10, 8, 42)"
+                  },
+                  "hoverBorder": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#020a08"
+                  }
+                }
+              },
+              "avatar": {
+                "fill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.400}"
+                }
+              }
+            },
+            "divider": {
+              "$scopes": [
+                "STROKE_COLOR",
+                "SHAPE_FILL"
+              ],
+              "$type": "color",
+              "$value": "rgba(2, 10, 8, 12)"
+            },
+            "background": {
+              "paper-elevation-24": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#dee4e6"
+              },
+              "paper-elevation-23": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#dfe5e7"
+              },
+              "paper-elevation-22": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#e0e6e7"
+              },
+              "paper-elevation-21": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#e1e6e8"
+              },
+              "paper-elevation-20": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#e2e7e9"
+              },
+              "paper-elevation-19": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#e3e8e9"
+              },
+              "paper-elevation-18": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#e4e9ea"
+              },
+              "paper-elevation-17": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#e5e9eb"
+              },
+              "paper-elevation-16": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#e6eaeb"
+              },
+              "paper-elevation-15": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#e7ebec"
+              },
+              "paper-elevation-14": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#e8ebec"
+              },
+              "paper-elevation-13": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#e9edee"
+              },
+              "paper-elevation-12": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#eaedee"
+              },
+              "paper-elevation-11": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#ebeeef"
+              },
+              "paper-elevation-10": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#ecefef"
+              },
+              "paper-elevation-9": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#edeff0"
+              },
+              "paper-elevation-8": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#eef0f1"
+              },
+              "paper-elevation-7": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#f1f2f3"
+              },
+              "paper-elevation-6": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#eff1f1"
+              },
+              "paper-elevation-5": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#f0f2f2"
+              },
+              "paper-elevation-4": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#ffffff"
+              },
+              "paper-elevation-3": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#f7f7f7"
+              },
+              "paper-elevation-2": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#fafafa"
+              },
+              "paper-elevation-1": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#fbfbfb"
+              },
+              "paper-elevation-0": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#fdfdfd"
+              },
+              "default": {
+                "$scopes": [
+                  "ALL_FILLS"
+                ],
+                "$type": "color",
+                "$value": "#f5f5f5"
+              }
+            },
+            "common": {
+              "white": {
+                "outlinedBorder": {
+                  "$scopes": [
+                    "STROKE_COLOR"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 50)"
+                },
+                "focusVisible": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 30)"
+                },
+                "focus": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 12)"
+                },
+                "selected": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 8)"
+                },
+                "hover": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 4)"
+                },
+                "main": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#f5f5f5"
+                }
+              },
+              "black": {
+                "outlinedBorder": {
+                  "$scopes": [
+                    "STROKE_COLOR"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 50)"
+                },
+                "focusVisible": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 30)"
+                },
+                "focus": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 12)"
+                },
+                "selected": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 8)"
+                },
+                "hover": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 4)"
+                },
+                "main": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#020a08"
+                }
+              }
+            },
+            "success": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 30)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 8)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 4)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#f5f5f5"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#c7ffb5"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#00704b"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#68da6a"
+              }
+            },
+            "info": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(3, 192, 212, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(3, 192, 212, 30)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(3, 192, 212, 8)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(3, 192, 212, 4)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#f5f5f5"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#80e7ff"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#04487f"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#03c0d4"
+              }
+            },
+            "warning": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 159, 29, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 159, 29, 30)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 159, 29, 8)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 159, 29, 4)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#f5f5f5"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#ffd07b"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#80531b"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#ff9f1d"
+              }
+            },
+            "error": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(211, 47, 47, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 69, 26, 30)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 69, 26, 8)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 69, 26, 4)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#f5f5f5"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#ffa18b"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#801a06"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#ff451a"
+              }
+            },
+            "action": {
+              "disabledBackground": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 12)"
+              },
+              "disabled": {
+                "$scopes": [
+                  "TEXT_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 38)"
+              },
+              "focus": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 12)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 8)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 4)"
+              },
+              "active": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 56.00000000000001)"
+              }
+            },
+            "secondary": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 30)"
+              },
+              "focus": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 12)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 8)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 4)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#020a08"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#c7ffb5"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#00704b"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#68da6a"
+              }
+            },
+            "primary": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(5, 46, 43, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(5, 46, 43, 30)"
+              },
+              "focus": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(5, 46, 43, 12)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(5, 46, 43, 8)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(5, 46, 43, 4)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#f5f5f5"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#00704b"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#031c1a"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#052e2b"
+              }
+            },
+            "text": {
+              "focusVisible": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 30)"
+              },
+              "focus": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 12)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 8)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 4)"
+              },
+              "disabled": {
+                "$scopes": [
+                  "TEXT_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 38)"
+              },
+              "secondary": {
+                "$scopes": [
+                  "TEXT_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 60)"
+              },
+              "primary": {
+                "$scopes": [
+                  "TEXT_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 87)"
+              }
+            }
+          },
+          "Dark": {
+            "outlinedBorder": {
+              "$scopes": [
+                "STROKE_COLOR"
+              ],
+              "$type": "color",
+              "$value": "rgba(104, 218, 106, 50)"
+            },
+            "focusVisible": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "rgba(104, 218, 106, 30)"
+            },
+            "focus": {
+              "$scopes": [
+                "SHAPE_FILL",
+                "FRAME_FILL"
+              ],
+              "$type": "color",
+              "$value": "rgba(104, 218, 106, 12)"
+            },
+            "selected": {
+              "$scopes": [
+                "SHAPE_FILL",
+                "FRAME_FILL"
+              ],
+              "$type": "color",
+              "$value": "rgba(104, 218, 106, 16)"
+            },
+            "hover": {
+              "$scopes": [
+                "SHAPE_FILL",
+                "FRAME_FILL"
+              ],
+              "$type": "color",
+              "$value": "rgba(104, 218, 106, 8)"
+            },
+            "contrast": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "rgba(5, 46, 43, 87)"
+            },
+            "light": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#c7ffb5"
+            },
+            "dark": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#239355"
+            },
+            "main": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#68da6a"
+            },
+            "_native": {
+              "scrollbar-bg": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$libraryName": "",
+                "$collectionName": "material/colors",
+                "$value": "{grey.700}"
+              }
+            },
+            "elevation": {
+              "outlined": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$libraryName": "",
+                "$collectionName": "palette",
+                "$value": "{divider}"
+              }
+            },
+            "components": {
+              "switch": {
+                "knowFillDisabled": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.600}"
+                },
+                "knobFillEnabled": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.300}"
+                },
+                "slideFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 38)"
+                }
+              },
+              "chip": {
+                "defaultFocusFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 20)"
+                },
+                "defaultCloseFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#f5f5f5"
+                },
+                "defaultHoverFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 12)"
+                },
+                "defaultEnabledBorder": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.700}"
+                }
+              },
+              "alert": {
+                "warning": {
+                  "color": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#ffd07b"
+                  },
+                  "background": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#80531b"
+                  }
+                },
+                "success": {
+                  "color": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#68da6a"
+                  },
+                  "background": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#052e2b"
+                  }
+                },
+                "error": {
+                  "background": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#801a06"
+                  },
+                  "color": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#ffa18b"
+                  }
+                },
+                "info": {
+                  "background": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#04487f"
+                  },
+                  "color": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#80e7ff"
+                  }
+                }
+              },
+              "breadcrumbs": {
+                "collapseFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.600}"
+                }
+              },
+              "backdrop": {
+                "fill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 75)"
+                }
+              },
+              "stepper": {
+                "connector": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.400}"
+                }
+              },
+              "tooltip": {
+                "fill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(97, 97, 97, 90)"
+                }
+              },
+              "appBar": {
+                "defaultFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "palette",
+                  "$value": "{background.paper-elevation-4}"
+                }
+              },
+              "snackbar": {
+                "fill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "palette",
+                  "$value": "{background.paper-elevation-6}"
+                }
+              },
+              "rating": {
+                "activeFill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#ff9f1d"
+                },
+                "enabledBorder": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 23)"
+                }
+              },
+              "input": {
+                "filled": {
+                  "hoverFill": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "rgba(245, 245, 245, 12)"
+                  },
+                  "enabledFill": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "rgba(245, 245, 245, 9)"
+                  }
+                },
+                "outlined": {
+                  "enabledBorder": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "rgba(245, 245, 245, 23)"
+                  },
+                  "hoverBorder": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#f5f5f5"
+                  }
+                },
+                "standard": {
+                  "enabledBorder": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "rgba(245, 245, 245, 42)"
+                  },
+                  "hoverBorder": {
+                    "$scopes": [
+                      "ALL_SCOPES"
+                    ],
+                    "$type": "color",
+                    "$value": "#f5f5f5"
+                  }
+                }
+              },
+              "avatar": {
+                "fill": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$libraryName": "",
+                  "$collectionName": "material/colors",
+                  "$value": "{grey.600}"
+                }
+              }
+            },
+            "divider": {
+              "$scopes": [
+                "STROKE_COLOR",
+                "SHAPE_FILL"
+              ],
+              "$type": "color",
+              "$value": "rgba(245, 245, 245, 12)"
+            },
+            "background": {
+              "paper-elevation-24": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#383838"
+              },
+              "paper-elevation-23": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#383838"
+              },
+              "paper-elevation-22": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#383838"
+              },
+              "paper-elevation-21": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#383838"
+              },
+              "paper-elevation-20": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#383838"
+              },
+              "paper-elevation-19": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#363636"
+              },
+              "paper-elevation-18": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#363636"
+              },
+              "paper-elevation-17": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#363636"
+              },
+              "paper-elevation-16": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#363636"
+              },
+              "paper-elevation-15": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#333333"
+              },
+              "paper-elevation-14": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#333333"
+              },
+              "paper-elevation-13": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#333333"
+              },
+              "paper-elevation-12": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#333333"
+              },
+              "paper-elevation-11": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#313131"
+              },
+              "paper-elevation-10": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#313131"
+              },
+              "paper-elevation-9": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#2e2e2e"
+              },
+              "paper-elevation-8": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#2e2e2e"
+              },
+              "paper-elevation-7": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#2c2c2c"
+              },
+              "paper-elevation-6": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#2c2c2c"
+              },
+              "paper-elevation-5": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#2a2a2a"
+              },
+              "paper-elevation-4": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#272727"
+              },
+              "paper-elevation-3": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#252525"
+              },
+              "paper-elevation-2": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#232323"
+              },
+              "paper-elevation-1": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#1e1e1e"
+              },
+              "paper-elevation-0": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "#1a1a1a"
+              },
+              "default": {
+                "$scopes": [
+                  "ALL_FILLS"
+                ],
+                "$type": "color",
+                "$value": "#121212"
+              }
+            },
+            "common": {
+              "white": {
+                "outlinedBorder": {
+                  "$scopes": [
+                    "STROKE_COLOR"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 50)"
+                },
+                "focusVisible": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 30)"
+                },
+                "focus": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 12)"
+                },
+                "selected": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 16)"
+                },
+                "hover": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(245, 245, 245, 8)"
+                },
+                "main": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#f5f5f5"
+                }
+              },
+              "black": {
+                "outlinedBorder": {
+                  "$scopes": [
+                    "STROKE_COLOR"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 50)"
+                },
+                "focusVisible": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 30)"
+                },
+                "focus": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 12)"
+                },
+                "selected": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 16)"
+                },
+                "hover": {
+                  "$scopes": [
+                    "SHAPE_FILL",
+                    "FRAME_FILL"
+                  ],
+                  "$type": "color",
+                  "$value": "rgba(2, 10, 8, 8)"
+                },
+                "main": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#020a08"
+                }
+              }
+            },
+            "success": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(102, 187, 106, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(102, 187, 106, 30)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(102, 187, 106, 16)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(102, 187, 106, 8)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 87)"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#c7ffb5"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#239355"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#68da6a"
+              }
+            },
+            "info": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(3, 192, 212, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(3, 192, 212, 30)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(3, 192, 212, 16)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(3, 192, 212, 8)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 87)"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#04487f"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#80e7ff"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#03c0d4"
+              }
+            },
+            "warning": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 159, 29, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 159, 29, 30)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 159, 29, 16)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 159, 29, 8)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(2, 10, 8, 87)"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#ffd07b"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#80531b"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#ff9f1d"
+              }
+            },
+            "error": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 69, 26, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 69, 26, 30)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 69, 26, 16)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(255, 69, 26, 8)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#f5f5f5"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#ffa18b"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#801a06"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#ff451a"
+              }
+            },
+            "action": {
+              "disabledBackground": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 12)"
+              },
+              "disabled": {
+                "$scopes": [
+                  "TEXT_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 38)"
+              },
+              "focus": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 12)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 16)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 8)"
+              },
+              "active": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 56.00000000000001)"
+              }
+            },
+            "secondary": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(0, 112, 75, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(0, 112, 75, 30)"
+              },
+              "focus": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(0, 112, 75, 12)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(0, 112, 75, 16)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(0, 112, 75, 8)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 87)"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#e4f9dc"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#063a25"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#00704b"
+              }
+            },
+            "primary": {
+              "outlinedBorder": {
+                "$scopes": [
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 50)"
+              },
+              "focusVisible": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 30)"
+              },
+              "focus": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 12)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 16)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(104, 218, 106, 8)"
+              },
+              "contrast": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "rgba(5, 46, 43, 87)"
+              },
+              "light": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#c7ffb5"
+              },
+              "dark": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#239355"
+              },
+              "main": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#68da6a"
+              }
+            },
+            "text": {
+              "focusVisible": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 30)"
+              },
+              "focus": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 12)"
+              },
+              "selected": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 16)"
+              },
+              "hover": {
+                "$scopes": [
+                  "SHAPE_FILL",
+                  "FRAME_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 8)"
+              },
+              "disabled": {
+                "$scopes": [
+                  "TEXT_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 38)"
+              },
+              "secondary": {
+                "$scopes": [
+                  "TEXT_FILL"
+                ],
+                "$type": "color",
+                "$value": "rgba(245, 245, 245, 70)"
+              },
+              "primary": {
+                "$scopes": [
+                  "TEXT_FILL"
+                ],
+                "$type": "color",
+                "$value": "#f5f5f5"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
