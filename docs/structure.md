@@ -3,127 +3,281 @@
 Most of the code lives in the `src` folder and looks like this:
 
 ```sh
-src
+
+📂public   
 |
-+-- app               # all the pages that you want to add on route you can create it here.
-|    |
-|    +-- feature      # all the specific feature page shold be here.
-|    |
-|    +-- error.tsx      # this file will be handle all error from our application(https://nextjs.org/docs/app/api-reference/file-conventions/error)
-|    |
-|    +-- layout.tsx      # this file will be handle Ui that will be shared between routes from our application(https://nextjs.org/docs/app/api-reference/file-conventions/layout)
-|    |
-|    +-- page.tsx      # This is the index page of our application whenever application start nextjs first rerender this page(https://nextjs.org/docs/app/api-reference/file-conventions/page).
-|    |
-|    +-- favicon.ico      # This is the ico file if we need to chnage application favicon we need to replace it with new file.
++-- 📂images
 |
-+-- components        # all the common components you need to develop here.
++-- 📂svg
+|
++-- 📂json
+|
+📂src
+|
++-- 📂app               
+|    +-- 📂(group-1)
+|           |
+|           +-- 📂feature-1
+|              |
+|              +-- 📄page.tsx
+|          |
+|          +-- 📂feature-2
+|              |
+|              +-- 📄page.tsx    
+|          |
+|          +-- 📄error.tsx
+|          |
+|          +-- 📄layout.tsx
+|          |
+|          +-- 📄page.tsx
+|          
+|    +-- 📂(group-2)
+|           |
+|           +-- 📂feature-1
+|              |
+|              +-- 📄page.tsx
+|          |
+|          +-- 📂feature-2
+|              |
+|              +-- 📄page.tsx    
+|          |
+|          +-- 📄error.tsx
+|          |
+|          +-- 📄layout.tsx
+|          |
+|          +-- 📄page.tsx
+|          
+|    +-- 📄error.tsx     
 |    |
-|    +-- common         # all the common components shold be here.
+|    +-- 📄layout.tsx     
+|    |
+|    +-- 📄page.tsx    
+|    |
+|    +-- 📄loading.tsx  
+|    |
+|    +-- 📄global.css
+|
++-- 📂components       
+|    |
+|    +-- 📂hoc        
 |       |
-|       +-- HOC             # all the higher order component develop here
+|    +-- 📂models       
+|       |
+|    +-- 📂common        
+|       |
+|    +-- 📄components.ts
+|
++-- 📂hooks
+|    |
+|    +-- 📂customshooks
+|              |
+|              +-- 📄useCustom.ts                  
+|
++-- 📂interfaces        
+|    |
+|    +--  📂api          
+|    |
+|    +-- 📂common        
+|    |
+|    +-- 📂state        
+|
++-- 📂lib             
+|
++-- 📂redux
+|    |
+|    +-- 📂asyncapis
+|    |
+|    +-- 📂slices
+|    |
+|    +-- 📄provider.tsx
+|    |
+|    +-- 📄store.ts
+|
++-- 📂styles           
+|    |
+|    +-- 📂mui 
+|    |
+|    +-- 📂template  
+|    |
+|    +-- 📄theme.ts  
 |    
-|    +-- feature1       # all the feature1 related components shold be here.
-|    |
-|    +-- feature2       # all the feature2 related components shold be here.
-|    
-+-- constants         # all the constant messages and configuration shold be here.
-|    |
-|    +-- config         # all the application configuration should be here.
-|    |
-|    +-- messages       # all the application messages should be here.
-|    |
-|    +-- metadata       # all the application metadata should be here.
-|
-+-- hooks             # all the Hooks develop here.
-|
-+-- images            # all the applications static file add here.
-|
-+-- interfaces        # all the applications interfaces develop here.
-|    |
-|    +-- api         
-|       |
-|       +-- requests    # all api request paramas interfaces should be here.
-|       |
-|       +-- responses    # all api request interfaces should be here. 
-|    |
-|    +-- common         # all the application common interfaces should be here.
-|    |
-|    +-- state         # all the application redux state interfaces should be here.
-|
-+-- lib               # all the applications common functionalities develop here.
-|
-+-- redux             # all the applications redux store and configuration develop here.
-|
-+-- services          # all the applications services develop here.
-|
-+-- styles            # all the applications css develop here.
-|    |
-|    +-- MUI         # all the application MUI style should be here should be here(file name should be component name So easy for readbility).
++--  📂metadata
+
 ```
+![alt text](image.png)
+
 
 # Project Components Overview
 
 This project utilizes three types of components categorized based on the folder structure and their intended usage across the application.
 
-## 1. Page Components
+## 1. public directory
 ### Description:
-Page components represent individual pages or features within the application. These components are specific to a particular page or feature and are meant to encapsulate the logic, layout, and functionality of that page.
+This directory contains all static assets used in the project, such as images, SVG files, and JSON files.
 
-### Characteristics:
-- Each page component is designed to be used exclusively by a single page or feature.
-- These components handle the rendering and behavior of the respective page they are associated with.
-- Located in the "pages" directory.
-
-## 2. Common Components (Project Level)
+## 2. src directory
 ### Description:
-Common components are shared components used across multiple pages or features within the project. These components are project-specific and are not intended to be part of a separate common package.
+This directory contains the source code of the project.
 
-### Characteristics:
-- These components are designed for reusability within the project and can be included in multiple pages or features.
-- They encapsulate functionalities or UI elements used consistently across different parts of the project.
-- Located in a designated directory within the project structure, separate from global or package-specific components.
+###  app:
+- This allows you to organize your route segments and project files into logical groups without affecting the URL path structure.
+- To create multiple root layouts, remove the top-level layout.js file, and add a layout.js file inside each route groups.
+- Reference : https://nextjs.org/docs/app/building-your-application/routing/route-groups
 
-## 3. NPM Package Components
-### Description:
-Components classified as NPM packages are designed for reusability beyond the current project. These components are meant to be standalone packages that can be shared and used across multiple projects or applications.
+###  components:
+- This directory contains reusable components organized into different categories.
+- hoc: Contains higher-order components (HOCs)
+- models: Contains data models or interfaces representing data structures used in the application. Example :- `alert.ts, popup.ts` etc.
+- ui: Contains UI components that can be reused across the application.
 
-### Characteristics:
-- Intended for broader reuse across various projects and applications.
-- These components are packaged and published as an npm package, making them available for use in different projects.
-- Maintained separately and stored in a dedicated repository or directory as an independent package.
+### hooks:
+- This directory contains the customhooks. Example:- `useFetch.ts, useToastify.ts` etc.
+
+### interfaces:
+-  This directory contains TypeScript interfaces used to define data structures and types within the project.
+-  api: This subdirectory contains interfaces related to API interactions. 
+-  common: The common subdirectory contains interfaces that are commonly used throughout the application. 
+-  state: The state subdirectory contains interfaces related to application state management. These interfaces define the       structure of the application's state, including data stored in Redux stores, React context providers, or local component     state.
 
 
-## FAQ
+### redux:
+- asyncapis: This directory contains files related to asynchronous API calls using Redux middleware. Redux middleware like     Redux Thunk or Redux Saga is commonly used to handle such operations asynchronously.
+- slices: This directory contains Redux slice files representing different parts of the application state.
+- provider.tsx: This file exports the Redux provider component.
+- store.ts: This file exports the Redux store configuration.
 
-#### why we use tsx for components
- - Typesefety, jsx support,
- - tsx is a file syntax extension used by React and here you can use CSS and Html as well. You should use tsx files when rendering a React component.
+### styles:
+- mui: This subdirectory contains files related to styling using Material-UI components or styled components. 
+- slices: This directory contains Redux slice files representing different parts of the application state.
+- provider.tsx: This file exports the Redux provider component.
+- store.ts: This file exports the Redux store configuration.
 
-#### why we use .ts file for non component file.
- - basically on the non component file we don't need to use jsx features.
+### metadata:
+- metadata: This directory likely contains metadata files used in the project. Metadata provides information about other data in the project. 
 
-#### what is the purpose of lib folder?
- - lib contains general reusable code and utilities. services has integrations.
- - lib code is synchronous. services involve async data fetching.
- - lib functions are app-specific. Services can be more generic.
- - Services often use lib utilities under the hood.
 
-#### what is the purpose of service folder.
- - Contains integration with external services such as making API calls.
- - Anything involving async operations and data fetching.
- - Requests to backend APIs or external services.
 
-#### what is the folder structure for new routes.
- - folder sturure for route page. we use routeName/page.tsx (becuse of in future we will able to add new child route as well like: feature/new route)
+## 3. Naming convention
 
-#### what is difrence between lib and service folder.
-  - we have diffrent approach for both folders.
-  ##### lib (Library) Folder:
-  - The "lib" folder in a Next.js project could contain shared code, utilities, or helper functions that are used across multiple parts of the application.
-  - It might store generic functionalities or services that are not specific to any particular feature but serve as a common set of tools or utilities for the application.
+### Description: 
+The primary goal of any naming convention is consistency. Ensure that the chosen convention is consistently applied throughout the project. Names should be clear and descriptive, making it easy for developers to understand the purpose. 
 
-  ##### Services Folder:
-  - The "services" folder might typically contain code that handles communication with external services, APIs, or databases.
-  - It often contains modules or functions that encapsulate API calls, database interactions, or other types of services.
-  - In a Next.js project, the "services" folder might contain logic related to data fetching, authentication, or any interaction with external entities.
+### interfaces
+-  Use a file naming convention like `filename.interfaces.ts`.
+-  PascalCase convention typically applies to the names of interfaces. Example: `IUser, IUserProfile` etc.
+
+### variables/method/function
+- Variables/method/function naming convention should be camelcase. 
+- Example: `variableOne, methodName, functionName` etc.
+
+### constants
+- Uppercase characters separated by underscores.
+- Example:- `MAX_SIZE, NAME` etc.
+
+### Components
+- Components naming convetion should be pascalcase.
+- If file contains the JSX then use `.tsx`. If it's pure TypeScript and doesn't have JSX, use `.ts`.
+- Component file naming convention :- `Button.ts, MyContainer.ts`etc.
+- Component naming convention:- `MyComponent, LoginForm` etc.
+
+### styled-components
+- Use a file naming convention like `filename.styled.ts`.
+- Naming conventions for styling Example:- `Section, Header, ButtonPrimary` etc.
+
+### higer-order-components(HOC)
+- Prefixing the original component's name with `with` is a common convention. For example, if you have a component named Component, the corresponding Higher-Order Component might be named something like withHOC(Component)
+- File naming convention : `withAuth.ts` etc
+- Component Naming Convention: ` withAuth, withModifiers, withUtilities` etc.
+
+### custome hooks
+- Begin the hook name with `use` to indicate that it's a hook.
+- Use camelCase for the filename. Example: `usePagination.ts, useLocalStorage.ts` etc.
+- Hook name :- `usePagination, useLocalStorage` etc.
+
+## 4. Git 
+
+### Create Branch
+- Feature Branches:  For developing new features. Use the prefix feature/. For instance, `feature/login-system`.
+- Bugfix Branches: To fix bugs in the code. Use the prefix bugfix/. For example, `bugfix/header-styling`.
+- Hotfix Branches: Directly from the production branch to fix critical bugs in the production environment. Use the prefix hotfix/. For instance, `hotfix/critical-security-issue`.
+- Release Branches: Used to prepare for a new production release.Use the prefix release/. For example, `release/v1.0.1`
+- Documentation Branch:  Used to write, update, or fix documentation. Use the prefix docs/. For instance, `docs/user-guide`.
+
+###  Git commit
+
+#### Type of commit :-
+- feat: A new feature or enhancement added to the codebase.
+- fix: A bug fix or correction to resolve an issue.
+- docs: Documentation changes or updates.
+- style: Changes related to code formatting, indentation, or whitespace.
+- refactor: Code refactoring without adding new features or fixing bugs.
+- test: Addition or modification of test cases.
+- chore: Other changes not directly affecting the code (e.g., build scripts, dependencies).
+
+#### Commit messages :-
+
+- length: The first line should ideally be no longer than 50 characters, and the body should be restricted to 72 characters 
+- Be Clear and Concise.
+- Include Relevant Context
+- Use Imperative Verbs: Add, Fix, Update, or Refactor.
+- For instance:- 
+
+##### Good
+- feat: improve performance with lazy load implementation for images
+- chore: update npm dependency to latest version
+- Fix bug preventing users from submitting the subscribe form
+- Update incorrect client phone number within footer body per client request
+
+##### Bad (Don't Use)
+- fixed bug on landing page
+- Changed style
+- oops
+- I think I fixed it this time?
+- empty commit messages
+
+
+### Git commands
+
+#### Create branch:
+create new branch
+```
+git checkout -b <branchname> 
+```
+
+#### Delete branch:
+Switch to another branch: 
+```
+git checkout <another-branch-name>
+```
+Delete the particular branch:
+```
+ git branch -d <branch-to-delete>
+```
+
+#### Cherry-pick:
+Git cherry-pick is a Git command used to apply a specific commit from one branch onto another.
+```
+git cherry-pick <commit-hash>
+```
+#### commit:
+
+Stage your changes
+```
+git add .
+```
+ create the commit 
+
+```
+git commit -m "Add feature X"
+```
+
+#### rebase :
+Use the rebase instead of the merge to avoid the unecessary commits. 
+```
+git rebase <target-branch>
+```
+#### revert:
+Revert some existing commits
+```
+git revert <commit-hash>
+```

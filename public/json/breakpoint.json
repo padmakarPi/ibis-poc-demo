@@ -1,0 +1,116 @@
+{
+    "id": "VariableCollectionId:833:93490",
+    "name": "breakpoints",
+    "modes": {
+      "833:0": "Mode 1"
+    },
+    "variableIds": [
+      "VariableID:833:93492",
+      "VariableID:847:93177",
+      "VariableID:847:93178",
+      "VariableID:847:93179",
+      "VariableID:847:93180"
+    ],
+    "variables": [
+      {
+        "id": "VariableID:833:93492",
+        "name": "xl",
+        "description": "",
+        "type": "FLOAT",
+        "valuesByMode": {
+          "833:0": 1536
+        },
+        "resolvedValuesByMode": {
+          "833:0": {
+            "resolvedValue": 1536,
+            "alias": null
+          }
+        },
+        "scopes": [
+          "ALL_SCOPES"
+        ],
+        "hiddenFromPublishing": false,
+        "codeSyntax": {}
+      },
+      {
+        "id": "VariableID:847:93177",
+        "name": "lg",
+        "description": "",
+        "type": "FLOAT",
+        "valuesByMode": {
+          "833:0": 1200
+        },
+        "resolvedValuesByMode": {
+          "833:0": {
+            "resolvedValue": 1200,
+            "alias": null
+          }
+        },
+        "scopes": [
+          "ALL_SCOPES"
+        ],
+        "hiddenFromPublishing": false,
+        "codeSyntax": {}
+      },
+      {
+        "id": "VariableID:847:93178",
+        "name": "md",
+        "description": "",
+        "type": "FLOAT",
+        "valuesByMode": {
+          "833:0": 900
+        },
+        "resolvedValuesByMode": {
+          "833:0": {
+            "resolvedValue": 900,
+            "alias": null
+          }
+        },
+        "scopes": [
+          "ALL_SCOPES"
+        ],
+        "hiddenFromPublishing": false,
+        "codeSyntax": {}
+      },
+      {
+        "id": "VariableID:847:93179",
+        "name": "sm",
+        "description": "",
+        "type": "FLOAT",
+        "valuesByMode": {
+          "833:0": 600
+        },
+        "resolvedValuesByMode": {
+          "833:0": {
+            "resolvedValue": 600,
+            "alias": null
+          }
+        },
+        "scopes": [
+          "ALL_SCOPES"
+        ],
+        "hiddenFromPublishing": false,
+        "codeSyntax": {}
+      },
+      {
+        "id": "VariableID:847:93180",
+        "name": "xs",
+        "description": "",
+        "type": "FLOAT",
+        "valuesByMode": {
+          "833:0": 444
+        },
+        "resolvedValuesByMode": {
+          "833:0": {
+            "resolvedValue": 444,
+            "alias": null
+          }
+        },
+        "scopes": [
+          "ALL_SCOPES"
+        ],
+        "hiddenFromPublishing": false,
+        "codeSyntax": {}
+      }
+    ]
+  }
