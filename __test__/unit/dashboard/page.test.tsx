@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { ThemeProvider } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import Home from "@/app/(dashboard)/dashboard/page";
 import { lightTheme } from "@/styles/theme";
 import { beforeEach } from "node:test";
+import Home from "@/pages/dashboard/index";
 
 jest.mock("react-redux", () => ({
 	...jest.requireActual("react-redux"),
