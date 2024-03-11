@@ -1,6 +1,8 @@
 # 🗄️ Project Structure
 
-Most of the code lives in the `src` folder and looks like this:
+### Page Router structure :- 
+The Pages Router has a file-system based router built on concepts of pages. When a file is added to the pages directory it's automatically available as a route. The ideal choice would be to go with app router however due to module federation we put page router in the template.
+
 
 ```sh
 
@@ -14,49 +16,32 @@ Most of the code lives in the `src` folder and looks like this:
 |
 📂src
 |
-+-- 📂app               
-|    +-- 📂(group-1)
-|           |
-|           +-- 📂feature-1
-|              |
-|              +-- 📄page.tsx
-|          |
-|          +-- 📂feature-2
-|              |
-|              +-- 📄page.tsx    
-|          |
-|          +-- 📄error.tsx
-|          |
-|          +-- 📄layout.tsx
-|          |
-|          +-- 📄page.tsx
-|          
-|    +-- 📂(group-2)
-|           |
-|           +-- 📂feature-1
-|              |
-|              +-- 📄page.tsx
-|          |
-|          +-- 📂feature-2
-|              |
-|              +-- 📄page.tsx    
-|          |
-|          +-- 📄error.tsx
-|          |
-|          +-- 📄layout.tsx
-|          |
-|          +-- 📄page.tsx
-|          
-|    +-- 📄error.tsx     
++-- 📂app                       
 |    |
 |    +-- 📄layout.tsx     
 |    |
-|    +-- 📄page.tsx    
-|    |
-|    +-- 📄loading.tsx  
-|    |
-|    +-- 📄global.css
+|    +-- 📄globals.css     
 |
++-- page  
+|    |             
+|    +-- 📂feature-1
+|         |
+|         +-- 📄index.tsx
+|    |    
+|    +-- 📂feature-2
+|         |
+|         +-- 📄index.tsx    
+|    |    
+|    +-- 📄_app.tsx
+|    |    
+|    +-- 📄_documents.tsx
+|    |    
+|    +-- 📄error.tsx
+|    |    
+|    +-- 📄index.tsx
+|    |    
+|    +-- 📄loading.tsx
+|          
 +-- 📂components       
 |    |
 |    +-- 📂hoc        
@@ -120,9 +105,16 @@ This directory contains all static assets used in the project, such as images, S
 This directory contains the source code of the project.
 
 ###  app:
-- This allows you to organize your route segments and project files into logical groups without affecting the URL path structure.
-- To create multiple root layouts, remove the top-level layout.js file, and add a layout.js file inside each route groups.
-- Reference : https://nextjs.org/docs/app/building-your-application/routing/route-groups
+- This directory contains the layouts and styling of your entire applications.
+- To create layout then add a layout.tsx file inside the app directory.
+
+### page:
+- feature-1/feature-2:- These likely represent different features or sections of your application.Each directory contains an index.tsx file, which serves as the entry point for that feature's route.
+- _app.tsx:- This file handle layout changes, and maintain global state across all pages.
+- _documents.tsx:- This file is used to override the default HTML document. You can use it to add custom <head> tags, meta  tags, and scripts that apply to all pages.
+- error.tsx:- This file represents the custom error page of your next js application.
+- index.tsx:- This file represents the landing page of your application.
+- loading.tsx:- This file represents a loading component or page displayed while content is being fetched or loaded.
 
 ###  components:
 - This directory contains reusable components organized into different categories.
