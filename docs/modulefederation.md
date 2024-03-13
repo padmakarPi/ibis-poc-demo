@@ -4,15 +4,11 @@ Module Federation is a feature in webpack, a popular JavaScript module bundler, 
 
 ### Host:
 
-The host is the webpack build that serves as the main application.
-It imports and uses modules from other webpack builds (remotes).
-The host defines which modules it wants to consume from the remote builds.
+Declare what an app wants to consume and from where to consume this part or the URL of the remote. An app that consumes something is called a host.
 
 ### Remote:
 
-The remote is a separate webpack build that exposes certain modules to be consumed by other builds (hosts).
-It decides which modules to share and how they should be exposed.
-Remotes can be thought of as external components or micro-frontends that can be dynamically loaded by the host.
+An app can decide what javascript parts it wants to expose so that other apps can use these parts. An app that exposes something is called remote in module federation terms.
 
 ## Pre Requisite for module federation
 
@@ -22,17 +18,15 @@ Host and remote projects need in next version - 13.4.19
 
 **Step 1:** Install next - 13.4.19
 
-**Step 2:** Check next version in package.json 
+**Step 2:** In src folder create pages folder if not exist
 
-**Step 3:** In src folder create pages folder if not exist
+**Step 3:** Move routing files from the 'app' folder to the 'pages' folder. 
 
-**Step 4:** Move routing files from the 'app' folder to the 'pages' folder. 
+**Step 4:** Rename the routing file to 'index.tsx'.
 
-**Step 5:** Rename the routing file to 'index.js'.
+**Step 5:** Note: In Next.js 13, a layout file is required in the 'app' folder.
 
-**Step 6:** Note: In Next.js 13, a layout file is required in the 'app' folder.
-
-**Step 7:** Also, ensure that in the 'pages' folder, there is an '_app.js' file and an 'index.js' file.
+**Step 6:** Also, ensure that in the 'pages' folder, there is an '_app.tsx' file and an 'index.tsx' file.
 
 ## Model Federation
 
@@ -54,12 +48,10 @@ npm install @module-federation/nextjs-mf@7.0.8
 
 **Step 2:** To avoid theme-related issues when using remote components in a federated environment, it's a good practice to wrap the remote component in a wrapper component. This wrapper component can ensure that the remote component is styled consistently with the rest of your application, regardless of the underlying theme differences.
 
-```jsx 
-     <ModuleFedaraionWrapper>
-        // your component
-    </ModuleFedaraionWrapper>
-```
 - wrapper component 
+
+    the "ModuleFedaraionWrapper" serves as a container for your remote components, allowing you to seamlessly integrate and utilize components exported from other modules or micro-frontends within your application. This wrapper essentially acts as a bridge, facilitating the incorporation of remote functionalities into your local environment with ease and efficiency.
+
 ```jsx 
    export const ModuleFedaraionWrapper = ({
         children,
@@ -85,6 +77,12 @@ npm install @module-federation/nextjs-mf@7.0.8
             </PersistGate>
         </Provider>
     );
+```
+
+```jsx 
+     <ModuleFedaraionWrapper>
+        // This is where your remote component
+    </ModuleFedaraionWrapper>
 ```
 **Step 3:** To configure your Next.js application and integrate the remote component with the wrapper component, you can make changes to your next.config.js file. Here's an example of how you can do this:
 
@@ -139,18 +137,18 @@ By configuring these properties in the `federationConfig` object and using the `
 
 ## Host
 
-**Step 1:** To ensure that your host project is using Next.js version 13.
+**Step 1:** To ensure that your host project is using Next.js version 13.4.19.
 
-**Step 2:**  you need to add a URL to the `.env` file with a key that indicates it's for the micro frontend, specifically for the component named `CompactFileUpload`. Here's how you can add the key-value pair:
+**Step 2:**  you need to add a URL to the `.env` file with a key that indicates it's for the micro frontend, specifically for the remote named `MICROFRONTEND`. Here's how you can add the key-value pair:
 
 ```
-NEXT_PUBLIC_CompactFileUpload_MICROFRONTEND_BASE_URL=http://example.com/compact-file-upload
+NEXT_PUBLIC_MICROFRONTEND_MICROFRONTEND_BASE_URL=http://example.com/compact-file-upload
 ```
 
 In this key:
 
 - `NEXT_PUBLIC`: This prefix is used for environment variables that are exposed to the client-side JavaScript code.
-- `CompactFileUpload`: This indicates the name of your component, as per your instruction.
+- `MICROFRONTEND`: This indicates the name of your remote, as per your instruction.
 - `MICROFRONTEND_BASE_URL`: This suffix indicates that it's the base URL for the micro frontend.
 
 Replace `http://example.com/compact-file-upload` with the actual URL of your micro frontend component.
@@ -173,7 +171,7 @@ const nextConfig = {
         // Add your remote key and value here
         // Replace `microfrontend` with your remote key
         // Use the URL with environment variable
-        microfrontend: `microfrontend@${process.env.NEXT_PUBLIC_CompactFileUpload_MICROFRONTEND_BASE_URL}/_next/static/chunks/remoteEntry.js`
+        microfrontend: `microfrontend@${process.env.NEXT_PUBLIC_MICROFRONTEND_MICROFRONTEND_BASE_URL}/_next/static/chunks/remoteEntry.js`
       },
     };
     config.plugins.push(new NextFederationPlugin(federationConfig));
@@ -189,7 +187,7 @@ In this modified configuration:
 
 - The `name` property is set to any name you prefer for your federation.
 - Under `remotes`, replace `microfrontend` with the key for your remote.
-- Use the URL with the environment variable `${process.env.NEXT_PUBLIC_CompactFileUpload_MICROFRONTEND_BASE_URL}` to dynamically specify the URL of your remote. Make sure the environment variable is set correctly.
+- Use the URL with the environment variable `${process.env.NEXT_PUBLIC_MICROFRONTEND_MICROFRONTEND_BASE_URL}` to dynamically specify the URL of your remote. Make sure the environment variable is set correctly.
 
 **Step 4:** Integration of Remote Component
 
