@@ -137,7 +137,7 @@ module.exports = nextConfig
 
 By configuring these properties in the `federationConfig` object and using the `NextFederationPlugin`, you're setting up module federation in your Next.js application. This allows you to expose specific components or modules and share dependencies with other federated modules.
 
-## host
+## Host
 
 **Step 1:** To ensure that your host project is using Next.js version 13.
 
