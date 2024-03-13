@@ -151,7 +151,7 @@ In this key:
 - `MICROFRONTEND`: This indicates the name of your remote, as per your instruction.
 - `MICROFRONTEND_BASE_URL`: This suffix indicates that it's the base URL for the micro frontend.
 
-Replace `http://example.com/compact-file-upload` with the actual URL of your micro frontend component.
+Replace `http://example.com/` with the actual URL of your micro frontend component.
 
 **Step 3:** To modify the configuration as per the provided instructions, here's how you can update the `next.config.js` file:
 
