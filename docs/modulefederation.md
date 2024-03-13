@@ -142,7 +142,7 @@ By configuring these properties in the `federationConfig` object and using the `
 **Step 2:**  you need to add a URL to the `.env` file with a key that indicates it's for the micro frontend, specifically for the remote named `MICROFRONTEND`. Here's how you can add the key-value pair:
 
 ```
-NEXT_PUBLIC_MICROFRONTEND_MICROFRONTEND_BASE_URL=http://example.com/compact-file-upload
+NEXT_PUBLIC_MICROFRONTEND_MICROFRONTEND_BASE_URL=http://example.com/
 ```
 
 In this key:
