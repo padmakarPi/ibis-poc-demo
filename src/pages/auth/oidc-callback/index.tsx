@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { userManager } from "@/constants/config/oidc.config";
 import AuthService from "@/services/auth.service";
 import { CookieService } from "@/services/cookie.service";
-import { setAuthState } from "@/redux/reducers/auth.reducer";
+import { setAuthState } from "@/redux/slices/authslice";
 
 function CallbackPage() {
 	const router = useRouter();
@@ -26,7 +26,7 @@ function CallbackPage() {
 					userType: userData.profile.UserType,
 					sid: userData.profile.sid,
 					expires_at: userData.expires_at,
-					profile:
+					portals:
 						userData?.profile?.Portals && JSON.parse(userData?.profile?.Portals)
 							? JSON.parse(userData?.profile?.Portals)
 							: [],
