@@ -4,11 +4,10 @@ export interface AuthState {
 	authState: {
 		isAuthenticated?: boolean;
 		email: string;
-		portals: any;
+		portals: IPortal[];
 		userType: string;
 		sid: string;
 		name: string;
 		expires_at: number;
-		profile: IPortal[];
 	};
 }
