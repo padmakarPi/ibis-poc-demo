@@ -1,6 +1,7 @@
+import withPermissions from "@/components/hoc/withPermissions";
 import AuthService from "@/services/auth.service";
 
-export default function Page() {
+function Page() {
 	const authService = new AuthService();
 
 	const logout = async () => {
@@ -14,3 +15,5 @@ export default function Page() {
 		</>
 	);
 }
+
+export default withPermissions(Page);
