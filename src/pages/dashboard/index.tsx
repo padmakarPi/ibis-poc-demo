@@ -5,7 +5,6 @@ import { toogleTheme } from "@/redux/slices/themeslice";
 import { darkTheme, lightTheme } from "@/styles/theme";
 import { IRootState } from "@/interfaces/states/theme.interfaces";
 import Dashboard from "@/components/Dashboard";
-import withPermissions from "@/components/hoc/withPermissions";
 
 const Home = () => {
 	const dispatch = useDispatch();
@@ -30,4 +29,4 @@ const Home = () => {
 	);
 };
 
-export default withPermissions(Home);
+export default Home;
