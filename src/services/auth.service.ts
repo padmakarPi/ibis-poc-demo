@@ -8,7 +8,9 @@ import { CookieService } from "@/services/cookie.service";
 // eslint-disable-next-line import/no-cycle
 import { userManager } from "@/constants/config/oidc.config";
 import { COMMON_METADATA } from "@/constants/metadata/common.metadata";
-import { TokenData } from "@/interfaces/common/token-data.interface";
+import {
+	TokenData,
+} from "@/interfaces/common/token-data.interface";
 
 export default class AuthService {
 	private cookieService = new CookieService();
@@ -67,8 +69,8 @@ export default class AuthService {
 			}
 		});
 
-		setLocalStorage(COMMON_METADATA.TOKEN_STORE_KEY, "");
-		setLocalStorage(COMMON_METADATA.OMNI_TOKEN_STORE_KEY, "");
+		setLocalStorage(COMMON_METADATA.TOKEN_STORE_KEY,"");
+		setLocalStorage(COMMON_METADATA.OMNI_TOKEN_STORE_KEY,"");
 
 		await this.userManager.signoutRedirect();
 		await this.cookieService.deleteAllCookies();
@@ -268,4 +270,5 @@ export default class AuthService {
 			localStorage.getItem(COMMON_METADATA.TOKEN_STORE_KEY) || "{}",
 		);
 	}
+
 }
