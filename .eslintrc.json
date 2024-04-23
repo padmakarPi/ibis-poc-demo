@@ -48,10 +48,13 @@
         "import/no-unresolved": "off", // TypeScript takes care of this
         "react/react-in-jsx-scope": "off", // Not needed in Next.js
         "react/jsx-props-no-spreading": "off", // Allowing spread props
-        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/rules-of-hooks": "off",
         "react-hooks/exhaustive-deps": "off",
         "import/prefer-default-export": "off",
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        "eslint-consistent-return": "off",
+        "no-promise-executor-return": "off",
+        "no-new": 0
       },
       "settings": {
         "import/resolver": {

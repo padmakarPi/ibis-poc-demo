@@ -1,16 +1,17 @@
-import AuthService from "@/services/auth.service";
+import { AuthContext } from "@/authcontext/AuthContext";
+import { useContext } from "react";
 
 export default function Page() {
-	const authService = new AuthService();
+	const { logout } = useContext(AuthContext);
 
-	const logout = async () => {
-		await authService.logout();
+	const handleLogout = () => {
+		logout();
 	};
 
 	return (
 		<>
 			<h1>Home page</h1>
-			<button onClick={logout}>Logout</button>
+			<button onClick={handleLogout}>Logout</button>
 		</>
 	);
 }

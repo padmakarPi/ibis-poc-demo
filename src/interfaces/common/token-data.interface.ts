@@ -12,3 +12,13 @@ export interface TokenData {
 	contact_id: number;
 	customer_id: number;
 }
+export interface jwtDecodeData {
+	iss?: string;
+	sub?: string;
+	aud?: string[] | string;
+	exp?: number;
+	nbf?: number;
+	iat?: number;
+	jti?: string;
+	ContactId?: number;
+}
