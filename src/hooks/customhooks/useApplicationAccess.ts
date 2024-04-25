@@ -37,6 +37,8 @@ const useApplicationAccess = () => {
 
 		checkApplicationAccess();
 	}, [router, clientId]);
+
+	return null;
 };
 
 export default useApplicationAccess;
