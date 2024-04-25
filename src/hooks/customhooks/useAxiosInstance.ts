@@ -19,7 +19,6 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 		}
 		return {};
 	};
-
 	const waitForTokenRefresh = async (localStorageKey: string) => {
 		while (localStorage.getItem(localStorageKey)) {
 			await new Promise(resolve => setTimeout(resolve, 1000));
@@ -111,7 +110,6 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 
 	React.useEffect(() => {
 		if (!baseURL) return;
-
 		const reqInterceptor =
 			axBackendInstance.interceptors.request.use(authRequest);
 		const resInterceptor = axBackendInstance.interceptors.response.use(
@@ -124,7 +122,7 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 
 			axBackendInstance.interceptors.response.eject(resInterceptor);
 		};
-	}, [baseURL]);
+	}, [baseURL, getStoredTokenData]);
 
 	return { axBe: axBackendInstance };
 };
