@@ -1,33 +1,28 @@
 import { useRouter } from "next/navigation";
 import { Box } from "@mui/material";
-import { useEffect } from "react";
-import AuthService from "@/services/auth.service";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "@/authcontext/AuthContext";
 
 export default function Main() {
+	const { getUser, login } = useContext(AuthContext);
 	const router = useRouter();
-	const authService = new AuthService();
+	const initializeAuth = async () => {
+		try {
+			const user = await getUser();
+			if (user) {
+				const originalRoute = "/homepage";
+				router.push(originalRoute);
+				console.log("Successfully login");
+			} else {
+				login();
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	useEffect(() => {
-		(async () => {
-			try {
-				const user = await authService.getUser();
-
-				if (user) {
-					let originalRoute = localStorage.getItem("originalRoute");
-
-					if (!originalRoute || originalRoute === "/") {
-						originalRoute = "/homepage";
-					}
-
-					router.push(originalRoute);
-				} else {
-					await authService.login();
-				}
-			} catch (error) {
-				/* empty */
-			}
-		})();
+		initializeAuth();
 	}, []);
-
 	return <Box>Authentication processing</Box>;
 }

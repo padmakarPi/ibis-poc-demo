@@ -51,7 +51,10 @@
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "off",
         "import/prefer-default-export": "off",
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        "eslint-consistent-return": "off",
+        "no-promise-executor-return": "off",
+        "no-new": 0
       },
       "settings": {
         "import/resolver": {
