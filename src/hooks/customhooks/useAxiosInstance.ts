@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-await-in-loop */
-import React, { useContext } from "react";
+import { useContext } from "react";
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { COMMON_METADATA } from "@/lib/constant/oidc";
 import { AuthContext } from "@/authcontext/AuthContext";
@@ -108,21 +108,11 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 		return newConfig;
 	};
 
-	React.useEffect(() => {
-		if (!baseURL) return;
-		const reqInterceptor =
-			axBackendInstance.interceptors.request.use(authRequest);
-		const resInterceptor = axBackendInstance.interceptors.response.use(
-			successResponse,
-			refreshTokenInterceptor,
-		);
-
-		return () => {
-			axBackendInstance.interceptors.request.eject(reqInterceptor);
-
-			axBackendInstance.interceptors.response.eject(resInterceptor);
-		};
-	}, [baseURL, getStoredTokenData]);
+	axBackendInstance.interceptors.request.use(authRequest);
+	axBackendInstance.interceptors.response.use(
+		successResponse,
+		refreshTokenInterceptor,
+	);
 
 	return { axBe: axBackendInstance };
 };
