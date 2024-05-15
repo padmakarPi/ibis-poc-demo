@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import { SECURITY } from "@/lib/constant/apiconstant";
 import useAxiosInterceptor from "./useAxiosInstance";
 
@@ -10,12 +10,14 @@ const useApplicationAccess = () => {
 	const { axBe }: any = useAxiosInterceptor(
 		process.env.NEXT_PUBLIC_VSECURITY_BASE_API_URL,
 	);
+	const pathname = usePathname();
 
 	useEffect(() => {
 		if (
-			router.pathname.startsWith("/auth") ||
-			router.pathname === "/" ||
-			router.pathname === "/health/ready"
+			pathname?.startsWith("/auth") ||
+			pathname === "/" ||
+			pathname === "/health/ready" ||
+			pathname === "/health/live"
 		) {
 			return;
 		}
