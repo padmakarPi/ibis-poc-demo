@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 
 import { COMMON_METADATA } from "@/lib/constant/oidc";
 import { jwtDecodeData } from "@/interfaces/common/token-data.interface";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 
 interface defaultState {
 	userManager: UserManager | null;
@@ -20,6 +20,7 @@ export const AuthContext = createContext<defaultState>({} as defaultState);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [userManager, setUserManager] = useState<UserManager | null>(null);
 	const router = useRouter();
+	const pathname = usePathname();
 	const checkAuthentication = async () => {
 		const token = localStorage.getItem(COMMON_METADATA.OMNI_TOKEN_STORE_KEY);
 		if (token) {
@@ -30,7 +31,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		const authenticate = async () => {
-			if (router.pathname.startsWith("/auth") || router.pathname === "/") {
+			if (
+				pathname?.startsWith("/auth") ||
+				pathname === "/" ||
+				pathname === "/health/ready" ||
+				pathname === "/health/live"
+			) {
 				return null;
 			}
 			const isAuthenticated = await checkAuthentication();
