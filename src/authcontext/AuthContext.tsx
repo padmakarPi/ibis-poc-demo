@@ -1,11 +1,12 @@
 import { OIDC_CONFIG } from "@/lib/config/config";
-import { ReactNode, createContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useEffect } from "react";
 import { User, UserManager } from "oidc-client";
 import { jwtDecode } from "jwt-decode";
 
 import { COMMON_METADATA } from "@/lib/constant/oidc";
 import { jwtDecodeData } from "@/interfaces/common/token-data.interface";
 import { usePathname, useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 interface defaultState {
 	userManager: UserManager | null;
@@ -16,9 +17,9 @@ interface defaultState {
 }
 
 export const AuthContext = createContext<defaultState>({} as defaultState);
+let userManager: UserManager;
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-	const [userManager, setUserManager] = useState<UserManager | null>(null);
 	const router = useRouter();
 	const pathname = usePathname();
 	const checkAuthentication = async () => {
@@ -62,10 +63,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		return null;
 	};
 
+	const clearAppStates = () => {
+		if (Cookies.get(COMMON_METADATA.OMNI_TOKEN_ALREADY_REQUESTED)) {
+			Cookies.remove(COMMON_METADATA.OMNI_TOKEN_ALREADY_REQUESTED);
+		}
+
+		const keys = Object.keys(sessionStorage);
+
+		const excludeSessionKeys = ["oidc.user:", "originalRoute"];
+
+		keys
+			.filter(k => !excludeSessionKeys.some(e => k.startsWith(e)))
+			.forEach(key => {
+				sessionStorage.removeItem(key);
+			});
+	};
 	const logout = async () => {
 		try {
 			if (userManager) {
 				localStorage.removeItem(COMMON_METADATA.OMNI_TOKEN_STORE_KEY);
+				localStorage.setItem(COMMON_METADATA.OMNI_TOKEN_STORE_KEY, "");
+				clearAppStates();
+				await userManager.signoutRedirect();
 				const logoutData = await userManager.signoutRedirect();
 				return logoutData;
 			}
@@ -105,10 +124,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	};
 	const initializeAuth = async () => {
 		OIDC_CONFIG.redirect_uri = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/oidc-callback`;
-		const manager = new UserManager(OIDC_CONFIG);
-		setUserManager(manager);
+		userManager = new UserManager(OIDC_CONFIG);
 
-		manager.events.addUserSignedOut(async () => {
+		userManager.events.addUserSignedOut(async () => {
 			await logout();
 		});
 	};
@@ -116,9 +134,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	useEffect(() => {
 		initializeAuth();
 	}, []);
-	if (!userManager) {
-		return <div>loading</div>;
-	}
+
 	return (
 		<AuthContext.Provider
 			value={{ userManager, getUser, saveToken, login, logout }}
