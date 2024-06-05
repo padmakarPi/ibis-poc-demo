@@ -20,7 +20,7 @@ function CallbackPage() {
 				getUserData();
 			});
 		}
-	}, []);
+	}, [userManager]);
 
 	return <div>Processing OIDC callback...</div>;
 }
