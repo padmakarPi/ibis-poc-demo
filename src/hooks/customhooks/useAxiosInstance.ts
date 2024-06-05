@@ -69,11 +69,10 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 			originalRequest.retry = true;
 
 			const localStorageKey = COMMON_METADATA.OMNI_TOKEN_ALREADY_REQUESTED;
-			console.log("refreshtoken");
+
 			if (localStorage.getItem(localStorageKey)) {
 				await waitForTokenRefresh(localStorageKey);
 				const tokenData = getStoredTokenData();
-				console.log("refreshtoken", tokenData);
 				originalRequest.headers.Authorization = `Bearer ${tokenData.access_token}`;
 				return axBackendInstance(originalRequest);
 			}
