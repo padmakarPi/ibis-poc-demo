@@ -28,17 +28,10 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 		const tokenData = getStoredTokenData();
 		const clientId = process.env.NEXT_PUBLIC_CLIENT_ID || "";
 
-		const requestBody: any = {
-			grant_type: "refresh_token",
-			client_id: clientId,
-			refresh_token: tokenData?.refresh_token,
-		};
-		const requestBodyString = Object.keys(requestBody)
-			.map(
-				(key: any) =>
-					`${encodeURIComponent(key)}=${encodeURIComponent(requestBody[key])}`,
-			)
-			.join("&");
+		const requestBody = new URLSearchParams();
+		requestBody.append("grant_type", "refresh_token");
+		requestBody.append("client_id", clientId);
+		requestBody.append("refresh_token", tokenData?.refresh_token);
 
 		try {
 			const response = await fetch(
@@ -48,7 +41,7 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 					headers: {
 						"Content-Type": "application/x-www-form-urlencoded",
 					},
-					body: requestBodyString,
+					body: requestBody,
 				},
 			);
 
@@ -56,6 +49,10 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 				await logout();
 			}
 			const data = await response.json();
+			localStorage.setItem(
+				COMMON_METADATA.OMNI_TOKEN_STORE_KEY,
+				JSON.stringify({ ...data }),
+			);
 			return data.access_token;
 		} catch (error) {
 			console.error(error);
@@ -72,10 +69,11 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 			originalRequest.retry = true;
 
 			const localStorageKey = COMMON_METADATA.OMNI_TOKEN_ALREADY_REQUESTED;
-
+			console.log("refreshtoken");
 			if (localStorage.getItem(localStorageKey)) {
 				await waitForTokenRefresh(localStorageKey);
 				const tokenData = getStoredTokenData();
+				console.log("refreshtoken", tokenData);
 				originalRequest.headers.Authorization = `Bearer ${tokenData.access_token}`;
 				return axBackendInstance(originalRequest);
 			}
