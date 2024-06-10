@@ -7,6 +7,8 @@ import { COMMON_METADATA } from "@/lib/constant/oidc";
 import { jwtDecodeData } from "@/interfaces/common/token-data.interface";
 import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { setAuthState } from "@/redux/slices/authslice";
 
 interface defaultState {
 	userManager: UserManager | null;
@@ -22,9 +24,26 @@ let userManager: UserManager;
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const router = useRouter();
 	const pathname = usePathname();
+	const dispatch = useDispatch();
 	const checkAuthentication = async () => {
 		const token = localStorage.getItem(COMMON_METADATA.OMNI_TOKEN_STORE_KEY);
 		if (token) {
+			const userData = JSON.parse(token);
+			dispatch(
+				setAuthState({
+					isAuthenticated: true,
+					email: userData?.profile?.email,
+					name: userData?.profile?.name,
+					userType: userData?.profile?.UserType,
+					sid: userData?.profile?.sid,
+					access_token: userData?.access_token,
+					expires_at: userData?.expires_at,
+					jobRole: "",
+					customer_id: 0,
+					sub: userData?.profile?.sub,
+				}),
+			);
+
 			return true;
 		}
 		return false;

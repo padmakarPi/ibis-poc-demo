@@ -7,12 +7,12 @@ import RootLayout from "../app/layout";
 export default function MyApp({ Component, pageProps }: AppProps) {
 	useApplicationAccess();
 	return (
-		<AuthProvider>
-			<RootLayout>
-				<Providers>
+		<Providers>
+			<AuthProvider>
+				<RootLayout>
 					<Component {...pageProps} />
-				</Providers>
-			</RootLayout>
-		</AuthProvider>
+				</RootLayout>
+			</AuthProvider>
+		</Providers>
 	);
 }
