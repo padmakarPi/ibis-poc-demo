@@ -19,10 +19,14 @@ Next, create a file named `StartupScript.js` in the root directory of your proje
 ```javascript
 // File: StartupScript.js
 const { exec } = require('child_process');
+
+// Execute the npm run start command
 const child = exec('npm run start', { cwd: __dirname });
 
+// Pipe the child process's stdout and stderr to the main process's stdout and stderr
 child.stdout.pipe(process.stdout);
 child.stderr.pipe(process.stderr);
+
 ```
 
 This script uses Node's `child_process` module to run the `npm run start` command, which should be defined in your `package.json` to start your application.
@@ -36,7 +40,16 @@ pm2 start StartupScript.js --name vchat-app
 
 This command tells PM2 to start your application using the `StartupScript.js` file and names the process `vchat-app`.
 
-#### 4. List All PM2 Processes
+#### 4. Access the Application
+After starting the application, you can access it via your localhost URL. By default, this is typically `http://localhost:3000` (assuming your application runs on port 3000). Make sure to replace `3000` with the actual port your application is configured to use.
+
+Open a web browser and navigate to:
+
+```
+http://localhost:3000
+```
+
+#### 5. List All PM2 Processes
 To see all processes managed by PM2, use the following command:
 
 ```bash
@@ -45,7 +58,7 @@ pm2 list
 
 This will display a list of all applications currently managed by PM2, along with their status and other details.
 
-#### 5. Stop the Application
+#### 6. Stop the Application
 If you need to stop the application, use the following command:
 
 ```bash
@@ -54,7 +67,7 @@ pm2 stop vchat-app
 
 This stops the `vchat-app` process without deleting it from PM2's process list.
 
-#### 6. Delete the Application
+#### 7. Delete the Application
 To remove the application from PM2's process list entirely, use the following command:
 
 ```bash
@@ -72,6 +85,9 @@ npm install pm2 -g
 
 # Start the application using PM2
 pm2 start StartupScript.js --name vchat-app
+
+# Access the application
+# Open your browser and go to http://localhost:3000
 
 # List all PM2 processes
 pm2 list
@@ -91,8 +107,7 @@ const child = exec('npm run start', { cwd: __dirname });
 
 child.stdout.pipe(process.stdout);
 child.stderr.pipe(process.stderr);
+
 ```
 
-With this guide, you should be able to deploy and manage your Node.js application using PM2 cli tool.
-
-PM2 Documentation: https://pm2.keymetrics.io/docs/usage/process-management/
+With this guide, you should be able to deploy, start, and access your Node.js application using PM2, along with managing its lifecycle.
