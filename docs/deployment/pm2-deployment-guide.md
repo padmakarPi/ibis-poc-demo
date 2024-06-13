@@ -111,3 +111,5 @@ child.stderr.pipe(process.stderr);
 ```
 
 With this guide, you should be able to deploy, start, and access your Node.js application using PM2, along with managing its lifecycle.
+
+PM2 Documentation: https://pm2.keymetrics.io/docs/usage/process-management/
