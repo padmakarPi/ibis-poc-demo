@@ -21,7 +21,7 @@ Next, create a file named `StartupScript.js` in the root directory of your proje
 const { exec } = require('child_process');
 
 // Execute the npm run start command
-child = exec('npm run start', { cwd: __dirname, windowsHide: true });
+const child = exec('npm run start', { cwd: __dirname, windowsHide: true });
 
 // Pipe the child process's stdout and stderr to the main process's stdout and stderr
 child.stdout.pipe(process.stdout);
