@@ -28,22 +28,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const checkAuthentication = async () => {
 		const token = localStorage.getItem(COMMON_METADATA.OMNI_TOKEN_STORE_KEY);
 		if (token) {
-			const userData = JSON.parse(token);
+			const userData: any = jwtDecode(JSON.parse(token).access_token);
 			dispatch(
 				setAuthState({
 					isAuthenticated: true,
-					email: userData?.profile?.email,
-					name: userData?.profile?.name,
-					userType: userData?.profile?.UserType,
-					sid: userData?.profile?.sid,
+					email: userData?.email,
+					name: userData?.name,
+					userType: userData?.UserType,
+					sid: userData?.sid,
 					access_token: userData?.access_token,
-					expires_at: userData?.expires_at,
+					expires_at: userData?.exp,
 					jobRole: "",
-					customer_id: 0,
-					sub: userData?.profile?.sub,
+					customer_id: userData?.CustomerId,
+					sub: userData?.sub,
 				}),
 			);
-
 			return true;
 		}
 		return false;
@@ -104,8 +103,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				localStorage.setItem(COMMON_METADATA.OMNI_TOKEN_STORE_KEY, "");
 				clearAppStates();
 				await userManager.signoutRedirect();
-				const logoutData = await userManager.signoutRedirect();
-				return logoutData;
 			}
 			return null;
 		} catch (error) {
@@ -142,7 +139,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 	const initializeAuth = async () => {
-		OIDC_CONFIG.redirect_uri = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/oidc-callback`;
+		OIDC_CONFIG.redirect_uri = `${window.location.origin}/auth/oidc-callback`;
+		OIDC_CONFIG.post_logout_redirect_uri = `${window.location.origin}/signout-callback-oidc`;
+
 		userManager = new UserManager(OIDC_CONFIG);
 
 		userManager.events.addUserSignedOut(async () => {
