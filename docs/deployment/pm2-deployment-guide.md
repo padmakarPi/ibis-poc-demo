@@ -15,32 +15,36 @@ First, you need to install PM2 globally on your system. PM2 is a process manager
 npm install pm2 -g
 ```
 
-#### 2. Create a Startup Script (Dev Team)
-Next, create a file named `StartupScript.js` in the root directory of your project. This script will start your application using PM2.
+#### 2. Create a ecosystem.config.js file (Dev Team)
+Next, create a file named `ecosystem.config.js` in the root directory of your project. This script will start your application using PM2.
 
 ```javascript
-// File: StartupScript.js
-const { exec } = require('child_process');
-
-// Execute the npm run start command
-const child = exec('npm run start', { cwd: __dirname, windowsHide: true });
-
-// Pipe the child process's stdout and stderr to the main process's stdout and stderr
-child.stdout.pipe(process.stdout);
-child.stderr.pipe(process.stderr);
-
+module.exports = {
+    apps: [
+      {
+        name: "vchat-app", // App Name
+        script: "node_modules/next/dist/bin/next",
+        args: "start",
+        exec_mode: "cluster",
+        detached: true,
+        env: {
+          NODE_ENV: "production",
+        },
+      },
+    ],
+  };
 ```
 
-This script uses Node's `child_process` module to run the `npm run start` command, which should be defined in your `package.json` to start your application.
+This script run the `npm run start` command, which should be defined in your `package.json` to start your application.
 
 #### 3. Start the Application Using PM2 (DevOps Team)
 Use the PM2 CLI to start your application with a specified name.
 
 ```bash
-pm2 start StartupScript.js --name vchat-app
+pm2 start ecosystem.config.js
 ```
 
-This command tells PM2 to start your application using the `StartupScript.js` file and names the process `vchat-app`.
+This command tells PM2 to start your application using the `ecosystem.config.js` files.
 
 #### 4. Access the Application (Dev Team)
 After starting the application, you can access it via your localhost URL. By default, this is typically `http://localhost:3000` (assuming your application runs on port 3000). Make sure to replace `3000` with the actual port your application is configured to use.
@@ -86,7 +90,7 @@ Here are the commands summarized for easy reference:
 npm install pm2 -g
 
 # Start the application using PM2
-pm2 start StartupScript.js --name vchat-app
+pm2 start ecosystem.config.js
 
 # Access the application
 # Open your browser and go to http://localhost:3000
@@ -101,18 +105,23 @@ pm2 stop vchat-app
 pm2 delete vchat-app
 ```
 
-### StartupScript.js Example
+### ecosystem.config.js Example
 ```javascript
-// File: StartupScript.js
-const { exec } = require('child_process');
-
-// Execute the npm run start command
-const child = exec('npm run start', { cwd: __dirname, windowsHide: true });
-
-// Pipe the child process's stdout and stderr to the main process's stdout and stderr
-child.stdout.pipe(process.stdout);
-child.stderr.pipe(process.stderr);
-
+// File: ecosystem.config.js
+module.exports = {
+    apps: [
+      {
+        name: "vchat-app",
+        script: "node_modules/next/dist/bin/next",
+        args: "start",
+        exec_mode: "cluster",
+        detached: true,
+        env: {
+          NODE_ENV: "production",
+        },
+      },
+    ],
+  };
 ```
 
 With this guide, you should be able to deploy, start, and access your Node.js application using PM2, along with managing its lifecycle.
