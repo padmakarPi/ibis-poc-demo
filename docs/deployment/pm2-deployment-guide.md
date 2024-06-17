@@ -1,19 +1,19 @@
 ## Deployment Using PM2 CLI Tool
 
-### Prerequisites
+### Prerequisites (DevOps Team)
 1. Clone the project from your repository.
 2. Build the project using the necessary build commands (e.g., `npm install` and `npm run build`).
 
 ### Steps to Deploy
 
-#### 1. Install PM2 Globally
+#### 1. Install PM2 Globally (DevOps Team)
 First, you need to install PM2 globally on your system. PM2 is a process manager for Node.js applications that allows you to keep your applications running forever.
 
 ```bash
 npm install pm2 -g
 ```
 
-#### 2. Create a Startup Script
+#### 2. Create a Startup Script (Dev Team)
 Next, create a file named `StartupScript.js` in the root directory of your project. This script will start your application using PM2.
 
 ```javascript
@@ -31,7 +31,7 @@ child.stderr.pipe(process.stderr);
 
 This script uses Node's `child_process` module to run the `npm run start` command, which should be defined in your `package.json` to start your application.
 
-#### 3. Start the Application Using PM2
+#### 3. Start the Application Using PM2 (DevOps Team)
 Use the PM2 CLI to start your application with a specified name.
 
 ```bash
@@ -40,7 +40,7 @@ pm2 start StartupScript.js --name vchat-app
 
 This command tells PM2 to start your application using the `StartupScript.js` file and names the process `vchat-app`.
 
-#### 4. Access the Application
+#### 4. Access the Application (Dev Team)
 After starting the application, you can access it via your localhost URL. By default, this is typically `http://localhost:3000` (assuming your application runs on port 3000). Make sure to replace `3000` with the actual port your application is configured to use.
 
 Open a web browser and navigate to:
@@ -49,7 +49,7 @@ Open a web browser and navigate to:
 http://localhost:3000
 ```
 
-#### 5. List All PM2 Processes
+#### 5. List All PM2 Processes (DevOps Team)
 To see all processes managed by PM2, use the following command:
 
 ```bash
@@ -58,7 +58,7 @@ pm2 list
 
 This will display a list of all applications currently managed by PM2, along with their status and other details.
 
-#### 6. Stop the Application
+#### 6. Stop the Application (DevOps Team)
 If you need to stop the application, use the following command:
 
 ```bash
@@ -67,7 +67,7 @@ pm2 stop vchat-app
 
 This stops the `vchat-app` process without deleting it from PM2's process list.
 
-#### 7. Delete the Application
+#### 7. Delete the Application (DevOps Team)
 To remove the application from PM2's process list entirely, use the following command:
 
 ```bash
@@ -103,8 +103,11 @@ pm2 delete vchat-app
 ```javascript
 // File: StartupScript.js
 const { exec } = require('child_process');
-const child = exec('npm run start', { cwd: __dirname });
 
+// Execute the npm run start command
+const child = exec('npm run start', { cwd: __dirname, windowsHide: true });
+
+// Pipe the child process's stdout and stderr to the main process's stdout and stderr
 child.stdout.pipe(process.stdout);
 child.stderr.pipe(process.stderr);
 
