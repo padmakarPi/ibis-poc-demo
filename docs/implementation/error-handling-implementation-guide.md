@@ -1,6 +1,11 @@
 
 ### Introduction
-Error handling in a Next.js application involves explaining the various strategies and practices to handle errors at different levels: page level, component level, and API level. Here’s a structured approach to handle the errors:
+Error handling is a critical part of building robust and user-friendly applications. This guide provides best practices and examples for handling errors in a Next.js application at various levels: 
+
+1. Root level (page level).
+2. Component level.
+3. API level.
+
 
 ## 1. Page-Level Error Handling
 - Page-level error handling refers to managing errors that occur within the pages of your Next.js application.
