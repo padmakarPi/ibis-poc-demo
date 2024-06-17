@@ -1,5 +1,7 @@
 ## Deployment Using PM2 CLI Tool
 
+In this guide, tasks labeled as (DevOps Team) are the responsibility of the DevOps team, while tasks labeled as (Dev Team) are the responsibility of the Development team.
+
 ### Prerequisites (DevOps Team)
 1. Clone the project from your repository.
 2. Build the project using the necessary build commands (e.g., `npm install` and `npm run build`).
