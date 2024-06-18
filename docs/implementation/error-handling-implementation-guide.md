@@ -66,6 +66,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     )
 }
 ```
+![alt text](../assets/pagelevelerror.png)
+
+
+
 
 ## 2 API-Level Error Handling
 
@@ -127,6 +131,30 @@ export const getActiveTicketTypes = () => {
 ```
 Note : VHandleError function must pass both the service and error props to VHandleError.
 
+### 3 Define Error Messages 
+
+In our error handling utility, define specific error messages based on the HTTP status code. Here is an example:
+
+```
+
+  400: `Oops! Something went wrong with ${service} service. Please check and try again.`,
+  401: `Unauthorized access to the ${service} service. Please log in and try again.`,
+  403: `You don't have permission to access the ${service} service.`,
+  404: `We couldn't find the ${service} service you're looking for.`,
+  405: "This action is not allowed.",
+  429: "You're making requests too quickly. Please slow down.",
+  500: "Our servers are having issues. Please try again later.",
+  502: "There was a problem with the server. Please try again later.",
+  503: `${service} service is temporarily unavailable. Please try again later.`,
+  504: "The server took too long to respond. Please try again later.",
+
+
+```
+
+
+![alt text](../assets/apilevelerror.png)
+
+
 ## 3. Component-Level Error Handling 
 
 - To handle errors at the component level using react-error-boundary, you can identify a common or main component where you can apply the ErrorBoundary and a fallback component. 
@@ -186,6 +214,8 @@ export default Layout;
 
 ```
 Note : 1. To dynamically control the positioning of the ErrorBoundary component such that it centers itself only when absolute is true.
+
+![alt text](../assets/componentlevel.png)
 
 ## Benefits of Using Error Handling
 
