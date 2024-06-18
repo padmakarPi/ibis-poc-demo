@@ -110,15 +110,31 @@ export default MyApp;
 ### 2. Implement Error Handling in an API Route
 
 Next, use the HandleError utility function in your API routes to handle any errors that may occur.
+
+#### Props
+
+The VHandleError function accepts two parameters:
+
+1. error (any) : The error object received from an API response or other sources.
+2. messageOptions (VHandleErrorOptions?): An optional object to customize error messages. 
+
+##### VHandleErrorOptions
+
+This interface defines the structure for customizing error messages.
+
+1. service (string?): The name of the service for which the error occurred. If provided, the error message will include the service name.
+2. customMessage (string?): A custom error message to be displayed. If provided, this message will override the default error message for the      specific error code.
+
 ```
 
 import { VHandleError } from "@vplatform/shared-components";
+
 
 export default async (req, res) => {
   try {
     // Your API logic here  
   } catch (error) {
-    VHandleError(error,'company details')
+    VHandleError(error, {customMessage : 'Your custom error message'})
   }
 };
 
@@ -126,10 +142,18 @@ Or
 
 export const getActiveTicketTypes = () => {
 	const url = 'api url';
-	return vLinkServiceAxios.post(url).catch((error) => VHandleError(error,'active ticket'));
+	return vLinkServiceAxios.post(url).catch((error) => VHandleError(error, {service : 'contact'}));
+};
+
+Or
+
+export const getActiveTicketTypes = () => {
+	const url = 'api url';
+	return vLinkServiceAxios.post(url).catch((error) => VHandleError(error, {customMessage : 'Your custom error message'}));
 };
 ```
-Note : VHandleError function must pass both the service and error props to VHandleError.
+
+Note: Don't use both 'service' and 'customMessage'.
 
 ### 3 Define Error Messages 
 
@@ -137,16 +161,16 @@ In our error handling utility, define specific error messages based on the HTTP 
 
 ```
 
-  400: `Oops! Something went wrong with ${service} service. Please check and try again.`,
-  401: `Unauthorized access to the ${service} service. Please log in and try again.`,
-  403: `You don't have permission to access the ${service} service.`,
-  404: `We couldn't find the ${service} service you're looking for.`,
-  405: "This action is not allowed.",
-  429: "You're making requests too quickly. Please slow down.",
-  500: "Our servers are having issues. Please try again later.",
-  502: "There was a problem with the server. Please try again later.",
-  503: `${service} service is temporarily unavailable. Please try again later.`,
-  504: "The server took too long to respond. Please try again later.",
+400: customMessage || (service ? `Oops! Something went wrong with ${service} service. Please check and try again.` : "Oops! Something went wrong. Please check and try again."),
+401: customMessage || (service ? `Unauthorized access to the ${service} service. Please log in and try again.` : "Unauthorized access. Please log in and try again."),
+403: customMessage || (service ? `You don't have permission to access the ${service} service.` : "You don't have permission to access this service."),
+404: customMessage || (service ? `We couldn't find the ${service} service you're looking for.` : "We couldn't find the service you're looking for."),
+405: customMessage || "This action is not allowed.",
+429: customMessage || "You're making requests too quickly. Please slow down.",
+500: customMessage || "Our servers are having issues. Please try again later.",
+502: customMessage || "There was a problem with the server. Please try again later.",
+503: customMessage || (service ? `${service} service is temporarily unavailable. Please try again later.` : "Service is temporarily unavailable. Please try again later."),
+504: customMessage || "The server took too long to respond. Please try again later.",
 
 
 ```
