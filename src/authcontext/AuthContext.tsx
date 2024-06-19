@@ -142,7 +142,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		OIDC_CONFIG.redirect_uri = `${window.location.origin}/auth/oidc-callback`;
 		OIDC_CONFIG.post_logout_redirect_uri = `${window.location.origin}/signout-callback-oidc`;
 
-		// ENABLE BASE PATH: Comment out the above redirect_uri and post_logout_redirect_uri configurations, and uncomment the below following configuration.
+		// ENABLE BASE PATH: Remove the above redirect_uri and post_logout_redirect_uri configurations, and uncomment the below following configuration.
 		// const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
 		// OIDC_CONFIG.redirect_uri = `${window.location.origin}${basePath}/auth/oidc-callback`;
 		// OIDC_CONFIG.post_logout_redirect_uri = `${window.location.origin}${basePath}/signout-callback-oidc`;
