@@ -79,6 +79,42 @@ const MyApp = ({ Component, pageProps }) => {
 
 export default MyApp;
 ```
+### Step 6: Update azure-pipelines.yml
+
+Check if `npmAuthenticate` is enabled or not. If not, then enable it like below.
+
+```yaml
+stages:
+- stage: BuildPublishandDeploy 
+  displayName: Build image, publish to DockerHub, and deploy to k8s
+  jobs: 
+  - template: Pipeline-templates/Jobs/docker_build_publish_deploy.yml@templates
+    parameters:
+      serviceName: $(serviceName)
+      k8sManifestPath: $(k8sManifestPath)
+      env_name: $(env)
+      chart_Path: $(chart_Path)
+      release_Name: $(release_name)
+      npmAuthenticate: true # Ensure this option is enabled
+      value_File_Path: $(k8sManifestPath)
+      runCodescan: true
+```
+
+### Step 7: Update Dockerfile
+
+Review your Dockerfile for the following steps and replace them with the updated commands:
+
+```shell
+# Replace these two steps
+COPY package.json package-lock.json ./
+RUN npm install
+
+# With these steps
+COPY package.json package-lock.json ./
+COPY .npmrc ./
+RUN npm ci --force
+RUN rm -f .npmrc
+```
 
 This code sets up an alert dialog that will appear when the user's session expires, prompting them to log in again. The `VSessionExpiredAlertDialog` component is displayed at the same level as the main `Component` inside the `_app.tsx` file.
 
