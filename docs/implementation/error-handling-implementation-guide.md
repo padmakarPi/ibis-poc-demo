@@ -245,7 +245,7 @@ Note : 1. To dynamically control the positioning of the ErrorBoundary component 
 
 ### Step 1: Update azure-pipelines.yml
 
-Enable `npmAuthenticate` setting in azure pipeline file.
+Check if `npmAuthenticate` is enabled or not. If not, then enable it like below.
 
 ```yaml
 stages:
