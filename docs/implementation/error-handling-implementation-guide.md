@@ -174,6 +174,7 @@ In our error handling utility, define specific error messages based on the HTTP 
 
 
 ```
+Note:- If the status code is 401 or 403, the toast notification is skipped.
 
 
 ![alt text](../assets/apilevelerror.png)
