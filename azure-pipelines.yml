@@ -31,6 +31,7 @@ stages:
       env_name: $(env)
       chart_Path: $(chart_Path)
       release_Name: $(release_name)
+      npmAuthenticate: true
       value_File_Path: $(k8sManifestPath)
       runCodescan: true
       

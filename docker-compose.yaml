@@ -1,5 +1,3 @@
-version: "v2"
-
 services:
   frontend:
     build: .

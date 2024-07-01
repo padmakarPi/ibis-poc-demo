@@ -25,6 +25,7 @@
     "@reduxjs/toolkit": "^1.9.7",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
+    "@vplatform/shared-components": "^1.1.10",
     "axios": "^1.5.1",
     "dayjs": "^1.11.10",
     "js-cookie": "^3.0.5",

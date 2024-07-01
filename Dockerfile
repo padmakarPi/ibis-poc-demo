@@ -5,7 +5,9 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json ./
+COPY .npmrc ./
 RUN npm ci --force
+RUN rm -f .npmrc
 
 FROM node:18-alpine AS builder
 WORKDIR /app
