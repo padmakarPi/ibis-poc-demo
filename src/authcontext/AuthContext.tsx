@@ -68,19 +68,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		authenticate();
 	}, []);
 
-	const login = async () => {
-		try {
-			if (userManager) {
-				const loginData = await userManager.signinRedirect();
-				return loginData;
-			}
-			return null;
-		} catch (error) {
-			console.error(error);
-		}
-		return null;
-	};
-
 	const clearAppStates = () => {
 		if (Cookies.get(COMMON_METADATA.OMNI_TOKEN_ALREADY_REQUESTED)) {
 			Cookies.remove(COMMON_METADATA.OMNI_TOKEN_ALREADY_REQUESTED);
@@ -96,6 +83,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				sessionStorage.removeItem(key);
 			});
 	};
+
+	const login = async () => {
+		try {
+			if (userManager) {
+				clearAppStates();
+				const loginData = await userManager.signinRedirect();
+				return loginData;
+			}
+			return null;
+		} catch (error) {
+			console.error(error);
+		}
+		return null;
+	};
+
 	const logout = async () => {
 		try {
 			if (userManager) {
@@ -148,10 +150,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		// OIDC_CONFIG.post_logout_redirect_uri = `${window.location.origin}${basePath}/signout-callback-oidc`;
 
 		userManager = new UserManager(OIDC_CONFIG);
-
-		userManager.events.addUserSignedOut(async () => {
-			await logout();
-		});
 	};
 
 	useEffect(() => {
