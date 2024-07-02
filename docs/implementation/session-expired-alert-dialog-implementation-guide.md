@@ -28,7 +28,108 @@ Install the `@vplatform/shared-components` package by running:
 npm i @vplatform/shared-components
 ```
 
-## Step 4: Modify OIDC Configuration
+---
+
+## Context-Based Authentication Implementation
+
+If you are using a context-based authentication implementation, follow the steps below:
+
+### Step 4: Modify `AuthContext.tsx`
+
+Remove the following code from `AuthContext.tsx`:
+
+```typescript
+userManager.events.addUserSignedOut(async () => {
+    await logout();
+});
+```
+
+Before login, call the `clearAppStates` method and move the `login` method after `clearAppStates`:
+
+```typescript
+const login = async () => {
+    try {
+        if (userManager) {
+            clearAppStates(); // this one
+            const loginData = await userManager.signinRedirect();
+            return loginData;
+        }
+        return null;
+    } catch (error) {
+        console.error(error);
+    }
+    return null;
+};
+```
+
+### Step 5: Add Custom Hook to Get AuthContext
+
+Create a file called `useAuth.ts` and add the following code:
+
+```typescript
+import { AuthContext } from "@/authcontext/AuthContext";
+import { useContext } from "react";
+
+export const useAuth = () => useContext(AuthContext);
+```
+
+### Step 6: Update `layout.tsx`
+
+Open `layout.tsx` and add the following code:
+
+```typescript
+"use client";
+
+import { useAuth } from "@/hooks/customhooks/useAuth";
+import { Inter } from "next/font/google";
+import { useEffect, useState } from "react";
+import { VSessionExpiredAlertDialog } from "@vplatform/shared-components";
+
+const inter = Inter({ subsets: ["latin"] });
+
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    const [sessionExpiredAlertDialogOpen, setSessionExpiredAlertDialogOpen] =
+        useState(false);
+    const { userManager, login } = useAuth();
+
+    useEffect(() => {
+        if (!userManager) {
+            return;
+        }
+        userManager.events.addUserSignedOut(async () => {
+            await userManager.removeUser();
+            setSessionExpiredAlertDialogOpen(true);
+        });
+    }, [userManager]);
+
+    const onRetry = async () => {
+        await login();
+    };
+
+    return (
+        <>
+            <main className={inter.className}>{children}</main>
+            <VSessionExpiredAlertDialog
+                open={sessionExpiredAlertDialogOpen}
+                setOpen={setSessionExpiredAlertDialogOpen}
+                onRetry={onRetry}
+            />
+        </>
+    );
+}
+```
+
+---
+
+## AuthService-Based Authentication Implementation
+
+If you are using an AuthService-based authentication implementation, follow the steps below:
+
+### Step 4: Modify OIDC Configuration
 
 Remove the following code from `oidc-config.ts|tsx`:
 
@@ -39,7 +140,7 @@ userManager.events.addUserSignedOut(async () => {
 });
 ```
 
-## Step 5: Update _app.tsx
+### Step 5: Update `_app.tsx`
 
 Open `_app.tsx` and add the following code inside the component:
 
@@ -79,9 +180,14 @@ const MyApp = ({ Component, pageProps }) => {
 
 export default MyApp;
 ```
-### Step 6: Update azure-pipelines.yml
 
-Check if `npmAuthenticate` is enabled or not. If not, then enable it like below.
+---
+
+## Additional Configuration
+
+### Step 6: Update `azure-pipelines.yml`
+
+Ensure `npmAuthenticate` is enabled in your Azure Pipeline configuration:
 
 ```yaml
 stages:
@@ -100,9 +206,9 @@ stages:
       runCodescan: true
 ```
 
-### Step 7: Update Dockerfile
+### Step 7: Update `Dockerfile`
 
-Review your Dockerfile for the following steps and replace them with the updated commands:
+Replace the installation steps in your Dockerfile with the following:
 
 ```shell
 # Replace these two steps
@@ -116,12 +222,12 @@ RUN npm ci --force
 RUN rm -f .npmrc
 ```
 
-This code sets up an alert dialog that will appear when the user's session expires, prompting them to log in again. The `VSessionExpiredAlertDialog` component is displayed at the same level as the main `Component` inside the `_app.tsx` file.
+---
 
 ## Testing Steps
 
 1. Log into two different applications: Application A (where the above feature is implemented) and Application B.
 2. Log out from Application B.
-3. After logging out is complete, a "You are not signed in" alert dialog will appear in Application A.
+3. After logging out, a "You are not signed in" alert dialog will appear in Application A.
 4. Clicking "Retry" on this dialog will take you to the login screen.
 5. If you log back into Application B and then return to Application A, clicking the "Retry" button on the "You are not signed in" dialog in Application A should automatically log you back in without needing to re-enter credentials.
