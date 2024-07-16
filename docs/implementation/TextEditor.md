@@ -42,16 +42,15 @@ const TextEditor = () => {
                 IconWeight = {'24px'}     
                 suggestions={suggestions}
                 profileColor={profileColor}
-                PrimaryComponent={PrimaryComponent}
-                SecondaryComponent={SecondaryComponent}  
                 ClearEditor={clearEditor}
                 handleHtmlStringChange={handleHtmlStringChange}
-                targetNodeEmoji={'.vlink-message-my-ticket'}  
                 isMobile={isMobile}     
-                emojiActive={emojiActive}     
-                setEmojiActive={setEmojiActive}
                 activeMic={activeMic}
-                mobileToolbar={mobileToolbar}
+                open = {open}
+                setOpen = {setOpen}
+                anchorEl = {anchorEl}
+                showTextEditorOptions = {showTextEditorOptions}
+                isMention = {isMention}
             />
     )
 }
@@ -64,17 +63,14 @@ const TextEditor = () => {
 
 - Below is a detailed description of all the props that need to be passed to the VTextEditor component:
 
-### 1. mode (boolean)
+### 1. mode (boolean, options)
 -  Determines the mode of the editor (e.g., dark or light mode).
-- If mode has true means it is dark mode.
 
 ![alt text](../assets/DarkmodeToolbar.png)
 
 ### 2. TopToolbar (boolean)
-- Enables or disables toolbar in top of the editor.
-- If TopToolbar is false then, toolbar will be in the footer
+- Toolbar in top of the editor.
 
-![alt text](../assets/Footertoolbar.png)
 ### 3. theme (any, optional)
 - Sets the theme of the editor, allowing for extensive customization of styles.
 
@@ -86,7 +82,7 @@ const TextEditor = () => {
 
 - Specifies the height of icons used in the toolbar. For example IconeHeight  = {'24px'}
 
-### 6. suggestions :- 
+### 6. suggestions(optional) :- 
 - Provides suggestions for mentions 
 - Example usage:
 
@@ -109,7 +105,7 @@ const suggestions: Suggestions[] = [
 
 ```
 
-### 7. profileColor :- 
+### 7. profileColor(any, optional) :- 
 - Sets the profile color for user mentions.
 - For example :- 
 ```
@@ -118,44 +114,32 @@ color: profileColor(option.id).color,
 ```
 - option.id comes from the suggestions
 
+### 8. open(boolean,optional):- 
+- Determines whether the emoji picker is visible
 
-### 8. PrimaryComponent(any, optional):- 
-- A primary component that can be passed to customize the editor.
-- Primary component will be add in the footer of the texteditor. Like if you want to add another icon in the footer. 
+### 9. setOpen(callback, optional) :- 
+- A callback function to set the state of the open prop. This function is called to show or hide the emoji picker.
 
-### 9. SecondaryComponent(any, optional):- 
-- A secondary component that can be passed to customize the editor.
-- Primary component will be add in the footer of the texteditor. Like if you want to add another icon in the footer. 
+### 10. anchorEl (HTMLElement | null, optional):- 
+- The DOM element used as the anchor for the emoji picker.
 
-![alt text](../assets/Props.Components.png)
-
-### 10. ClearEditor(boolean, optional):- 
+### 11. ClearEditor(boolean, optional):- 
 
 - It is mechanism to clear the editor content.
 
-### 19. handleHtmlStringChange(function) : -
+### 12. showTextEditorOptions(boolean):- 
+- A boolean to control the visibility of additional text editor options.
+
+### 13. isMention(boolean):-
+- Indicates if the mention feature is enabled.
+
+### 14. handleHtmlStringChange(function) : -
 
 - A callback function that is called whenever the HTML string representation of the editor content changes. The function should accept a single argument which is the new HTML string.
 
-### 12. targetNodeEmoji(string) :- 
-
-- A CSS selector string that specifies the target node for emoji insertion.
-
-
-## Mobile Props
-
-- If isMobile is true, the footer of the editor will be hidden. The footer functionality is managed using the provided props.
-
-
-### 13. isMobile (boolean): 
+### 15. isMobile (boolean,optional): 
 - Indicates if the editor is being used on a mobile device. This can be used to conditionally render mobile-specific features.
 - If isMobile is true then the footer won't be show in text editor. Footer functionality will be handle by props. 
-
-### 14. emojiActive(boolean, optional) :- 
-- Determines if the emoji picker is active.
-
-### 15. setEmojiActive(function,optional) :- 
-- When clicking outside of the emoji picker, it will close.
 
 ### 16. activeMic(boolean,optional) :- 
 -  Indicates if the speech-to-text microphone is active.
