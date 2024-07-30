@@ -3,6 +3,7 @@ import { AuthState } from "@/interfaces/states/auth-state.interface";
 
 const initialState: AuthState = {
 	authState: {
+		isAuthenticated: false,
 		email: "",
 		portals: [],
 		userType: "",

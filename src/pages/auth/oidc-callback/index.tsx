@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "@/authcontext/AuthContext";
 import { useDispatch } from "react-redux";
 import { setAuthState } from "@/redux/slices/authslice";
+import Cookies from "js-cookie";
 
 function CallbackPage() {
 	const router = useRouter();
@@ -13,6 +14,10 @@ function CallbackPage() {
 		if (userData && userData.profile && userData.profile.email) {
 			saveToken(userData);
 			const originalRoute = "/homepage";
+			Cookies.set("isAuthenticated", "true", {
+				sameSite: "None",
+				secure: true,
+			});
 			dispatch(
 				setAuthState({
 					isAuthenticated: true,
