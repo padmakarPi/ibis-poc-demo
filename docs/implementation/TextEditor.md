@@ -51,6 +51,9 @@ const TextEditor = () => {
                 anchorEl = {anchorEl}
                 showTextEditorOptions = {showTextEditorOptions}
                 isMention = {isMention}
+                showFooter = {showFooter}
+                handlePastedFiles = {handlePastedFiles}
+                initialContent = {initialContent}
             />
     )
 }
@@ -143,6 +146,18 @@ color: profileColor(option.id).color,
 
 ### 16. activeMic(boolean,optional) :- 
 -  Indicates if the speech-to-text microphone is active.
+
+### 17. showFooter(boolean, optional):-
+- This indicates to show the Format icon, Mic icon and Emoji icon in the footer. 
+- By default this is ture. 
+
+### 18. handlePastedFiles(Callback, optional):-
+- Indicated copy paste image callback. 
+
+### 19. initialContent(string, optional):- 
+- A string representing the initial content to be displayed in the editor upon initialization.
+- For Example:- initialContent will be - 
+- let initialContent= '<p class="editor-paragraph" dir="ltr"><span style="white-space: pre-wrap;">Some messages.....</span></p>'
 
 
 

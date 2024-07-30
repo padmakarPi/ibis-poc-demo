@@ -82,6 +82,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			.forEach(key => {
 				sessionStorage.removeItem(key);
 			});
+		Cookies.remove("isAuthenticated");
 	};
 
 	const login = async () => {
