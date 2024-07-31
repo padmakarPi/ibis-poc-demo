@@ -10,6 +10,7 @@ RUN npm ci --force
 RUN rm -f .npmrc
 
 FROM node:18-alpine AS builder
+ENV NEXT_PRIVATE_LOCAL_WEBPACK=true
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
