@@ -1,11 +1,8 @@
 "use client";
 
 import { useAuth } from "@/hooks/customhooks/useAuth";
-import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import { VSessionExpiredAlertDialog } from "@vplatform/shared-components";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
 	children,
@@ -32,7 +29,7 @@ export default function RootLayout({
 
 	return (
 		<>
-			<main className={inter.className}>{children}</main>
+			<main>{children}</main>
 			<VSessionExpiredAlertDialog
 				open={sessionExpiredAlertDialogOpen}
 				setOpen={setSessionExpiredAlertDialogOpen}
