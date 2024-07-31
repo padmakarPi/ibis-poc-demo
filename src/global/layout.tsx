@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuth } from "@/hooks/customhooks/useAuth";
-import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import { VSessionExpiredAlertDialog } from "@vplatform/shared-components";
 
