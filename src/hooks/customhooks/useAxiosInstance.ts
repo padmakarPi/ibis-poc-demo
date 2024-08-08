@@ -8,7 +8,7 @@ import { AuthContext } from "@/authcontext/AuthContext";
 const useAxiosInterceptor = (baseURL: string | undefined) => {
 	const axBackendInstance = axios.create({ baseURL });
 
-	const { logout } = useContext(AuthContext);
+	const { logout, login } = useContext(AuthContext);
 
 	const getStoredTokenData = () => {
 		if (typeof localStorage !== "undefined") {
@@ -101,6 +101,8 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 			newConfig.headers!.Accept = "application/json";
 			return newConfig;
 		}
+
+		await login();
 
 		return newConfig;
 	};
