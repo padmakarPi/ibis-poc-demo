@@ -2,8 +2,8 @@ const depcheck = require("depcheck");
 const { IgnorePlugin } = require("webpack");
 
 const options = {
-	ignoreMissing: true, // Ignore missing dependencies
-	ignoreBinPackage: true, // Ignore packages containing bin entry
+	ignoreMissing: true,
+	ignoreBinPackage: true,
 	ignoreMatches: [
 		"eslint-*",
 		"react-*",
@@ -26,5 +26,5 @@ depcheck(__dirname, options, unused => {
 	if (unused.dependencies.length || unused.devDependencies.length) {
 		console.warn("Warning: Unused npm packages found.");
 	}
-	process.exit(0); // Exit with a success code, showing only a warning
+	process.exit(0);
 });
