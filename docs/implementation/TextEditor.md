@@ -54,6 +54,7 @@ const TextEditor = () => {
                 showFooter = {showFooter}
                 handlePastedFiles = {handlePastedFiles}
                 initialContent = {initialContent}
+                isDeleteContent = {isDeleteContent}
             />
     )
 }
@@ -159,7 +160,9 @@ color: profileColor(option.id).color,
 - For Example:- initialContent will be - 
 - let initialContent= '<p class="editor-paragraph" dir="ltr"><span style="white-space: pre-wrap;">Some messages.....</span></p>'
 
-
+### 20. isDeleteContent(boolean, optional):- 
+- This prop will hide the clear text icon and the read/write mode icons, if isDeleteContent true.
+- By default isDeleteContent false. 
 
 
 
