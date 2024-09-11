@@ -122,8 +122,15 @@ The VHandleError function accepts two parameters:
 
 This interface defines the structure for customizing error messages.
 
-1. service (string?): The name of the service for which the error occurred. If provided, the error message will include the service name.
-2. customMessage (string?): A custom error message to be displayed. If provided, this message will override the default error message for the      specific error code.
+1. service (string, optional): The name of the service for which the error occurred. If provided, the error message will include the service name.
+2. customMessage (string, optional): A custom error message to be displayed. If provided, this message will override the default error message for the specific error code.
+3. suppressMessage (string , optional) : To control whether the error toast is displayed.
+
+    Possible values:
+
+      - "true": Error toast won't be display.
+      
+      - "false": By default, error toast will be display.
 
 ```
 
@@ -134,7 +141,7 @@ export default async (req, res) => {
   try {
     // Your API logic here  
   } catch (error) {
-    VHandleError(error, {customMessage : 'Your custom error message'})
+    VHandleError(error, {customMessage : 'Your custom error message'}, process.env.NEXT_PUBLIC_SUPPRESS_API_TOASTER_ERROR_MESSAGE)
   }
 };
 
@@ -154,6 +161,8 @@ export const getActiveTicketTypes = () => {
 ```
 
 Note: Don't use both 'service' and 'customMessage'.
+
+Note: Add `NEXT_PUBLIC_SUPPRESS_API_TOASTER_ERROR_MESSAGE="true" ` to your environment file (.env) if you want to suppress the error toast notifications.
 
 ### 3 Define Error Messages 
 
