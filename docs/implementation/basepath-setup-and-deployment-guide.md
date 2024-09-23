@@ -26,7 +26,8 @@ Provide a script to the build team so that they can apply these redirect URLs fo
 Update the `Dockerfile` with the following lines to ensure the Next.js app builds correctly with the base path:
 
 ```dockerfile
-COPY --from=builder /app/next.config.js ./ # Add this line
+ # Add this line
+COPY --from=builder /app/next.config.js ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
