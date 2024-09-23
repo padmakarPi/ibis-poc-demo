@@ -109,8 +109,34 @@ NEXT_PUBLIC_ORIGIN = 'https://dev.shipsure.com'
 These variables control the app’s base path and origin URL dynamically based on the environment.
 
 ---
+### 6. **Middleware Changes**
 
-### 6. **Kubernetes Manifest Changes**
+If you're using `middleware.tsx` in your project, you'll need to modify it as follows:
+
+#### Change the `middleware.tsx`
+
+Replace the existing line of code:
+
+```javascript
+return NextResponse.redirect(new URL("/", req.url));
+```
+
+with the following:
+
+```javascript
+return NextResponse.redirect(
+			new URL(`${req.nextUrl.basePath || ""}/`, req.url),
+		);
+```
+
+This change ensures that the base path is correctly handled during redirects in the middleware.
+
+---
+
+
+---
+
+### 7. **Kubernetes Manifest Changes**
 
 #### **Liveness & Readiness Probes**
 Prefix the base path in the health check URLs and ensure the health check pages (`/health/live` and `/health/ready`) exist in the app:
