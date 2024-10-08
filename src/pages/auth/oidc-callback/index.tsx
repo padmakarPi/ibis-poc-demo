@@ -4,11 +4,29 @@ import { AuthContext } from "@/authcontext/AuthContext";
 import { useDispatch } from "react-redux";
 import { setAuthState } from "@/redux/slices/authslice";
 import Cookies from "js-cookie";
+import { SECURITY } from "@/lib/constant/apiconstant";
+import useAxiosInterceptor from "@/hooks/customhooks/useAxiosInstance";
 
 function CallbackPage() {
 	const router = useRouter();
 	const { getUser, saveToken, userManager } = useContext(AuthContext);
 	const dispatch = useDispatch();
+	const { axBe }: any = useAxiosInterceptor(
+		process.env.NEXT_PUBLIC_VSECURITY_BASE_API_URL,
+	);
+	const clientId = process.env.NEXT_PUBLIC_CLIENT_ID || "";
+
+	const checkApplicationAccess = async () => {
+		try {
+			const res = await axBe.get(
+				`${SECURITY.CHECKAPPLICATIONACCESS}?clientId=${clientId}`,
+			);
+			return res.data.result;
+		} catch (error) {
+			console.error("Error checking application access:", error);
+			return false;
+		}
+	};
 	const getUserData = async () => {
 		const userData = await getUser();
 		if (userData && userData.profile && userData.profile.email) {
@@ -38,7 +56,14 @@ function CallbackPage() {
 
 	useEffect(() => {
 		if (userManager) {
-			userManager.signinRedirectCallback().then(() => {
+			userManager.signinRedirectCallback().then(async () => {
+				const canApplicationAccessible = await checkApplicationAccess();
+				if (!canApplicationAccessible) {
+					router.push(
+						`${process.env.NEXT_PUBLIC_STS_AUTHORITY}/Account/AccessDenied`,
+					);
+					return;
+				}
 				getUserData();
 			});
 		}
