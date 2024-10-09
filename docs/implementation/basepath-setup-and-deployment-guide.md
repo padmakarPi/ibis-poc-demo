@@ -126,7 +126,7 @@ req.nextUrl.pathname === "/health/ready"
 ```
 
 For more details on where to apply this logic, refer to the [middleware configuration in the template project](https://dev.azure.com/vgroupframework/VPlatform-Apps/_git/Vplatform-Frontend-Template?path=/src/middleware.tsx&version=GBDEV_1.2&line=10&lineEnd=11&lineStartColumn=3&lineEndColumn=43&lineStyle=plain&_a=contents).
-
+If the health check pages are missing, you can copy them from the [Azure DevOps health page template](https://dev.azure.com/vgroupframework/VPlatform-Apps/_git/Vplatform-Frontend-Template?path=/src/pages/health&version=GBDEV_1.2&_a=contents).
 ---
 
 ## DevOps Side
