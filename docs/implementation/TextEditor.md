@@ -164,6 +164,63 @@ color: profileColor(option.id).color,
 - This prop will hide the clear text icon and the read/write mode icons, if isDeleteContent true.
 - By default isDeleteContent false. 
 
+### 21. showSendButton(boolean, optional):- 
+- This prop is especially for vchat web app that will show the send icon button.
+- By default showSendButton false.
+
+### 22. vChat(boolean, optional):- 
+- This prop is especially for vchat web app to show the icons for vchat web app.
+- By default vChat false.
+
+### 23. activeSidebar(string, optional):- 
+- This prop is especially for vchat web app to show the icons only for vchat sidebar.
+
+### 24. signatureDropdown(any, optional):- 
+- This prop is especially for vchat web app to disable/enable the signature icon for changing signature.
+
+### 25. setSignatureMenu(any, optional):- 
+- This prop is especially for vchat web app to open signature menu options to select the signature.
+
+### 26. setMenuPosition(any, optional):- 
+- This prop is especially for vchat web app to set the position of signature options menu.
+
+### 27. isEmailChat(boolean, optional):- 
+- This prop is especially for vchat web app to show the signature icon only for email chat.
+- By default isEmailChat false.
+
+### 28. showGPT(boolean, optional):- 
+- This prop is especially for vchat web app to show the vpilot icon.
+- By default showGPT false.
+
+### 29. addMentionFuncRef(any, optional):- 
+- This prop will be used for showing pilot functionality also.
+
+### 30. pilotContact(any, optional):- 
+- This prop will be used for parameter to pass in addMentionFuncRef.
+
+### 31. COMMON_CDN_BASE_URL(any, optional):- 
+- This prop is especially for vchat web app will be used for vpilot icon.
+
+### 32. onSend(function, optional):- 
+- This prop is especially for vchat web app is used when we click on send icon button for sending message.
+
+### 33. isHideSendBtn(boolean, optional):- 
+- This prop is especially for vchat web app to hide the send icon button.
+- By default isHideSendBtn false.
+
+### 34. btnisDisable(string, optional):- 
+- This prop is especially for vchat web app to disable the send icon button.
+- By default btnisDisable true.
+
+### 35. handleAttachFile(function, optional):- 
+- This prop is used to add the attachment using attachment icon, showAttachment should be true for this prop.
+
+### 36. showAttachment(boolean, optional):- 
+- This prop is used to show the attachment icon.
+- By default showAttachment false.
+
+### 37. enterKeyFunc(callback, optional):- 
+- This prop is especially for vchat web app for on click functionality of enter key.
 
 
 
