@@ -1,17 +1,17 @@
-## VFederationComponentAccessControl Implementation Guide
+## VMicroFrontendAccessControl Implementation Guide
 
 ### Overview
-The `VFederationComponentAccessControl` component provides an access control layer for microfrontend applications, allowing you to restrict access based on user permissions. By integrating this component, you can easily manage access checks and display customizable loading and access-denied screens.
+The `VMicroFrontendAccessControl` component provides an access control layer for microfrontend applications, allowing you to restrict access based on user permissions. By integrating this component, you can easily manage access checks and display customizable loading and access-denied screens.
 
 ### Basic Usage
-To use `VFederationComponentAccessControl`, wrap the microfrontend component with it. You must provide `clientId`, `securityServiceAxios`, and `sectionName` props, and optionally override the loading or access-denied components.
+To use `VMicroFrontendAccessControl`, wrap the microfrontend component with it. You must provide `clientId`, `securityServiceAxios`, and `sectionName` props, and optionally override the loading or access-denied components.
 
 ### Example Usage
 
-Here’s an example of how to use `VFederationComponentAccessControl` in a microfrontend wrapper:
+Here’s an example of how to use `VMicroFrontendAccessControl` in a microfrontend wrapper:
 
 ```typescript
-import { VFederationComponentAccessControl } from "@vplatform/shared-components";
+import { VMicroFrontendAccessControl } from "@vplatform/shared-components";
 import { securityServiceAxios } from "@/lib/axios/base-urls";
 import { ModuleFedaraionWrapper } from "@/components/ModuleFedarationWrapper";
 import VesselDetails from ".";
@@ -19,13 +19,13 @@ import VesselDetails from ".";
 const VesselDetailsWrapper = (props) => {
   return (
   <ModuleFedaraionWrapper themeMode={darkMode}>
-        <VFederationComponentAccessControl
+        <VMicroFrontendAccessControl
             clientId={process.env.NEXT_PUBLIC_CLIENT_ID}
             securityServiceAxios={securityServiceAxios}
             sectionName="Vessel Details"
         >
             <VesselDetails {...props} />
-        </VFederationComponentAccessControl>
+        </VMicroFrontendAccessControl>
     </ModuleFedaraionWrapper>
   );
 };
@@ -46,7 +46,7 @@ export default VesselDetailsWrapper;
 The component provides flexibility to override the default implementations of loading and access-denied screens:
 
 ```typescript
-<VFederationComponentAccessControl
+<VMicroFrontendAccessControl
   clientId="your-client-id"
   securityServiceAxios={securityServiceAxios}
   sectionName="Example Section"
