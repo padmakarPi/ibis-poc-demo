@@ -1,0 +1,53 @@
+# Ignore node_modules
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Ignore local environment files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.example
+
+# Ignore build output
+.next
+out
+
+# Ignore logs
+logs
+*.log
+
+# Ignore temporary files
+.DS_Store
+Thumbs.db
+
+# Ignore editor config files
+.vscode
+.idea
+*.swp
+
+# Ignore test and coverage directories
+__tests__
+coverage
+
+# Ignore documentation and unused files
+docs
+*.md
+*.png
+*.svg
+
+# Ignore git files
+.git
+.gitignore
+.husky/
+
+# Ignore Docker files
+Dockerfile
+docker-compose.yaml
+
+# Ignore linting configuration
+.eslintignore
+.eslintrc.json
+.prettierignore
+.prettierrc

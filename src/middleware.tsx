@@ -6,7 +6,9 @@ export default function AppMiddleware(req: NextRequest) {
 		req.nextUrl.pathname.startsWith("/auth") ||
 		req.nextUrl.pathname === "/" ||
 		req.nextUrl.pathname === "/manifest.json" ||
-		req.nextUrl.pathname.includes("_next/static")
+		req.nextUrl.pathname.includes("_next/static") ||
+		req.nextUrl.pathname === "/health/live" ||
+		req.nextUrl.pathname === "/health/ready"
 	) {
 		return NextResponse.next();
 	}
