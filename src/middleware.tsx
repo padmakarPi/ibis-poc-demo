@@ -18,8 +18,9 @@ export default function AppMiddleware(req: NextRequest) {
 
 	const isAuthenticated = cookieVal === "true";
 	if (!isAuthenticated) {
-		console.log("appliction not run");
-		return NextResponse.redirect(new URL("/", req.url));
+		return NextResponse.redirect(
+			new URL(`${req.nextUrl.basePath || ""}/`, req.url),
+		);
 	}
 
 	return NextResponse.next();
