@@ -55,6 +55,8 @@ const TextEditor = () => {
                 handlePastedFiles = {handlePastedFiles}
                 initialContent = {initialContent}
                 isDeleteContent = {isDeleteContent}
+                isActionButtonHorizontal={isActionButtonHorizontal}
+								setIsActionButtonHorizontal={setIsActionButtonHorizontal}
             />
     )
 }
@@ -222,6 +224,11 @@ color: profileColor(option.id).color,
 ### 37. enterKeyFunc(callback, optional):- 
 - This prop is used for on click functionality of enter key.
 
+### 38.isActionButtonHorizontal(boolean, optional):-								 
+- This prop is used to have horizontal View of textEditor 
+
+### 39. setIsActionButtonHorizontal(callback, optional):- 
+- This prop is used for toggling the value of isActionButtonHorizontal
 
 
 
