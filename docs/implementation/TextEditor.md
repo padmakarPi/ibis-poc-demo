@@ -55,8 +55,6 @@ const TextEditor = () => {
                 handlePastedFiles = {handlePastedFiles}
                 initialContent = {initialContent}
                 isDeleteContent = {isDeleteContent}
-                isActionButtonHorizontal={isActionButtonHorizontal}
-								setIsActionButtonHorizontal={setIsActionButtonHorizontal}
             />
     )
 }
