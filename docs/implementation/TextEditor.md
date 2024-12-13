@@ -228,6 +228,14 @@ color: profileColor(option.id).color,
 ### 39. setIsActionButtonHorizontal(callback, optional):- 
 - This prop is used for toggling the value of isActionButtonHorizontal
 
+### 40. cannedResponseModel({ cannedResponseDropdown?: any[], cannedContent?: string, setCannedResponseMenu?: function }, optional):- 
+- This prop in combination is used for showing a button which on click will open a popup in VChat which contains list of auto-replies and when we select an option the text which we want to display can be sent to text editor which it will append in the editor.
+
+cannedResponseDropdown : list of the options used for checking if the button of cannedResponse should be disabled or not.
+cannedContent : message after selection which we want to display in the editor.
+setCannedResponseMenu : callback function which is called from editor to let the parent application know the button has been clicked to show the popup.
+
+
 
 
 
