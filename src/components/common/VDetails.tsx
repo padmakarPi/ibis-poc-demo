@@ -1,8 +1,7 @@
 import Box from "@mui/material/Box";
-import Grid from "@mui/system/Unstable_Grid";
-import styled from "@mui/system/styled";
+
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import { Avatar, IconButton, Typography } from "@mui/material";
+import { Avatar, Grid, IconButton, styled, Typography } from "@mui/material";
 import { FlexBox } from "../../styles/mui/dashboard.styled";
 
 const Item = styled("div")(() => ({
