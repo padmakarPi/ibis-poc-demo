@@ -21,6 +21,9 @@ module.exports = {
         extraOptions: {},
       }),
     );
+    if (!config.output) {
+      config.output = {};
+    }
     config.output.publicPath = `${baseUrl}/_next/`;
     config.module.rules.push(
       {
