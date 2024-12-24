@@ -1,3 +1,5 @@
+"use client";
+
 import { ThemeProvider } from "@mui/material/styles";
 import NavBar from "@/components/common/AppBar";
 import { useDispatch, useSelector } from "react-redux";

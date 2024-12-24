@@ -1,10 +1,15 @@
-import { useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Box, Button, useTheme } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { VHandleError } from "@vplatform/shared-components";
+import axios from "axios";
+
 import {
 	AddIconButton,
 	FlexBoxContent,
@@ -24,6 +29,15 @@ const Dashboard = () => {
 		console.log("event", event.target.value);
 		setSearchQuery(event.target.value);
 	};
+
+	useEffect(() => {
+		async function fetchUrl() {
+			await axios
+				.get("https://jsonplceholder.typicode.com/todos")
+				.catch(err => VHandleError(err, { customMessage: "testing" }));
+		}
+		fetchUrl();
+	}, []);
 
 	return (
 		<Box data-testid="dashboard">
