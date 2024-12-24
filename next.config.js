@@ -2,11 +2,12 @@
 const NextFederationPlugin = require('@module-federation/nextjs-mf');
 
 module.exports = {
-  basePath: process.env.NODE_ENV === 'production' ? '/pathname' : '',
-  reactStrictMode: false,
+    basePath: process.env.NEXT_PUBLIC_BASE_PATH,
+    reactStrictMode: false,
 
   webpack(config, options) {
     const { webpack } = options;
+    const baseUrl = `${process.env.NEXT_PUBLIC_ORIGIN || ''}${process.env.NEXT_PUBLIC_BASE_PATH || ''}`;
 
     config.plugins.push(
       new NextFederationPlugin({
@@ -20,7 +21,7 @@ module.exports = {
         extraOptions: {},
       }),
     );
-    config.output.publicPath = `${process.env.NEXT_PUBLIC_ORIGIN}/_next/`;
+    config.output.publicPath = `${baseUrl}/_next/`;
     config.module.rules.push(
       {
         test: /\.css$/,
