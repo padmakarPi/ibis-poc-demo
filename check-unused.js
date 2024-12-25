@@ -10,7 +10,6 @@ const options = {
 		"@mui/*",
 		"@types/*",
 		"dayjs",
-		"qs",
 		"redux-persist",
 		"css-loader",
 		"sass-loader",
