@@ -8,7 +8,6 @@ const options = {
 		"eslint-*",
 		"react-*",
 		"@mui/*",
-		"@testing-library/*",
 		"@types/*",
 		"dayjs",
 		"qs",
@@ -16,7 +15,6 @@ const options = {
 		"css-loader",
 		"sass-loader",
 		"style-loader",
-		"jest-environment-jsdom",
 	],
 };
 
