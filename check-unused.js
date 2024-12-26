@@ -14,6 +14,7 @@ const options = {
 		"css-loader",
 		"sass-loader",
 		"style-loader",
+		"zod"
 	],
 };
 
