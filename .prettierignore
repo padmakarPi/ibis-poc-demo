@@ -20,3 +20,4 @@ docs/*
 check-unused.js
 Dockerfile
 docker-compose.yaml
+.lintstagedrc.json
