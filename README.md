@@ -21,17 +21,17 @@ Follow this [guide](./docs/structure.md).
 
 ## Features
 
-- **Material-UI (MUI)**: Material UI library which provide all the reusable components.
+- **Material-UI (MUI)**: Material UI library that provides reusable components.
 - **Styled Components**: Dynamic styling capabilities for React components.
 - **Redux Toolkit**: Application State management.
-- **Module Federation Support**: Nextjs module federation support.
+- **Module Federation Support**: Next.js module federation support for micro-frontends.
 - **React Hook Form**: Simplifies form handling with validation.
 - **Zod**: validation library.
 - **Day.js**: Efficient date manipulation and formatting.
 - **Pre-commit and Pre-push Git Hooks**: Configured with Husky and lint-staged to run linting and formatting before commit, and to build the project before push.
 - **ESlint**: Lint code as per language standard.
 - **Prettier**: Standard code formatter.
-- **Custom VSCode Configuration**: To Nextjs Debug, Useful Settings and Extensions recommendation to speed developer productivity.
+- **Custom VSCode Configuration**: Useful settings and extensions recommendations to speed up developer productivity.
 - **Authentication**: Integrated OMNI Authentication.
 - **Docker Support**: Includes a Dockerfile for containerization.
 - **K8s Pipeline implementation**: K8s deployment deployment implementation in azure pipeline.
