@@ -8,7 +8,8 @@ export default function AppMiddleware(req: NextRequest) {
 		req.nextUrl.pathname === "/manifest.json" ||
 		req.nextUrl.pathname.includes("_next/static") ||
 		req.nextUrl.pathname === "/health/live" ||
-		req.nextUrl.pathname === "/health/ready"
+		req.nextUrl.pathname === "/health/ready" ||
+		req.nextUrl.pathname === "/homepage"
 	) {
 		return NextResponse.next();
 	}
@@ -22,7 +23,6 @@ export default function AppMiddleware(req: NextRequest) {
 			new URL(`${req.nextUrl.basePath || ""}/`, req.url),
 		);
 	}
-
 	return NextResponse.next();
 }
 

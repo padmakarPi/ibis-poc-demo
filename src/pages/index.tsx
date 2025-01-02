@@ -1,7 +1,11 @@
-import { useRouter } from "next/navigation";
-import { Box } from "@mui/material";
+"use client";
+
+import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "@/authcontext/AuthContext";
+import WelcomeScreenMicroFrontEnd from "@/components/microfrontends/WelcomeScreenMicrofrontend";
+import { SESSION_STORAGE_KEYS } from "@/lib/constant/oidc";
+import { getOriginalRoute } from "@/lib/utils";
 
 export default function Main() {
 	const { getUser, login } = useContext(AuthContext);
@@ -10,19 +14,26 @@ export default function Main() {
 		try {
 			const user = await getUser();
 			if (user) {
-				const originalRoute = "/homepage";
+				const originalRoute = getOriginalRoute();
 				router.push(originalRoute);
-				console.log("Successfully login");
 			} else {
-				login();
+				await login();
 			}
+			return null;
 		} catch (error) {
-			console.log(error);
+			return null;
 		}
 	};
 
 	useEffect(() => {
-		initializeAuth();
+		const isNotCallbackRoute = !router.asPath.startsWith("/auth/oidc-callback");
+		if (isNotCallbackRoute) {
+			sessionStorage.setItem(SESSION_STORAGE_KEYS.ORIGINALROUTE, router.asPath);
+		}
+		if (isNotCallbackRoute) {
+			initializeAuth();
+		}
 	}, []);
-	return <Box>Authentication processing</Box>;
+
+	return <WelcomeScreenMicroFrontEnd currentStep={0} IsCallBackPage={false} />;
 }

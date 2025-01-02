@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/authcontext/AuthContext";
 import { useDispatch } from "react-redux";
@@ -6,12 +6,16 @@ import { setAuthState } from "@/redux/slices/authslice";
 import Cookies from "js-cookie";
 import { SECURITY } from "@/lib/constant/apiconstant";
 import axios from "axios";
+import WelcomeScreenMicroFrontEnd from "@/components/microfrontends/WelcomeScreenMicrofrontend";
+import { SESSION_STORAGE_KEYS } from "@/lib/constant/oidc";
+import { getOriginalRoute } from "@/lib/utils";
 
 function CallbackPage() {
 	const router = useRouter();
 	const { getUser, saveToken, userManager } = useContext(AuthContext);
 	const dispatch = useDispatch();
 	const clientId = process.env.NEXT_PUBLIC_CLIENT_ID || "";
+	const [redirectUrl, setRedirectUrl] = useState("");
 
 	const checkApplicationAccess = async (token: string) => {
 		try {
@@ -33,11 +37,23 @@ function CallbackPage() {
 			return false;
 		}
 	};
-	const getUserData = async () => {
+
+	const redirectUser = (returnUrl: string) => {
+		sessionStorage.setItem(SESSION_STORAGE_KEYS.ORIGINALROUTE, returnUrl);
+		const originalRoute = getOriginalRoute();
+		router.push(originalRoute);
+	};
+
+	useEffect(() => {
+		if (redirectUrl) {
+			redirectUser(redirectUrl);
+		}
+	}, [redirectUrl]);
+
+	const getUserData = async (state: { returnUrl: string }) => {
 		const userData = await getUser();
 		if (userData && userData.profile && userData.profile.email) {
 			saveToken(userData);
-			const originalRoute = "/homepage";
 			Cookies.set("isAuthenticated", "true", {
 				sameSite: "None",
 				secure: true,
@@ -56,13 +72,13 @@ function CallbackPage() {
 					sub: userData.profile.sub,
 				}),
 			);
-			router.push(originalRoute);
+			setRedirectUrl(state.returnUrl);
 		}
 	};
 
 	useEffect(() => {
 		if (userManager) {
-			userManager.signinRedirectCallback().then(async () => {
+			userManager.signinRedirectCallback().then(async user => {
 				const userData = await getUser();
 
 				if (!userData?.access_token) {
@@ -81,12 +97,19 @@ function CallbackPage() {
 					);
 					return;
 				}
-				getUserData();
+				getUserData(user.state);
 			});
 		}
 	}, [userManager]);
 
-	return <div>Processing OIDC callback...</div>;
+	return (
+		<WelcomeScreenMicroFrontEnd
+			currentStep={1}
+			IsCallBackPage={true}
+			healthCheckList={[]}
+			handleHealthCheck={() => {}}
+		/>
+	);
 }
 
 export default CallbackPage;
