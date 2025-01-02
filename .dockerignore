@@ -29,6 +29,8 @@ Thumbs.db
 
 # Ignore test and coverage directories
 __tests__
+jest.config.ts
+jest.setup.ts
 coverage
 
 # Ignore documentation and unused files
@@ -51,3 +53,9 @@ docker-compose.yaml
 .eslintrc.json
 .prettierignore
 .prettierrc
+
+#Ignore deployment files
+azure-pipelines.yml
+
+#Ignore Javascript files
+check-unused.js

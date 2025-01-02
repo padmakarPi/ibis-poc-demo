@@ -14,5 +14,10 @@ package-lock.json
 tsconfig.json
 node_modules/*
 public/*
-.vscode
+.vscode/*
 docs/*
+.husky/*
+check-unused.js
+Dockerfile
+docker-compose.yaml
+.lintstagedrc.json

@@ -1,144 +1,134 @@
-# Introduction
+# VPlatform Frontend Template Project
 
-Welcome to the VPlatform Frontend Template Project. This project template will serve as a starting point for developers that will be creating Frontend projects in NextJS quickly and efficiently.
+Welcome to the VPlatform Frontend Template Project. This project serves as a starting point for developers to create frontend projects in Next.js efficiently.
 
-## Table Of Contents:
+## Table of Contents
 
-- Development Branch
-- Project Structure
-- Setup the project
-- Running the app
-- Setup test library
-- Important
+1. [Project Structure](#project-structure)
+2. [Features](#features)
+3. [Project Requirements](#project-requirements)
+4. [Getting Started](#getting-started)
+5. [Contribution Guidelines](#contribution-guidelines)
+6. [Useful Links and Cheatsheets](#useful-links-and-cheatsheets)
 
-## Development Branch
-
-The `DEV` branch is the primary development branch. It is the place where ongoing development work takes place. Contributors are encouraged to create branches based on `DEV` for new features or bug fixes.
+---
 
 ## Project Structure
 
-- A structure file is addded inside doc which states the basic folder structure followed in the project. Click here [🗄️ Project Structure](docs/structure.md)
+Follow this [guide](./docs/structure.md).
 
-### Setup the project 
-Setting up a project in Next.js is relatively straightforward.
+---
 
-##### 1. Create a new next.js project
-Run the following command to create a new Next.js project:
-```
-npx create-next-app@latest
-```
+## Features
 
-##### 2. Install dependencies
-##### Dependencies
-To install dependencies in a Next.js project, you can use npm or yarn, depending on your preference
-```
-npm install
-or
-npm install <package name>
-```
-##### Dev dependencies
-In package.json file, there is an object called as dev Dependencies and it consists of all the packages that are used in the project in its development phase and not in the production or testing environment with its version number. So, whenever you want to install any library that is required only in your development phase then you can find it in the dev Dependencies object. 
-```
-npm install <package name> --save-dev
-```
+- **Material-UI (MUI)**: Material UI library that provides reusable components.
+- **Styled Components**: Dynamic styling capabilities for React components.
+- **Redux Toolkit**: Application State management.
+- **Module Federation Support**: Next.js module federation support for micro-frontends.
+- **React Hook Form**: Simplifies form handling with validation.
+- **Zod**: validation library.
+- **Day.js**: Efficient date manipulation and formatting.
+- **Pre-commit and Pre-push Git Hooks**: Configured with Husky and lint-staged to run linting and formatting before commit, and to build the project before push.
+- **ESlint**: Lint code as per language standard.
+- **Prettier**: Standard code formatter.
+- **Custom VSCode Configuration**: Useful settings and extensions recommendations to speed up developer productivity.
+- **Authentication**: Integrated OMNI Authentication.
+- **Docker Support**: Includes a Dockerfile for containerization.
+- **K8s Pipeline implementation**: K8s deployment deployment implementation in azure pipeline.
+---
 
-## Running the app
-This command starts the development server provided by Next.js, allowing you to preview your project in a local development environment.
+## Project Requirements
+
+- Node 18+
+- npm 10+
+
+---
+
+## Getting Started
+
+### Installation Process
+
+1.1. **Clone the repository**:
+
+   ```bash
+   git clone https://vgroupframework@dev.azure.com/vgroupframework/VPlatform-Apps/_git/Vplatform-Frontend-Template
+   ```
+1.2. **Use  DEV_1.2 git branch**.
+
+2.1. **Obtain Azure Artifacts Token**:
+
+   Follow this [guide](./docs/access-private-npm-packages.md).
+
+2.2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**:
+
+    ```bash
+    npm run dev
+    ```
+
+### Commands
+
 ```bash
-npm run dev
-```
+    # start in development mode.
+    npm run dev
 
-## Setup the test library
+    # Build project.
+    npm run build
 
-Setting up Jest in a Next.js project involves a few steps to configure Jest to work with Next.js and to write and run tests for your application. Here's a step-by-step guide:
+    # start in production mode.
+    npm run start
 
-##### 1. Install Jest and Testing Utilities
-First, you need to install Jest along with any necessary testing utilities. 
-```
-npm i -D @testing-library/jest-dom @testing-library/react @testing-library/user-event jest jest-environment-jsdom ts-jest
-npm i --save-dev @types/jest
-npm i -D ts-node
-```
-##### 2. Modify Package.json file
-Add a new scripts 
-```
-"test":"jest"
-"test:watch":"jest --watchAll"
-```
+    # format before committing the code
+    npm run format:fix
 
-##### 3. Add configuration
-- Create a jest.config.ts file in the root directory and add the configuration.
-```
-import type { Config } from 'jest'
-import nextJest from 'next/jest.js'
- 
-const createJestConfig = nextJest({
-  // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
-  dir: './',
-})
- 
-// Add any custom config to be passed to Jest
-const config: Config = {
-  coverageProvider: 'v8',
-  testEnvironment: 'jsdom',
-  // Add more setup options before each test is run
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-  preset: 'ts-jest',
-}
- 
-// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-export default createJestConfig(config)
-```
-
-- Create a jest.setup.ts file in the root directroy
-
-Just import one library in jest.setup.ts
-```
-import '@testing-library/jest-dom'
-```
-
-- ESLint plugins for jest
-
-These plugins provide ESLint rules specifically designed to work with Jest and testing utilities
+    # lint before committing the code
+    npm run lint:fix
 
 ```
-npm i -D eslint-plugin-jest-dom eslint-plugin-testing-library
-```
 
-- Modify the .eslintrc.json file
+## Contribution Guidelines
 
-```
- "extends": [
-    "next/core-web-vitals",
-    "plugin:testing-library/react",
-    "plugin:jest-dom/recommended"
-  ]
-```
-- Create new directory name ` __test__` in the root directory
+1. Begin by creating a branch from `DEV`.
+2. Develop your feature on the branch.
+3. Before commit run linting & formatting command.
+4. Create a pull request and assign it to the appropriate reviewer.
+5. After approval, merge it into the `DEV` branch.
+6. The pipeline will then automatically publish the changes.
 
-Add the tests file in the __test__ directory. For instance :- `page.test.tsx or page.test.ts`
-Make the proper folder or file structure in the __test__ directory.
+---
 
-- Run test cases
-```
-npm test
-```
-## Important
-##### Before pushing code to a version control system like Azure DevOps, there are several things you should remember to ensure smooth collaboration and maintain code quality:
+## Useful Links and Cheatsheets
 
+### Material-UI (MUI)
+- [MUI Official Documentation](https://mui.com/material-ui/getting-started/learn/)
+- [MUI Cheatsheet](https://yourdevkit.com/cheat-sheet/material-ui)
 
-###### 1. To ensure your project runs successfully after implementing changes.
-###### 2. Open the terminal and run `npm run build`. Before going to the next setup make sure all warning and error are resolved.
-###### 3. ESLint will analyze your project files according to the configured rules and report any errors or warnings found. Run : `npm run lint`
-###### 4. Absolutely, running `npm run lint:fix` after `npm run lint` is a good practice to automatically fix as many linting errors as possible.
-###### 5. Run `npm run format` to format your project files using Prettier.
-###### 6 you can run `npm run format:fix` to attempt to fix any remaining Prettier formatting issues.
-###### 7. All test case must be passed. Run : `npm test`.
-###### 8. Your branch must be update to date with main branch. Rebase your branch before push the code and resolve the conflict if any. 
-###### 9. Provide clear and concise commit messages that accurately describe the changes made. Reference:- (docs/structure.md)
+### Day.js
+- [Day.js Documentation](https://day.js.org/docs/en/display/format)
 
+### Next.js
+- [Next.js Learning Resources](https://nextjs.org/learn)
 
+### React Hook Form
+- [Getting Started with React Hook Form](https://www.react-hook-form.com/get-started/)
+- [Advanced Usage](https://www.react-hook-form.com/advanced-usage/)
 
+### Redux Toolkit
+- [Redux Toolkit Cheatsheet](https://www.codecademy.com/learn/fscp-redux/modules/refactoring-with-redux-toolkit/cheatsheet)
 
+### Styled Components
+- [Styled Components Basics](https://styled-components.com/docs/basics)
+- [Advanced Concepts](https://styled-components.com/docs/advanced)
+- [Styled Components Cheatsheet](https://scalablecss.com/static/Styled-Components-Cheat-Sheet-c9ef20eda7095a43b5e4c80b36b545a4.pdf)
 
+### Zod
+- [Zod Basics](https://zod.dev/?id=basic-usage#:~:text=directly%20from%20the-,%22zod%22%20package.,-Basic%20usage)
+- [Learn Zod in 5 Minutes](https://dev.to/arafat4693/learn-zod-in-5-minutes-17pn)
+- [Zod Integration with React Hook Form](https://www.austinshelby.com/blog/build-a-react-form-with-react-hook-form-and-zod)
 
+---
