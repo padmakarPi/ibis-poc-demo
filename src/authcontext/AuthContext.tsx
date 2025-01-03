@@ -23,17 +23,11 @@ export const AuthContext = createContext<defaultState>({} as defaultState);
 let userManager: UserManager;
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-	let test = "";
 	const router = useRouter();
 	const pathname = usePathname();
 	const dispatch = useDispatch();
 	const checkAuthentication = async () => {
 		const token = localStorage.getItem(COMMON_METADATA.OMNI_TOKEN_STORE_KEY);
-		test = "123";
-
-		if (test === "111") {
-			token?.toLocaleLowerCase();
-		}
 		if (token) {
 			const userData: any = jwtDecode(JSON.parse(token).access_token);
 			dispatch(
