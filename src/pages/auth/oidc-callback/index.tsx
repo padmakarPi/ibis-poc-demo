@@ -101,12 +101,26 @@ function CallbackPage() {
 		}
 	}, [userManager]);
 
+	const getWelcomeScreenRefreshRedirectUrl = () => {
+		const originalRoute = sessionStorage.getItem(
+			SESSION_STORAGE_KEYS.ORIGINALROUTE,
+		);
+		const pathBasedUrl = `${process.env.NEXT_PUBLIC_ORIGIN}${process.env.NEXT_PUBLIC_BASE_PATH}`;
+
+		if (originalRoute) {
+			return `${pathBasedUrl}${originalRoute}`;
+		}
+
+		return pathBasedUrl;
+	};
+
 	return (
 		<WelcomeScreenMicroFrontEnd
 			currentStep={1}
 			IsCallBackPage={true}
 			healthCheckList={[]}
 			handleHealthCheck={() => {}}
+			onRefreshRedirectUrl={getWelcomeScreenRefreshRedirectUrl}
 		/>
 	);
 }
