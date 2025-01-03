@@ -48,17 +48,12 @@ const AppBarHeader = () => {
 		process.env.NEXT_PUBLIC_VSECURITY_BASE_API_URL,
 	);
 
-	const setUserProfile = async (data: ISetUserProfile) => {
-		try {
-			return axBe
-				.post(`${APIURL.SETUSERPROFILE}`, data)
-				.catch((error: Error) =>
-					VHandleError(error, { service: "set-userpreference" }),
-				);
-		} catch (error) {
-			return null;
-		}
-	};
+	const setUserProfile = async (data: ISetUserProfile) =>
+		axBe
+			.post(`${APIURL.SETUSERPROFILE}`, data)
+			.catch((error: Error) =>
+				VHandleError(error, { service: "set-userpreference" }),
+			);
 	const handleMode = () => {
 		setMode(!mode);
 		setToggleDarkMode(!toggleDarkMode);
@@ -76,17 +71,13 @@ const AppBarHeader = () => {
 	}, []);
 
 	const toggleDarkTheme = async () => {
-		try {
-			const payload = { DarkMode: !mode };
-			const themeChangeEvent = new CustomEvent("themeChange", {
-				detail: payload,
-			});
-			document.dispatchEvent(themeChangeEvent);
-			await setUserProfile(payload);
-			return null;
-		} catch (error) {
-			return null;
-		}
+		const payload = { DarkMode: !mode };
+		const themeChangeEvent = new CustomEvent("themeChange", {
+			detail: payload,
+		});
+		document.dispatchEvent(themeChangeEvent);
+		await setUserProfile(payload);
+		return null;
 	};
 
 	const fetchDocumentConfigs = async () => {
@@ -119,6 +110,7 @@ const AppBarHeader = () => {
 					setToggleDarkMode(false);
 				}
 			} catch (error) {
+				console.log("error=", error);
 				setMode(false);
 				setToggleDarkMode(false);
 			}

@@ -10,9 +10,7 @@
       "plugin:react/recommended",
       "next", 
       "next/core-web-vitals", 
-      "prettier",
-      "plugin:testing-library/react",
-      "plugin:jest-dom/recommended"
+      "prettier"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -23,6 +21,9 @@
           "tsx": true
         }
     },
+    "ignorePatterns": [
+      "check-unused.js"
+    ],
     "plugins": [
         "@typescript-eslint",
         "react"

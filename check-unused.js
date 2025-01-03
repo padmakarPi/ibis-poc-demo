@@ -1,5 +1,4 @@
 const depcheck = require("depcheck");
-const { IgnorePlugin } = require("webpack");
 
 const options = {
 	ignoreMissing: true,
@@ -8,15 +7,13 @@ const options = {
 		"eslint-*",
 		"react-*",
 		"@mui/*",
-		"@testing-library/*",
 		"@types/*",
 		"dayjs",
-		"qs",
 		"redux-persist",
 		"css-loader",
 		"sass-loader",
 		"style-loader",
-		"jest-environment-jsdom",
+		"zod"
 	],
 };
 

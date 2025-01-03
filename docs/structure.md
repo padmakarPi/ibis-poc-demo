@@ -203,7 +203,6 @@ The primary goal of any naming convention is consistency. Ensure that the chosen
 - docs: Documentation changes or updates.
 - style: Changes related to code formatting, indentation, or whitespace.
 - refactor: Code refactoring without adding new features or fixing bugs.
-- test: Addition or modification of test cases.
 - chore: Other changes not directly affecting the code (e.g., build scripts, dependencies).
 
 #### Commit messages :-

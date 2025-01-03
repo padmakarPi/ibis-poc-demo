@@ -21,6 +21,7 @@ export default function Main() {
 			}
 			return null;
 		} catch (error) {
+			console.log("error=", error);
 			return null;
 		}
 	};
