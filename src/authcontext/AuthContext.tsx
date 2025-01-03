@@ -40,7 +40,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 					access_token: userData?.access_token,
 					expires_at: userData?.exp,
 					jobRole: "",
-					customer_id: userData?.CustomerId,
 					sub: userData?.sub,
 				}),
 			);
