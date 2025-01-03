@@ -1,0 +1,195 @@
+{
+    "VESSEL": {
+      "nameTag": "VESSELNAME",
+      "headerName": "Vessel Name",
+      "isTagValueId": true,
+      "icon": "DirectionsBoatFilledOutlinedIcon",
+      "iconName": "DirectionsBoatFilledOutlinedIcon",
+      "isIconComponent": false,
+      "textColor": {
+        "light": "#04487F !important",
+        "dark": "#03C0D4"
+      },
+      "iconColor": {
+        "light": "#04487F !important",
+        "dark": "#03C0D4"
+      },
+      "backgroundColor": {
+        "light": "#FAFAFA !important",
+        "dark": "#1A1A1A"
+      },
+      "borderColor": {
+        "light": "#04487F !important",
+        "dark": "#03C0D4"
+      }
+    },
+    "PRIORITY": {
+      "label": "PRIORITY",
+      "keyWord": "PRIORITY",
+      "headerName": "Priority",
+      "sortOrder": 7,
+      "icon": "ArrowCircleUpIcon",
+      "iconName": "ArrowCircleUpIcon",
+      "isIconComponent": false,
+      "iconColor": "rgba(0, 0, 0, 0.87)",
+      "key": {
+        "urgent": {
+          "textColor": {
+            "light": "#FF451A",
+            "dark": "#FF451A"
+          },
+          "icon": "KeyboardDoubleArrowUpIcon",
+          "iconColor": {
+            "light": "#FF451A",
+            "dark": "#FF451A"
+          },
+          "borderColor": {
+            "light": "#FF451A",
+            "dark": "#FF451A"
+          }
+        },
+        "high": {
+          "textColor": {
+            "light": "#FF6F00",
+            "dark": "#FF6F00"
+          },
+          "icon": "KeyboardArrowUpIcon",
+          "borderColor": {
+            "light": "#FF6F00",
+            "dark": "#FF6F00"
+          },
+          "iconColor": {
+            "light": "#FF6F00",
+            "dark": "#FF6F00"
+          }
+        },
+        "medium": {
+          "textColor": {
+            "light": "#80531B",
+            "dark": "#FF9F1D"
+          },
+          "icon": "RemoveIcon",
+          "borderColor": {
+            "light": "#80531B",
+            "dark": "#FF9F1D"
+          },
+          "iconColor": {
+            "light": "#80531B",
+            "dark": "#FF9F1D"
+          }
+        },
+        "low": {
+          "textColor": {
+            "light": "#455A64",
+            "dark": "#90A4AE"
+          },
+          "icon": "KeyboardArrowDownIcon",
+          "borderColor": {
+            "light": "#455A64",
+            "dark": "#90A4AE"
+          },
+          "iconColor": {
+            "light": "#455A64",
+            "dark": "#90A4AE"
+          }
+        }
+      }
+    },
+    "STATUS": {
+      "keys": "STATUS",
+      "headerName": "Status",
+      "key": {
+        "open": {
+          "textColor": {
+            "light": "#303F9F",
+            "dark": "#7986CB"
+          },
+          "icon": "FiberManualRecordIcon",
+          "iconColor": {
+            "light": "#303F9F",
+            "dark": "#7986CB"
+          },
+          "borderColor": {
+            "light": "#303F9F",
+            "dark": "#7986CB"
+          }
+        },
+        "new": {
+          "textColor": {
+            "light": "#303F9F",
+            "dark": "#7986CB"
+          },
+          "icon": "FiberManualRecordIcon",
+          "iconColor": {
+            "light": "#303F9F",
+            "dark": "#7986CB"
+          },
+          "borderColor": {
+            "light": "#303F9F",
+            "dark": "#7986CB"
+          }
+        },
+        "closed": {
+          "textColor": {
+            "light": "#FF8F00",
+            "dark": "#FF8F00"
+          },
+          "icon": "FiberManualRecordIcon",
+          "borderColor": {
+            "light": "#FF8F00",
+            "dark": "#FF8F00"
+          },
+          "iconColor": {
+            "light": "#FF8F00",
+            "dark": "#FF8F00"
+          }
+        },
+        "rejected": {
+          "textColor": {
+            "light": "#ff451a",
+            "dark": "#ff451a"
+          },
+          "icon": "CloseIcon",
+          "borderColor": {
+            "light": "#ff451a",
+            "dark": "#ff451a"
+          },
+          "iconColor": {
+            "light": "#ff451a",
+            "dark": "#ff451a"
+          }
+        },
+        "resolved": {
+          "textColor": {
+            "light": "#00704B",
+            "dark": "#239355"
+          },
+          "icon": "CheckCircleRoundedIcon",
+          "borderColor": {
+            "light": "#00704B",
+            "dark": "#239355"
+          },
+          "iconColor": {
+            "light": "#00704B",
+            "dark": "#239355"
+          }
+        },
+        "completed": {
+          "textColor": {
+            "light": "#00704B",
+            "dark": "#239355"
+          },
+          "icon": "CheckCircleRoundedIcon",
+          "borderColor": {
+            "light": "#00704B",
+            "dark": "#239355"
+          },
+          "iconColor": {
+            "light": "#00704B",
+            "dark": "#239355"
+          }
+        }
+      }
+    }
+  }
+  
