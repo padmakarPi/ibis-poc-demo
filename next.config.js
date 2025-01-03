@@ -13,9 +13,11 @@ module.exports = {
       new NextFederationPlugin({
         name: 'Template',
         filename: 'static/chunks/remoteEntry.js',
-        exposes: {
-          // './defect-app': './src/components/DefectBox/index',
+        remotes : {
+          VWelcomeApp: `VWelcomeApp@${process.env.NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL}/_next/static/chunks/remoteEntry.js`,
+          appbar: `appbar@${process.env.NEXT_PUBLIC_APPBAR}/_next/static/chunks/remoteEntry.js`,
         },
+        exposes: {},
   
         shared: {},
         extraOptions: {},

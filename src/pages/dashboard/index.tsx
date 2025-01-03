@@ -1,31 +1,20 @@
 "use client";
 
 import { ThemeProvider } from "@mui/material/styles";
-import NavBar from "@/components/common/AppBar";
-import { useDispatch, useSelector } from "react-redux";
-import { toogleTheme } from "@/redux/slices/themeslice";
+import { useSelector } from "react-redux";
 import { darkTheme, lightTheme } from "@/styles/theme";
 import { IRootState } from "@/interfaces/states/theme.interfaces";
-import Dashboard from "@/components/Dashboard";
+import AppBarHeader from "../../components/appbar";
 
 const Home = () => {
-	const dispatch = useDispatch();
 	const isDarkMode = useSelector((state: IRootState) => state.theme.isDarkMode);
 
 	const currentTheme = isDarkMode ? darkTheme : lightTheme;
-	const handleThemetoggle = () => {
-		dispatch(toogleTheme());
-	};
+
 	return (
 		<>
 			<ThemeProvider theme={currentTheme}>
-				<NavBar
-					isDarkMode={isDarkMode}
-					toggleTheme={handleThemetoggle}
-					currentTheme={currentTheme}
-					data-testid="navbar"
-				/>
-				<Dashboard data-testid="dashboard" />
+				<AppBarHeader />
 			</ThemeProvider>
 		</>
 	);

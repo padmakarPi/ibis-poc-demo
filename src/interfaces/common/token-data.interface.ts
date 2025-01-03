@@ -10,7 +10,6 @@ export interface TokenData {
 	expired: string;
 	scopes: string;
 	contact_id: number;
-	customer_id: number;
 }
 export interface jwtDecodeData {
 	iss?: string;
