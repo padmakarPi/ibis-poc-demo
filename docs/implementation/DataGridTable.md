@@ -138,12 +138,12 @@ const DataGridTable = () => {
 ```
 
 
-### Prop Details
+## Prop Details
 
 The VDataGridTable component accepts a variety of props that allow you to control its behavior and appearance.
 
 
-| **Prop Name**                   | **Type**                                                            | **Description**                                                                                  | **Required**  |
+| **Prop Name**                   | **Types and Custom Types (explained below)**                                                            | **Description**                                                                                  | **Required**  |
 |----------------------------------|---------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|---------------|
 | `mode`                           | `boolean`                                                          |  Determines the color scheme; `true` for dark mode, `false` for light mode. Default is `false`    | No            |
 | `addColumnOptions`               | `addColumnOptionsTypes`                                             | Options for adding columns dynamically.                                                          | No            |
@@ -176,6 +176,9 @@ The VDataGridTable component accepts a variety of props that allow you to contro
 | `disableColumnSorting`           | `boolean`                                                          | Disables column sorting. Defaults to `false`.                                                    | No            |
 
 
+## Custom Types for VDataGridTable
+
+This section outlines the custom types used to control the dynamic behavior of the VDataGridTable.
 
 ### `addColumnOptionsTypes`
 
