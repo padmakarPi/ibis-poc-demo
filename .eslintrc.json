@@ -21,6 +21,9 @@
           "tsx": true
         }
     },
+    "ignorePatterns": [
+      "check-unused.js"
+    ],
     "plugins": [
         "@typescript-eslint",
         "react"
@@ -51,7 +54,8 @@
         "class-methods-use-this": "off",
         "eslint-consistent-return": "off",
         "no-promise-executor-return": "off",
-        "no-new": 0
+        "no-new": 0,
+        "no-param-reassign":"off"
       },
       "settings": {
         "import/resolver": {

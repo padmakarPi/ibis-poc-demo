@@ -1,5 +1,4 @@
 const depcheck = require("depcheck");
-const { IgnorePlugin } = require("webpack");
 
 const options = {
 	ignoreMissing: true,

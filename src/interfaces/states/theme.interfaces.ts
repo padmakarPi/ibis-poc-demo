@@ -13,3 +13,7 @@ export interface IRootState {
 		isDarkMode: boolean;
 	};
 }
+
+export interface documentConfigState {
+	documentConfig: object;
+}

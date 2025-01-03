@@ -9,6 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { setAuthState } from "@/redux/slices/authslice";
+import { getOriginalRoute } from "@/lib/utils";
 
 interface defaultState {
 	userManager: UserManager | null;
@@ -89,7 +90,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		try {
 			if (userManager) {
 				clearAppStates();
-				const loginData = await userManager.signinRedirect();
+				const originalRoute = getOriginalRoute();
+				const loginData = await userManager.signinRedirect({
+					state: { returnUrl: originalRoute },
+				});
 				return loginData;
 			}
 			return null;
