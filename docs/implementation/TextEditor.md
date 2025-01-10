@@ -236,6 +236,15 @@ cannedContent : message after selection which we want to display in the editor.
 setCannedResponseMenu : callback function which is called from editor to let the parent application know the button has been clicked to show the popup.
 
 
+### 41 . onQueryChange (callback , optional) :-
+
+This props is used as callback function which gets a query string (mention search string) and performs debounce on the same on the host application
+
+
+### 42 isDebounceLoading (boolean , optional) :- 
+
+This prop is used to show the Loading Ui when the debounce function is being executed .
+
 
 
 
