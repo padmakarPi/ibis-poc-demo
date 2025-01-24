@@ -275,7 +275,8 @@ export const configMapping = {
 | `subTextKey`        | `string` | `undefined`   | The key for retrieving subtext data from the row object in textWithSubtext component.          |
 | `row`               | `any`    | `undefined`   | The row data object containing information for rendering.                                        |
 | `customComponent`   | `boolean`| `false`       | If `true`, renders a custom React component inside the cell.                                                    |
-| `CustomComponents`  | `React.ComponentType` | `undefined` | A custom component to be rendered inside the cell.                                              |
+| `CustomComponents`  | `React.ComponentType` | `undefined` | A custom component to be rendered inside the cell.                                                    |
+| `cellRenderStyle`   | `BoxOwnProps<Theme>.sx?: SxProps<Theme> | undefined` | A prop for the style of the Cell wrapper of the table - applies to the sx value of the MUI box.                                                 |
 | `iconMap`           | `IconMapType` | `undefined`   | A map of icons for dynamic rendering. When `chip` prop is true then use iconMap                                                           |
 | `textColor`         | `string` | `undefined`   | Color of the text content. When text or date prop true then use textColor                     |
 | `textVariant`       | `string` | `undefined`   | Typography variant for the text content. When text or date prop true then use textVariant                                                          |
