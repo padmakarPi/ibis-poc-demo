@@ -254,7 +254,7 @@ This prop is used to show the Loading Ui when the debounce function is being exe
 
 ### 43 descriptionContent(any, optional):- 
 
-- This prop is used to as the description content to be displayed in the editor.
+- This prop is used as the description content to be displayed in the editor.
 
 
 
