@@ -246,6 +246,18 @@ This props is used as callback function which gets a query string (mention searc
 This prop is used to show the Loading Ui when the debounce function is being executed .
 
 
+### 43 isInNewChat(boolean, optional):- 
+
+- This prop is used to show the description icon only for new email chat.
+- By default isInNewChat false.
+
+
+### 43 descriptionContent(any, optional):- 
+
+- This prop is used to as the description content to be displayed in the editor.
+
+
+
 
 
 
