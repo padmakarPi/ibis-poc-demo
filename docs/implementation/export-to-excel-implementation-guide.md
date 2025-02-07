@@ -33,7 +33,7 @@ In this script, the Python argument is received in `str(sys.argv[1])`, which is 
 2. Send a request to the endpoint with the required payload.
 
 
-```
+```python
 import json
 import os
 import sys
