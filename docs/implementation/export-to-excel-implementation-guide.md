@@ -195,7 +195,7 @@ if __name__ == "__main__":
 ```
 
 ### Step 2: Upload the Python Script to the Task Library
-1. Upload the script to **Shipyard**: [`https://dev.shipsure.com/shipyard`](https://dev.shipsure.com/shipyard).
+1. Upload the script to  VTask Library **Shipyard**: [`https://dev.shipsure.com/shipyard`](https://dev.shipsure.com/shipyard).
 2. Obtain the **Library ID** for reference in the frontend integration.
 
 ### Step 3: Create API Endpoint
