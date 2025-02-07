@@ -24,181 +24,7 @@ This document provides an overview of the implementation for exporting data to E
 ## Below is Vlink Export To Excel  Implementation
 
 
-### Step 1 : Create Python script
-
-In this script, the Python argument is received in `str(sys.argv[1])`, which is then converted into an object using `json_string_to_object`. The type of this object is `ScriptPayload`, which represents the argument passed in the task payload.
-
-#### Workflow of the Python Script
-1. Parse the JSON string received from the Python argument.
-2. Send a request to the endpoint with the required payload.
-
-
-```python
-import json
-import os
-import sys
-from urllib.parse import urlencode, urljoin
-import logging
-import traceback
-import requests
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
-class DisplayColumn:
-    def __init__(self, fieldName, displayColumnName):
-        self.fieldName = fieldName
-        self.displayColumnName = displayColumnName
-        
-    def to_dict(self):
-        return {"fieldName": self.fieldName, "displayColumnName": self.displayColumnName}
-
-
-class ExportDataBody:
-    def __init__(self, taskIds, pageNumber, pageSize, displayColumns):
-        self.taskIds = taskIds
-        self.pageNumber = pageNumber
-        self.pageSize = pageSize
-        self.displayColumns = [DisplayColumn(**col) for col in displayColumns]
-        
-    def to_dict(self):
-        return {
-            "taskIds": self.taskIds,
-            "pageNumber": self.pageNumber,
-            "pageSize": self.pageSize,
-            "displayColumns": [col.to_dict() for col in self.displayColumns]
-        }
-        
-        
-class ExportExcelRequestBody:
-    def __init__(self, exportDataBody, taskId, sourceApplicationId, userId,customerId,uploadDocumentTypeId,exportExcelColumns):
-        self.exportDataBody = ExportDataBody(**exportDataBody)
-        self.taskId = taskId
-        self.sourceApplicationId = sourceApplicationId
-        self.userId = userId
-        self.customerId = customerId
-        self.uploadDocumentTypeId = uploadDocumentTypeId
-        self.exportExcelColumns = exportExcelColumns
-    
-    def to_dict(self):
-        return {
-            "exportDataBody": self.exportDataBody.to_dict(),
-            "taskId": self.taskId,
-            "sourceApplicationId": self.sourceApplicationId,
-            "userId": self.userId,
-            "customerId": self.customerId,
-            "uploadDocumentTypeId": self.uploadDocumentTypeId,
-            "exportExcelColumns": self.exportExcelColumns
-        }
-
-# Represents the script payload (arguments passed to the script)requirement
-class ScriptPayload:
-    def __init__(self, exportDataUrl, exportExcelRequestBody):
-        self.exportDataUrl = exportDataUrl
-        self.exportExcelRequestBody = ExportExcelRequestBody(**exportExcelRequestBody)
-        
-
-# Custom Exception for handling errors in the export process
-class ExportExcelException(Exception):
-    def __init__(self, message, original_exception=None):
-        super().__init__(f"ERROR EXPORT EXCEL: {message}")
-        self.original_exception = original_exception
-        if original_exception:
-            self.traceback = traceback.format_exc()
-
-
-def main():
-    log('Script execution started.')
-    
-    if len(sys.argv) > 1:
-        json_string = str(sys.argv[1])
-         
-        script_payload = json_string_to_object(json_string, ScriptPayload)
-
-        response = post_api(script_payload)
-        log(f'process started: {response}.')
-        
-    else:
-        raise ExportExcelException('No argument passed.')
-        
-    log('Script execution completed.')
-
-
-# Function to call the API and initiate export
-def post_api(script_payload: ScriptPayload):
-    token = get_token(script_payload.exportExcelRequestBody.customerId)
-    headers = {'Authorization': f'Bearer {token}'}
-    
-    try:
-        url = script_payload.exportDataUrl
-        body = script_payload.exportExcelRequestBody.to_dict()
-        response = requests.post(url, headers=headers, json=body)
-        
-        if response.status_code >= 200 and response.status_code < 300:
-            return response.text
-        else:
-            raise ExportExcelException(f"Failed POST API: {response.text}")
-
-    except Exception as e:
-        raise ExportExcelException("Error in fetch_post_api", e)
-
-# Function to obtain authentication token
-def get_token(customer_id):
-    try:
-        
-        omni_jwt_issuer = os.environ.get('OMNI_JWT_ISSUER')
-        omni_client_id = os.environ.get('CLIENT_ID')
-        omni_client_secret = os.environ.get('CLIENT_SECRET')
-        
-        if omni_jwt_issuer:
-            omni_jwt_issuer = omni_jwt_issuer.split(',')[0]
- 
-            url = generate_url(omni_jwt_issuer, 'connect/token')
-            
-            data = {
-                "grant_type": 'client_credentials',
-                "client_id": omni_client_id,
-                "client_secret": omni_client_secret,
-                "CustomerId": customer_id
-            }
-            encoded_data = urlencode(data)
-            headers = {"Content-Type": "application/x-www-form-urlencoded"}
-            response = requests.post(url, data=encoded_data, headers=headers, verify=True)
-            success = response.json()
-            return success["access_token"]
-    except Exception as error:
-        raise ExportExcelException(f"Error in get token", error)
-
-# Converts JSON string to a specific object type
-def json_string_to_object(json_string, class_type):
-    try:
-        data = json.loads(json_string)
-        object_instance = class_type(**data)
-        return object_instance
-    except Exception as error:
-        raise ExportExcelException(f"Error in converting json string to object", error)
-
-
-def log(message):
-    logging.info(f"EXPORT EXCEL: {message}")
-
-
-def generate_url(base_url, path=''):
-    if not base_url.endswith('/'):
-        base_url += '/'
-    full_url = urljoin(base_url, path)
-    return full_url
-
-
-if __name__ == "__main__":
-    main()
-
-```
-
-### Step 2: Upload the Python Script to the Task Library
-1. Upload the script to  VTask Library **Shipyard**: [`https://dev.shipsure.com/shipyard`](https://dev.shipsure.com/shipyard).
-2. Obtain the **Library ID** for reference in the frontend integration.
-
-### Step 3: Create API Endpoint
+### Step 1: Create API Endpoint
 This endpoint will handle:
 1. Fetching required data
 2. Processing the data for Excel
@@ -207,6 +33,8 @@ This endpoint will handle:
 5. Generating a download URL
 6. Sending a notification with the download URL
 
+
+#### Vlink API Endpoint Example
 
 Install this below package
 
@@ -788,14 +616,192 @@ In gitignore add this
 ```
 
 
+### Step 2 : Create Python script
+
+In this script, the Python argument is received in `str(sys.argv[1])`, which is then converted into an object using `json_string_to_object`. The type of this object is `ScriptPayload`, which represents the argument passed in the task payload.
+
+#### Workflow of the Python Script
+1. Parse the JSON string received from the Python argument.
+2. Send a request to the endpoint with the required payload.
 
 
-### Step 4: Vlink frontend changes
+#### Vlink Python Script Example
+
+```python
+import json
+import os
+import sys
+from urllib.parse import urlencode, urljoin
+import logging
+import traceback
+import requests
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+class DisplayColumn:
+    def __init__(self, fieldName, displayColumnName):
+        self.fieldName = fieldName
+        self.displayColumnName = displayColumnName
+        
+    def to_dict(self):
+        return {"fieldName": self.fieldName, "displayColumnName": self.displayColumnName}
+
+
+class ExportDataBody:
+    def __init__(self, taskIds, pageNumber, pageSize, displayColumns):
+        self.taskIds = taskIds
+        self.pageNumber = pageNumber
+        self.pageSize = pageSize
+        self.displayColumns = [DisplayColumn(**col) for col in displayColumns]
+        
+    def to_dict(self):
+        return {
+            "taskIds": self.taskIds,
+            "pageNumber": self.pageNumber,
+            "pageSize": self.pageSize,
+            "displayColumns": [col.to_dict() for col in self.displayColumns]
+        }
+        
+        
+class ExportExcelRequestBody:
+    def __init__(self, exportDataBody, taskId, sourceApplicationId, userId,customerId,uploadDocumentTypeId,exportExcelColumns):
+        self.exportDataBody = ExportDataBody(**exportDataBody)
+        self.taskId = taskId
+        self.sourceApplicationId = sourceApplicationId
+        self.userId = userId
+        self.customerId = customerId
+        self.uploadDocumentTypeId = uploadDocumentTypeId
+        self.exportExcelColumns = exportExcelColumns
+    
+    def to_dict(self):
+        return {
+            "exportDataBody": self.exportDataBody.to_dict(),
+            "taskId": self.taskId,
+            "sourceApplicationId": self.sourceApplicationId,
+            "userId": self.userId,
+            "customerId": self.customerId,
+            "uploadDocumentTypeId": self.uploadDocumentTypeId,
+            "exportExcelColumns": self.exportExcelColumns
+        }
+
+# Represents the script payload (arguments passed to the script)requirement
+class ScriptPayload:
+    def __init__(self, exportDataUrl, exportExcelRequestBody):
+        self.exportDataUrl = exportDataUrl
+        self.exportExcelRequestBody = ExportExcelRequestBody(**exportExcelRequestBody)
+        
+
+# Custom Exception for handling errors in the export process
+class ExportExcelException(Exception):
+    def __init__(self, message, original_exception=None):
+        super().__init__(f"ERROR EXPORT EXCEL: {message}")
+        self.original_exception = original_exception
+        if original_exception:
+            self.traceback = traceback.format_exc()
+
+
+def main():
+    log('Script execution started.')
+    
+    if len(sys.argv) > 1:
+        json_string = str(sys.argv[1])
+         
+        script_payload = json_string_to_object(json_string, ScriptPayload)
+
+        response = post_api(script_payload)
+        log(f'process started: {response}.')
+        
+    else:
+        raise ExportExcelException('No argument passed.')
+        
+    log('Script execution completed.')
+
+
+# Function to call the API and initiate export
+def post_api(script_payload: ScriptPayload):
+    token = get_token(script_payload.exportExcelRequestBody.customerId)
+    headers = {'Authorization': f'Bearer {token}'}
+    
+    try:
+        url = script_payload.exportDataUrl
+        body = script_payload.exportExcelRequestBody.to_dict()
+        response = requests.post(url, headers=headers, json=body)
+        
+        if response.status_code >= 200 and response.status_code < 300:
+            return response.text
+        else:
+            raise ExportExcelException(f"Failed POST API: {response.text}")
+
+    except Exception as e:
+        raise ExportExcelException("Error in fetch_post_api", e)
+
+# Function to obtain authentication token
+def get_token(customer_id):
+    try:
+        
+        omni_jwt_issuer = os.environ.get('OMNI_JWT_ISSUER')
+        omni_client_id = os.environ.get('CLIENT_ID')
+        omni_client_secret = os.environ.get('CLIENT_SECRET')
+        
+        if omni_jwt_issuer:
+            omni_jwt_issuer = omni_jwt_issuer.split(',')[0]
+ 
+            url = generate_url(omni_jwt_issuer, 'connect/token')
+            
+            data = {
+                "grant_type": 'client_credentials',
+                "client_id": omni_client_id,
+                "client_secret": omni_client_secret,
+                "CustomerId": customer_id
+            }
+            encoded_data = urlencode(data)
+            headers = {"Content-Type": "application/x-www-form-urlencoded"}
+            response = requests.post(url, data=encoded_data, headers=headers, verify=True)
+            success = response.json()
+            return success["access_token"]
+    except Exception as error:
+        raise ExportExcelException(f"Error in get token", error)
+
+# Converts JSON string to a specific object type
+def json_string_to_object(json_string, class_type):
+    try:
+        data = json.loads(json_string)
+        object_instance = class_type(**data)
+        return object_instance
+    except Exception as error:
+        raise ExportExcelException(f"Error in converting json string to object", error)
+
+
+def log(message):
+    logging.info(f"EXPORT EXCEL: {message}")
+
+
+def generate_url(base_url, path=''):
+    if not base_url.endswith('/'):
+        base_url += '/'
+    full_url = urljoin(base_url, path)
+    return full_url
+
+
+if __name__ == "__main__":
+    main()
+
+```
+
+### Step 3: Upload the Python Script to the Task Library
+1. Upload the script to  VTask Library **Shipyard**: [`https://dev.shipsure.com/shipyard`](https://dev.shipsure.com/shipyard).
+2. Obtain the **Library ID** for reference in the frontend integration.
+
+
+### Step 4: Frontend changes
 
 1. Create Manual type task.
 2. Get the taskId.
 3. Get task Entity.
 4. Update Task type to ***Schedule*** task and add all ***payload**.
+
+
+### Vlink Frontend Code Example
 
 Add that library Id in env
 
