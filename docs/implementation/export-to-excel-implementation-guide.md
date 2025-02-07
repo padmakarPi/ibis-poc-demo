@@ -550,7 +550,7 @@ export class ExportToExcelWorkflowService {
                 const value = cell.value;
 
                 if (this.isValidDate(value)) {
-                    cell.numFmt = 'd-mmm-yyyy';
+                    cell.numFmt = 'm/d/yyyy';
                 }
             });
 
