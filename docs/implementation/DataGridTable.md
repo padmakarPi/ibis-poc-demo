@@ -174,6 +174,7 @@ The VDataGridTable component accepts a variety of props that allow you to contro
 | `onRowOrderChange`               | `GridEventListener<"rowOrderChange">`                               | Handler function to respond to changes in row order.                                             | No            |
 | `rowReordering`                  | `boolean`                                                          | Whether row reordering is enabled. Defaults to `false`.                                          | No            |
 | `disableColumnSorting`           | `boolean`                                                          | Disables column sorting. Defaults to `false`.                                                    | No            |
+| `muiDataGridStyle`               | `any`                                                              | The style or SX property we directly want the mui data grid to take. It gets spreaded in the styledDataGrid component. | No            |
 
 
 ## Custom Types for VDataGridTable
@@ -348,6 +349,7 @@ The `AdvanceColumnLevelFilter` type defines the structure and functionality of a
 | `handleFilterValueSelect`    | `(field: string, value: any) => void`                                                     | A function to handle the selection of a filter value. It takes the field name and the selected value as arguments.                                             | Yes          |
 | `shouldNotHaveColumnFilter`  | `(field: string) => boolean`                                                              | A function to determine if a specific column should not have a filter. It takes the column name (field) as an argument and returns a boolean.                  | Yes          |
 | `CustomComponent`            | `any`                                                                                    | An optional custom component for rendering the filter UI.                                                                                                     | No           |
+| `avialableOptions`           | `any`                                                                                     | A function which handles the search of all the values of the given specific column when opened its Filter and sesrch                                           | No          |
 
 
 ### Below is the UI design for the table:
