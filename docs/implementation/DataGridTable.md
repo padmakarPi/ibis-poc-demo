@@ -174,6 +174,7 @@ The VDataGridTable component accepts a variety of props that allow you to contro
 | `onRowOrderChange`               | `GridEventListener<"rowOrderChange">`                               | Handler function to respond to changes in row order.                                             | No            |
 | `rowReordering`                  | `boolean`                                                          | Whether row reordering is enabled. Defaults to `false`.                                          | No            |
 | `disableColumnSorting`           | `boolean`                                                          | Disables column sorting. Defaults to `false`.                                                    | No            |
+| `muiDataGridStyle`               | `any`                                                              | The style or SX property we directly want the mui data grid to take. It gets spreaded in the styledDataGrid component. | No            |
 
 
 ## Custom Types for VDataGridTable
