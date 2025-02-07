@@ -1,7 +1,7 @@
 # Export to Excel Implementation Guide - Documentation
 
 ## Overview
-This document provides an overview of the implementation for exporting data to Excel in Vlink, including API endpoints, Python script workflow, task creation, and frontend integration. You can use the same approach in your application.
+This document provides an overview of the implementation for exporting data to Excel **from grid**, Python script workflow, task creation, and frontend integration. You can use the same approach in your application.
 
 ## Overall Workflow
 
