@@ -19,7 +19,7 @@ export default function Document() {
 				<meta name="format-detection" content="telephone=no" />
 				<meta name="mobile-web-app-capable" content="yes" />
 				<meta name="msapplication-tap-highlight" content="no" />
-				<title>V.Template</title>
+
 				<link
 					href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
 					rel="stylesheet"
