@@ -1,5 +1,6 @@
 "use client";
 
+import Head from "next/head";
 import type { AppProps } from "next/app";
 import Providers from "@/redux/provider";
 import { AuthProvider } from "@/authcontext/AuthContext";
@@ -13,6 +14,9 @@ import RootLayout from "../global/layout";
 export default function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<>
+			<Head>
+				<title>V.Template</title>
+			</Head>
 			<Providers>
 				<ThemeContextProvider>
 					<AuthProvider>
