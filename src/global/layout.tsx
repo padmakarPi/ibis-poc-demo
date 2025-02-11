@@ -8,6 +8,10 @@ import { SESSION_STORAGE_KEYS } from "@/lib/constant/oidc";
 import { getOriginalRoute } from "@/lib/utils";
 import { AuthContext } from "@/authcontext/AuthContext";
 import { useRouter } from "next/router";
+import { ThemeProvider } from "@mui/material";
+import { useSelector } from "react-redux";
+import { IRootState } from "@/interfaces/states/theme.interfaces";
+import { darkTheme, lightTheme } from "@/styles/theme";
 
 export default function RootLayout({
 	children,
@@ -19,6 +23,8 @@ export default function RootLayout({
 	const { userManager, login } = useAuth();
 	const { getUser } = React.useContext(AuthContext);
 	const router = useRouter();
+	const isDarkMode = useSelector((state: IRootState) => state.theme.isDarkMode);
+	const currentTheme = isDarkMode ? darkTheme : lightTheme;
 
 	useEffect(() => {
 		if (!userManager) {
@@ -61,12 +67,14 @@ export default function RootLayout({
 
 	return (
 		<>
-			<main>{children}</main>
-			<VSessionExpiredAlertDialog
-				open={sessionExpiredAlertDialogOpen}
-				setOpen={setSessionExpiredAlertDialogOpen}
-				onRetry={onRetry}
-			/>
+			<ThemeProvider theme={currentTheme}>
+				<main>{children}</main>
+				<VSessionExpiredAlertDialog
+					open={sessionExpiredAlertDialogOpen}
+					setOpen={setSessionExpiredAlertDialogOpen}
+					onRetry={onRetry}
+				/>
+			</ThemeProvider>
 		</>
 	);
 }
