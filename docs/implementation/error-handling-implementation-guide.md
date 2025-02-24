@@ -34,7 +34,7 @@ import { FallbackProps } from "react-error-boundary";
 import { VErrorFallBack } from "@vplatform/shared-components";
 
 const ErrorFallback = React.memo(
-	({ resetErrorBoundary, error, absolute }: FallbackProps & { absolute?: boolean }) => (
+	({ resetErrorBoundary, error, absolute, titleMessage, subMessage }: FallbackProps & { absolute?: boolean }) => (
 		<VErrorFallBack resetErrorBoundary={resetErrorBoundary} error={error} absolute = {absolute} />
 	),
 );
@@ -116,7 +116,8 @@ Next, use the HandleError utility function in your API routes to handle any erro
 The VHandleError function accepts two parameters:
 
 1. error (any) : The error object received from an API response or other sources.
-2. messageOptions (VHandleErrorOptions?): An optional object to customize error messages. 
+2. titleMessage (string?): Optional Title error for the error fallback. 
+2. subMessage (string?): Optional subtext error for the error fallback.  
 
 ##### VHandleErrorOptions
 
