@@ -26,7 +26,6 @@ npm install react-error-boundary
 First, we need to create a component that will serve as the fallback UI when an error is caught. This component will display a user-friendly message and provide an option to retry or navigate away from the error state.
 
 
-
 ```
  // pages/ErrorFallback.tsx
 
@@ -35,16 +34,9 @@ import { FallbackProps } from "react-error-boundary";
 import { VErrorFallBack } from "@vplatform/shared-components";
 
 const ErrorFallback = React.memo(
-	({ resetErrorBoundary, error, absolute }: FallbackProps & { absolute?: boolean }) => {
-
-    const fullErrorMessage =
-			error?.stack ||
-			`${error?.name || "Error"}: ${error?.message || "An unexpected error occurred."}`;
-
-    return (
-		<VErrorFallBack resetErrorBoundary={resetErrorBoundary} error={error} absolute = {absolute} errorMessage={fullErrorMessage}/>
-    )
-  },
+	({ resetErrorBoundary, error, absolute }: FallbackProps & { absolute?: boolean }) => (
+		<VErrorFallBack resetErrorBoundary={resetErrorBoundary} error={error} absolute = {absolute} />
+	),
 );
 
 ErrorFallback.displayName = "ErrorFallback";
@@ -52,11 +44,6 @@ ErrorFallback.displayName = "ErrorFallback";
 export default ErrorFallback;
 
 ```
-#### Prop
-
-1 . errorMessage (string, optional):
-
-- The VErrorFallBack component receives an errorMessage prop, which contains a detailed error message, including the stack trace when available. The user can be copied with a built-in copy button.
 
 Note: 1. resetErrorBoundary function is clearing the error and allowing the component tree to re-render as if no error had occurred.
     
@@ -220,16 +207,9 @@ import { FallbackProps } from "react-error-boundary";
 import { VErrorFallBack } from "@vplatform/shared-components";
 
 const ErrorFallback = React.memo(
-	({ resetErrorBoundary, error, absolute }: FallbackProps & { absolute?: boolean }) => {
-
-    const fullErrorMessage =
-			error?.stack ||
-			`${error?.name || "Error"}: ${error?.message || "An unexpected error occurred."}`;
-
-    return(
-		<VErrorFallBack resetErrorBoundary={resetErrorBoundary} error={error} absolute = {absolute} errorMessage={fullErrorMessage} />
-    )
-  },
+	({ resetErrorBoundary, error, absolute }: FallbackProps & { absolute?: boolean }) => (
+		<VErrorFallBack resetErrorBoundary={resetErrorBoundary} error={error} absolute = {absolute} />
+	),
 );
 
 ErrorFallback.displayName = "ErrorFallback";
