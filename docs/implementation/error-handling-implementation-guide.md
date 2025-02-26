@@ -249,7 +249,7 @@ export default Layout;
 ```
 Note : 1. To dynamically control the positioning of the ErrorBoundary component such that it centers itself only when absolute is true.
 
-![alt text](../assets/componentlevel.png)
+![alt text](../assets/componentlevelerror.png)
 
 ## Deployment related steps
 
@@ -297,3 +297,4 @@ RUN rm -f .npmrc
 - By leveraging tools like react-error-boundary and react-toastify, you can effectively manage errors and improve the overall health of your Next.js application.
 - Reusable error fallback components and utilities reduce code duplication and ensure consistency across the application.
 - Users encounter user-friendly messages instead of application crashes or blank screens. This helps maintain trust and reduces frustration.
+- Allows easy copying of error messages for debugging.
