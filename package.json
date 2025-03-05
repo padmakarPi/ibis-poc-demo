@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "set NODE_OPTIONS=--max_old_space_size=8192 && set NEXT_PRIVATE_LOCAL_WEBPACK=true && next dev",
-    "build": "set NODE_OPTIONS=--max_old_space_size=8192 && set NEXT_PRIVATE_LOCAL_WEBPACK=true && next build",
+    "build": "npm run update-css-client && set NODE_OPTIONS=--max_old_space_size=8192 && set NEXT_PRIVATE_LOCAL_WEBPACK=true && next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --check --ignore-path .prettierignore .",
     "format:fix": "prettier --write --ignore-path .prettierignore .",
     "prepare": "husky",
-    "check-unused": "node check-unused.js"
+    "check-unused": "node check-unused.js",
+    "update-css-client": "node scripts/replace-client-id-in-css.js"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -53,6 +54,7 @@
     "@types/react-dom": "^18.3.1",
     "@typescript-eslint/eslint-plugin": "^8.18.2",
     "@typescript-eslint/parser": "^8.18.2",
+    "dotenv": "^16.4.7",
     "eslint": "^8.52.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-next": "^15.0.1",
