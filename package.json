@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "set NODE_OPTIONS=--max_old_space_size=8192 && set NEXT_PRIVATE_LOCAL_WEBPACK=true && next dev",
-    "build": "set NODE_OPTIONS=--max_old_space_size=8192 && set NEXT_PRIVATE_LOCAL_WEBPACK=true && next build",
+    "build": "npm run update-css-client && set NODE_OPTIONS=--max_old_space_size=8192 && set NEXT_PRIVATE_LOCAL_WEBPACK=true && next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
