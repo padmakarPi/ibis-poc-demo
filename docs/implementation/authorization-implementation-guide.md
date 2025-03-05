@@ -114,6 +114,30 @@ add `update-css-client` npm script and call that script in `build` script.
   }
 ```
 
+### **Update .eslintignore**
+
+Add this below lines in `.eslintignore`.
+
+```shell
+package.json
+scripts/*
+```
+
+### **Update .prettierignore**
+
+Add this below lines in `.prettierignore`.
+
+```shell
+package.json
+scripts/*
+```
+
+### **Install dotenv**
+
+```shell
+npm i dotenv
+```
+
 ---
 
 ## Step 5: Configure Business Process in Shipyard
