@@ -19,3 +19,4 @@ docker-compose.yaml
 .husky/*
 check-used.js
 .lintstagedrc.json
+scripts/*
