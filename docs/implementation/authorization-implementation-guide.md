@@ -135,7 +135,7 @@ scripts/*
 ### **Install dotenv**
 
 ```shell
-npm i dotenv
+npm install dotenv --save-dev
 ```
 
 ---
