@@ -70,7 +70,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
 #### Props
 
-The Component has accepts two parameters:
+The Component has accepts three props:
 
 1. error (any) : The error object received from an API response or other sources. 
 2. titleMessage (string?): Optional Title error for the error fallback. 
@@ -123,6 +123,8 @@ Next, use the HandleError utility function in your API routes to handle any erro
 The VHandleError function accepts two parameters:
 
 1. error (any) : The error object received from an API response or other sources. 
+2. messageOptions (VHandleErrorOptions?): An optional object to customize error messages. 
+
 
 ##### VHandleErrorOptions
 
