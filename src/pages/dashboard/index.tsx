@@ -3,9 +3,9 @@
 import AppBarHeader from "../../components/appbar";
 
 const Home = () => (
-		<>
-			<AppBarHeader />
-		</>
-	);
+	<>
+		<AppBarHeader />
+	</>
+);
 
 export default Home;
