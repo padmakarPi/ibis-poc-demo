@@ -21,7 +21,7 @@ In this below example
 
 `#btnUpdateDetails-` is `elementId` and `0896c4c3-e70b-4f84-9054-d6b57e5351d2` is `clientId`.
 
-> Note: Mention css for each uiElements will be disabled by default.
+> Note: CSS for each uiElements will be disabled by default.
 
 ### **Example CSS:**
 ```css
