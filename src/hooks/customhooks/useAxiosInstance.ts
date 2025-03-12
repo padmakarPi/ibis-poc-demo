@@ -4,6 +4,8 @@ import { useContext } from "react";
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { COMMON_METADATA } from "@/lib/constant/oidc";
 import { AuthContext } from "@/authcontext/AuthContext";
+import { jwtDecode } from "jwt-decode";
+import { jwtDecodeData } from "@/interfaces/common/token-data.interface";
 
 const useAxiosInterceptor = (baseURL: string | undefined) => {
 	const axBackendInstance = axios.create({ baseURL });
@@ -24,9 +26,20 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 			await new Promise(resolve => setTimeout(resolve, 1000));
 		}
 	};
+
+	const getClientIdFromToken = () => {
+		const tokenData = getStoredTokenData();
+		const accessToken = tokenData?.access_token;
+		if (!accessToken) return "";
+
+		const decoded: jwtDecodeData = jwtDecode(accessToken);
+		return decoded?.client_id;
+	};
+
 	const refreshToken = async () => {
 		const tokenData = getStoredTokenData();
-		const clientId = process.env.NEXT_PUBLIC_CLIENT_ID || "";
+
+		const clientId = getClientIdFromToken() || "";
 
 		const requestBody = new URLSearchParams();
 		requestBody.append("grant_type", "refresh_token");
