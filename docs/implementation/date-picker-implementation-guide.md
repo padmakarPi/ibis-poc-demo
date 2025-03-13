@@ -13,6 +13,9 @@ VDatePicker is a customizable date picker component designed for seamless integr
 
 - `Customization`: Supports various customization options such as styles, formats, and width etc.
 
+- `Dark Mode Support` : Toggle between dark and light themes using the mode prop.
+
+
 ### Installation
 
 To install VDatePicker, run the following command:
@@ -22,10 +25,10 @@ npm install @vplatform/shared-components
 
 ```
 
-If already install the shared-components package then upgrade the package
+If the shared-components package is already installed, upgrade it to version 1.7.43 or above:
 
 ```
-npm install @vplatform/shared-components@1.7.42
+npm install @vplatform/shared-components@1.7.43
 
 ```
 
@@ -86,4 +89,10 @@ export default App;
 - If consider2YearRange is true, the component checks whether the difference between the startDate and endDate is more than 2 years.
 - If the range exceeds 2 years, an error is triggered, preventing selection.
 
+#### 6) mode (boolean, optional)
+- If true, the date picker will use a dark theme.
+- If false, the date picker will use a light theme (default).
+
 ![alt text](../assets/datepicker.png)
+![alt text](../assets/datepickedark1.png)
+![alt text](../assets/datepickedark2.png)
