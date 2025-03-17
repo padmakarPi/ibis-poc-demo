@@ -1,7 +1,7 @@
 # Export to Excel Implementation Guide - Documentation
 
 ## Overview
-This document provides an overview of the implementation for exporting data to Excel **from grid**, Python script workflow, task creation, and frontend integration. You can use the same approach in your application.
+This document provides an overview of the implementation for exporting data to Excel **from grid**,  task creation, and frontend integration. You can use the same approach in your application.
 
 ## Overall Workflow
 
@@ -16,8 +16,7 @@ This document provides an overview of the implementation for exporting data to E
    - Uploads the document
    - Generates a download URL
    - Sends a notification with the download URL
-2. **Develop a Python script** to invoke the above endpoint.
-3. **Implement frontend logic** to create a scheduled task with all the necessary payloads.
+2. **Implement frontend logic** to create a scheduled task with all the necessary payloads.
 
 
 
@@ -89,7 +88,7 @@ export const Message = {
 ```typescript
   //export-to-excel.request.dto.ts
 
-  import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
     IsArray,
@@ -516,7 +515,7 @@ export class ExportToExcelWorkflowService {
 
 ```
 
-Import ExportToExcelWorkflowService in module
+Import **ExportToExcelWorkflowService** in module
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -554,7 +553,7 @@ export class VLinkModule {}
 
 ```
 
-Change in DockerFile 
+Change in **DockerFile** 
 
 
 ```Dockerfile
@@ -609,205 +608,22 @@ CMD ["node", "dist/main.js"]
 
 ```
 
-In gitignore add this 
+In **.gitignore** add this 
 
 ```bash
 /reports
 ```
 
-
-### Step 2 : Create Python script
-
-In this script, the Python argument is received in `str(sys.argv[1])`, which is then converted into an object using `json_string_to_object`. The type of this object is `ScriptPayload`, which represents the argument passed in the task payload.
-
-#### Workflow of the Python Script
-1. Parse the JSON string received from the Python argument.
-2. Send a request to the endpoint with the required payload.
-
-
-#### Vlink Python Script Example
-
-```python
-import json
-import os
-import sys
-from urllib.parse import urlencode, urljoin
-import logging
-import traceback
-import requests
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
-class DisplayColumn:
-    def __init__(self, fieldName, displayColumnName):
-        self.fieldName = fieldName
-        self.displayColumnName = displayColumnName
-        
-    def to_dict(self):
-        return {"fieldName": self.fieldName, "displayColumnName": self.displayColumnName}
-
-
-class ExportDataBody:
-    def __init__(self, taskIds, pageNumber, pageSize, displayColumns):
-        self.taskIds = taskIds
-        self.pageNumber = pageNumber
-        self.pageSize = pageSize
-        self.displayColumns = [DisplayColumn(**col) for col in displayColumns]
-        
-    def to_dict(self):
-        return {
-            "taskIds": self.taskIds,
-            "pageNumber": self.pageNumber,
-            "pageSize": self.pageSize,
-            "displayColumns": [col.to_dict() for col in self.displayColumns]
-        }
-        
-        
-class ExportExcelRequestBody:
-    def __init__(self, exportDataBody, taskId, sourceApplicationId, userId,customerId,uploadDocumentTypeId,exportExcelColumns):
-        self.exportDataBody = ExportDataBody(**exportDataBody)
-        self.taskId = taskId
-        self.sourceApplicationId = sourceApplicationId
-        self.userId = userId
-        self.customerId = customerId
-        self.uploadDocumentTypeId = uploadDocumentTypeId
-        self.exportExcelColumns = exportExcelColumns
-    
-    def to_dict(self):
-        return {
-            "exportDataBody": self.exportDataBody.to_dict(),
-            "taskId": self.taskId,
-            "sourceApplicationId": self.sourceApplicationId,
-            "userId": self.userId,
-            "customerId": self.customerId,
-            "uploadDocumentTypeId": self.uploadDocumentTypeId,
-            "exportExcelColumns": self.exportExcelColumns
-        }
-
-# Represents the script payload (arguments passed to the script)requirement
-class ScriptPayload:
-    def __init__(self, exportDataUrl, exportExcelRequestBody):
-        self.exportDataUrl = exportDataUrl
-        self.exportExcelRequestBody = ExportExcelRequestBody(**exportExcelRequestBody)
-        
-
-# Custom Exception for handling errors in the export process
-class ExportExcelException(Exception):
-    def __init__(self, message, original_exception=None):
-        super().__init__(f"ERROR EXPORT EXCEL: {message}")
-        self.original_exception = original_exception
-        if original_exception:
-            self.traceback = traceback.format_exc()
-
-
-def main():
-    log('Script execution started.')
-    
-    if len(sys.argv) > 1:
-        json_string = str(sys.argv[1])
-         
-        script_payload = json_string_to_object(json_string, ScriptPayload)
-
-        response = post_api(script_payload)
-        log(f'process started: {response}.')
-        
-    else:
-        raise ExportExcelException('No argument passed.')
-        
-    log('Script execution completed.')
-
-
-# Function to call the API and initiate export
-def post_api(script_payload: ScriptPayload):
-    token = get_token(script_payload.exportExcelRequestBody.customerId)
-    headers = {'Authorization': f'Bearer {token}'}
-    
-    try:
-        url = script_payload.exportDataUrl
-        body = script_payload.exportExcelRequestBody.to_dict()
-        response = requests.post(url, headers=headers, json=body)
-        
-        if response.status_code >= 200 and response.status_code < 300:
-            return response.text
-        else:
-            raise ExportExcelException(f"Failed POST API: {response.text}")
-
-    except Exception as e:
-        raise ExportExcelException("Error in fetch_post_api", e)
-
-# Function to obtain authentication token
-def get_token(customer_id):
-    try:
-        
-        omni_jwt_issuer = os.environ.get('OMNI_JWT_ISSUER')
-        omni_client_id = os.environ.get('CLIENT_ID')
-        omni_client_secret = os.environ.get('CLIENT_SECRET')
-        
-        if omni_jwt_issuer:
-            omni_jwt_issuer = omni_jwt_issuer.split(',')[0]
- 
-            url = generate_url(omni_jwt_issuer, 'connect/token')
-            
-            data = {
-                "grant_type": 'client_credentials',
-                "client_id": omni_client_id,
-                "client_secret": omni_client_secret,
-                "CustomerId": customer_id
-            }
-            encoded_data = urlencode(data)
-            headers = {"Content-Type": "application/x-www-form-urlencoded"}
-            response = requests.post(url, data=encoded_data, headers=headers, verify=True)
-            success = response.json()
-            return success["access_token"]
-    except Exception as error:
-        raise ExportExcelException(f"Error in get token", error)
-
-# Converts JSON string to a specific object type
-def json_string_to_object(json_string, class_type):
-    try:
-        data = json.loads(json_string)
-        object_instance = class_type(**data)
-        return object_instance
-    except Exception as error:
-        raise ExportExcelException(f"Error in converting json string to object", error)
-
-
-def log(message):
-    logging.info(f"EXPORT EXCEL: {message}")
-
-
-def generate_url(base_url, path=''):
-    if not base_url.endswith('/'):
-        base_url += '/'
-    full_url = urljoin(base_url, path)
-    return full_url
-
-
-if __name__ == "__main__":
-    main()
-
-```
-
-### Step 3: Upload the Python Script to the Task Library
-1. Upload the script to  VTask Library **Shipyard**: [`https://dev.shipsure.com/shipyard`](https://dev.shipsure.com/shipyard).
-2. Obtain the **Library ID** for reference in the frontend integration.
-
-
-### Step 4: Frontend changes
+### Step 2: Frontend changes
 
 1. Create Manual type task.
 2. Get the taskId.
 3. Get task Entity.
-4. Update Task type to ***Schedule*** task and add all ***payload**.
+4. Update Task type to ***Schedule*** task and add all **payload**.
 
 
 ### Vlink Frontend Code Example
 
-Add that library Id in env
-
-```bash
-NEXT_PUBLIC_EXPORT_TO_EXCEL_PYTHON_SCRIPT_LIBRARY_ID = <library Id>
-```
 
 ```typescript
 
@@ -836,10 +652,6 @@ const handleExportToExcel = async () => {
 				})
 				.replace(",", "");
 
-			const libraryId = Number(
-				process.env.NEXT_PUBLIC_EXPORT_TO_EXCEL_PYTHON_SCRIPT_LIBRARY_ID,
-			);
-
 			const createTaskRequest = {
 				schemaId: 1,
 				type: taskTypeEnum.MANUAL,
@@ -853,58 +665,44 @@ const handleExportToExcel = async () => {
 						value: `VLink Tickets Export To Excel: ${formattedDate}`,
 					},
 				],
-				taskExecutionType: "Python Script",
+				taskExecutionType: "API",
 			};
 
-            // Call Create Task V3 api
 			const createTaskResponse = await createTicketV3Api(createTaskRequest);
 			const taskId = createTaskResponse.data.result;
 
-            // Call Get Task V3 api
 			const taskResponse = await getTaskByTaskIdApiV3(taskId);
 			const task = taskResponse.data.result;
 
 			task.type = taskTypeEnum.SCHEDULER;
 			task.payload = {
-				libraryId,
+				url: `${process.env.NEXT_PUBLIC_VLINK_BASE_API_URL}/v1/export-to-excel`,
+				method: "post",
 				data: {
-					// above Endpoint which is created
-                    exportDataUrl: `${process.env.
-                    NEXT_PUBLIC_VLINK_BASE_API_URL}/v1/export-to-excel`, 
-
-                    // request Body
-					exportExcelRequestBody: {
-						exportDataBody: {
-							taskIds,
-							pageNumber: 1,
-							pageSize: 100,
-							displayColumns: localSelectedColumns?.map(column => ({
-								fieldName: column.field,
-								displayColumnName: column.headerName,
-							})),
-						},
-
-                        //Task Id which is used to store notification under specific task for persistent.
-						taskId,
-
-                        //application Id
-						sourceApplicationId: process.env.NEXT_PUBLIC_CLIENT_ID,
-
-                        //User Id which get notify
-						userId: loggedInUserDetails.sub,
-						customerId: loggedInUserDetails.CustomerId,
-
-                        // Based on project id will change. You can get from Document Service Team. 
-						uploadDocumentTypeId: 5, 
-						
-                        // Columns which is need to export in excel.
-                        exportExcelColumns: localSelectedColumns?.map(
-							column => column.headerName,
-						),
+					exportDataBody: {
+						taskIds,
+						pageNumber: 1,
+						pageSize: 100,
+						displayColumns: localSelectedColumns?.map(column => ({
+							fieldName: column.field,
+							displayColumnName: column.headerName,
+						})),
 					},
+                    //TaskId which is used to store notification under specific task for persistent.
+					taskId,
+                    //application Id
+					sourceApplicationId: process.env.NEXT_PUBLIC_CLIENT_ID,
+                    //User Id which get notify
+					userId: loggedInUserDetails.sub,
+					customerId: loggedInUserDetails.CustomerId,
+                    // Based on project id will change. You can get from Document Service Team.
+					uploadDocumentTypeId: 5,
+                    // Columns which is need to export in excel.
+					exportExcelColumns: localSelectedColumns?.map(
+						column => column.headerName,
+					),
 				},
 			};
-
 			task.scheduleDetails = [
 				{
 					startDate: new Date(),
@@ -912,7 +710,6 @@ const handleExportToExcel = async () => {
 				},
 			];
 
-            // Call Update Task V4 api
 			await updateTicketTaskApiV4(taskId, task);
 			enqueueSnackbar({
 				variant: "success",
@@ -931,6 +728,7 @@ const handleExportToExcel = async () => {
 					</Box>
 				),
 			});
+			onModalClose();
 			setIsLoading(false);
 		} catch (error) {
 			console.error("Export to excel =>", error);
@@ -938,7 +736,6 @@ const handleExportToExcel = async () => {
 			setIsLoading(false);
 		}
 	};
-
 
 
 
