@@ -1,540 +1,636 @@
 # Export to Excel Implementation Guide - Documentation
 
 ## Overview
-This document provides an overview of the implementation for exporting data to Excel, including API endpoints, Python script workflow, task creation, and frontend integration.
+This document provides an overview of the implementation for exporting data to Excel **from grid**,  task creation, and frontend integration. You can use the same approach in your application.
 
 ## Overall Workflow
 
 ![Workflow](../assets/export-to-excel-generic-diagram.png)
 
-## Implementation Steps
 
-### Step 1: API Endpoint for Data Retrieval
-An API endpoint is required to fetch the data for Excel export. The response should be an array of key-value pairs where:
-- **key** serves as the header of the Excel file.
-- **value** represents the column data.
+### Steps to Implement Export to Excel Workflow
 
-#### **Example Response:**
-```json
-[
-    {
-        "Status": "New",
-        "Progress": "",
-        "Raised By": "Gazanfar Ansari",
-        "Created On": "2025-01-27T09:30:05.958Z",
-        "Updated On": "2025-01-27T10:09:01.445Z",
-        "Name": "T",
-        "Resolver Group": "Vships FMC",
-        "Priority": "Urgent",
-        "Due Date": "2025-02-06T14:35:07.861Z",
-        "Ticket Type": "Vessel setup issues",
-        "Vessel Name": "",
-        "Ticket No.": "25-7386",
-        "Agent": "",
-        "Closed On": "",
-        "Task Count": ""
-    }
-]
+1. **Create an API Endpoint** that:
+   - Fetches all the required data
+   - Creates an Excel document
+   - Uploads the document
+   - Generates a download URL
+   - Sends a notification with the download URL
+2. **Implement frontend logic** to create a scheduled task with all the necessary payloads.
+
+
+
+## Below is Vlink Export To Excel  Implementation
+
+
+### Step 1: Create API Endpoint
+This endpoint will handle:
+1. Fetching required data
+2. Processing the data for Excel
+3. Generating the Excel document
+4. Uploading the document to VDocument Service
+5. Generating a download URL
+6. Sending a notification with the download URL
+
+
+#### Vlink API Endpoint Example
+
+Install this below package
+
+```bash
+npm i exceljs date-fns
 ```
 
-#### **Paginated Response Example Response:**
-```json
-{
-    "paginationResponse": {
-        "totalRecords": 1884
-    },
-    "result": [
-        {
-            "Status": "New",
-            "Progress": "",
-            "Raised By": "Gazanfar Ansari",
-            "Created On": "2025-01-27T09:30:05.958Z",
-            "Updated On": "2025-01-27T10:09:01.445Z",
-            "Name": "T",
-            "Resolver Group": "Vships FMC",
-            "Priority": "Urgent",
-            "Due Date": "2025-02-06T14:35:07.861Z",
-            "Ticket Type": "Vessel setup issues",
-            "Vessel Name": "",
-            "Ticket No.": "25-7386",
-            "Agent": "",
-            "Closed On": "",
-            "Task Count": ""
-        },
-        {
-            "Status": "Open",
-            "Progress": "",
-            "Raised By": "system system",
-            "Created On": "2025-01-24T12:51:47.566Z",
-            "Updated On": "2025-01-30T06:45:42.261Z",
-            "Name": "Updates from All Company, All Company and more at Vships",
-            "Resolver Group": "Vships FMC",
-            "Priority": "Urgent",
-            "Due Date": "2025-02-03T17:56:48.328Z",
-            "Agent": "Kamlesh   Dandi",
-            "Ticket Type": "Vessel setup issues",
-            "Ticket No.": "25-7385",
-            "Vessel Name": "",
-            "Closed On": "",
-            "Task Count": ""
-        }
-        
-    ]
-}
-```
-
-**Notes:**
-- Ensure all values are of primitive types (string, date, number, boolean, etc.).
-- If a property has no value, assign an empty string.
-
-### Step 2: Create Python Script for Export Workflow
-A Python script is implemented to handle the workflow of exporting data to Excel. It performs the following steps:
-1. Fetches data from the API.
-2. Generates an Excel document.
-3. Uploads the document.
-4. Sends a notification upon completion.
-
-Once script is ready upload to TaskLibrary (Shipyard https://dev.shipsure.com/shipyard) and get the **libraryId**.
-
-#### **Python script example**
-```python
-import json
-import os
-import sys
-import time
-from urllib.parse import urlencode, urljoin
-from openpyxl import Workbook
-from datetime import datetime, timezone
-import mimetypes
-import logging
-import traceback
-import aiohttp
-import asyncio
-import requests
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
-class ScriptPayload:
-    def __init__(
-        self, 
-        exportDataUrl, 
-        exportDataMethod, 
-        exportDataIsPaginated,
-        exportDataPageSize,
-        exportDataBody, 
-        exportDataQueryParams, 
-        documentBaseUrl, 
-        uploadDocumentTypeId, 
-        exportExcelColumns, 
-        notificationBaseUrl, 
-        taskId,
-        taskBaseUrl,
-        userId, 
-        sourceApplicationId,
-        customerId,
-        exportDataPaginationTotalRecordCountKey,
-        exportExcelFileNamePrefix = None
-        ):
-        self.exportDataUrl = exportDataUrl
-        self.exportDataMethod = exportDataMethod
-        self.exportDataIsPaginated = exportDataIsPaginated
-        self.exportDataPageSize = exportDataPageSize
-        self.exportDataBody = exportDataBody
-        self.exportDataQueryParams = exportDataQueryParams
-        self.documentBaseUrl = documentBaseUrl
-        self.uploadDocumentTypeId = uploadDocumentTypeId
-        self.exportExcelColumns = exportExcelColumns
-        self.notificationBaseUrl = notificationBaseUrl
-        self.taskId = taskId
-        self.taskBaseUrl = taskBaseUrl
-        self.userId = userId
-        self.sourceApplicationId = sourceApplicationId
-        self.customerId = customerId
-        self.exportDataPaginationTotalRecordCountKey = exportDataPaginationTotalRecordCountKey
-        self.exportExcelFileNamePrefix = exportExcelFileNamePrefix
-
-class ExportExcelException(Exception):
-    def __init__(self, message, original_exception=None):
-        super().__init__(f"ERROR EXPORT EXCEL: {message}")
-        self.original_exception = original_exception
-        if original_exception:
-            self.traceback = traceback.format_exc()
-
-
-async def main():
-    log('Script execution started.')
-    
-    if len(sys.argv) > 1:
-        json_string = str(sys.argv[1])
-         
-        script_payload = json_string_to_object(json_string, ScriptPayload)
-
-        export_data = await fetch_export_data(script_payload)
-        log('Fetched data successfully.')
-        
-        file_name = create_excel_document(export_data, script_payload,script_payload.exportExcelFileNamePrefix)
-        log(f'{file_name} file created successfully.')
-
-        upload_response = upload_document(file_name, script_payload.uploadDocumentTypeId, file_name, script_payload)
-        pre_signed_url_params = upload_response["preSignedUrlParams"]
-        log(f'{file_name} file uploaded successfully and pre signed url params {pre_signed_url_params}.')
-        
-        url = generate_url(script_payload.documentBaseUrl, f'v1/pre-signed/download{pre_signed_url_params}')
-        await send_notification(script_payload, url)
-        log(f'Notification send successfully for this {file_name} file.')
-        
-    else:
-        raise ExportExcelException('No argument passed.')
-        
-    log('Script execution completed.')
-
-
-async def fetch_export_data(script_payload):
-    token = get_token(script_payload.customerId)
-    headers = {'Authorization': f'Bearer {token}'}
-
-    if script_payload.exportDataMethod.upper() == 'GET':
-        if script_payload.exportDataIsPaginated == 'True':
-            return await fetch_get_paginated_api(script_payload, headers)
-        else:
-            return await fetch_get_api(script_payload, headers)
-    
-    elif script_payload.exportDataMethod.upper() == 'POST':
-        if script_payload.exportDataIsPaginated == 'True':
-            return await fetch_post_paginated_api(script_payload, headers)
-        else:
-            return await fetch_post_api(script_payload, headers)
-
-    else:
-        raise ExportExcelException(f"Unsupported HTTP method: {script_payload.exportDataMethod}")
-
-
-async def fetch_get_api(script_payload, headers):
-    try:
-        url = script_payload.exportDataUrl
-        params = script_payload.exportDataQueryParams or {}
-        url += f"?{urlencode(params)}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers) as response:
-                if response.status >= 200 and response.status < 300:
-                    return await response.json()
-                else:
-                    raise ExportExcelException(f"Failed GET API: {await response.text()}")
-
-    except Exception as e:
-        raise ExportExcelException("Error in fetch_get_api", e)
-
-
-async def fetch_get_paginated_api(script_payload, headers):
-    try:
-        url = script_payload.exportDataUrl
-        params = script_payload.exportDataQueryParams or {}
-        page_size = script_payload.exportDataPageSize
-        all_data = []
-
-        async def fetch_page(page_number):
-            params.update({'pageNumber': page_number, 'pageSize': page_size})
-            async with aiohttp.ClientSession() as session:
-                async with session.get(f"{url}?{urlencode(params)}", headers=headers) as response:
-                    if response.status >= 200 and response.status < 300:
-                        return await response.json()
-                    else:
-                        raise ExportExcelException(f"Failed GET Paginated API: {await response.text()}")
-
-        first_page_data = await fetch_page(1)
-        
-        all_data.extend(get_items_from_response(script_payload,first_page_data))
-        total_records = get_total_records_count_from_response(script_payload,first_page_data)
-
-        total_pages = (total_records + page_size - 1) // page_size
-
-        if total_pages > 1:
-            tasks = [fetch_page(page) for page in range(2, total_pages + 1)]
-            results = await asyncio.gather(*tasks)
-            for result in results:
-                all_data.extend(get_items_from_response(script_payload,result))
-
-        return all_data
-
-    except Exception as e:
-        raise ExportExcelException("Error in fetch_get_paginated_api", e)
-
-
-async def fetch_post_api(script_payload, headers):
-    try:
-        url = script_payload.exportDataUrl
-        body = script_payload.exportDataBody
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=body) as response:
-                if response.status >= 200 and response.status < 300:
-                    return await response.json()
-                else:
-                    raise ExportExcelException(f"Failed POST API: {await response.text()}")
-
-    except Exception as e:
-        raise ExportExcelException("Error in fetch_post_api", e)
-
-
-async def fetch_post_paginated_api(script_payload, headers):
-    try:
-        url = script_payload.exportDataUrl
-        page_size = script_payload.exportDataPageSize
-        all_data = []
-
-        async def fetch_page(page_number):
-            body = script_payload.exportDataBody.copy()
-            body.update({'pageNumber': page_number, 'pageSize': page_size})
-            async with aiohttp.ClientSession() as session:
-                async with session.post(url, headers=headers, json=body) as response:
-                    if response.status >= 200 and response.status < 300:
-                        return await response.json()
-                    else:
-                        raise ExportExcelException(f"Failed POST Paginated API: {await response.text()}")
-
-        first_page_data = await fetch_page(1)
-        
-        all_data.extend(get_items_from_response(script_payload,first_page_data))
-        total_records = get_total_records_count_from_response(script_payload,first_page_data)
-        
-        total_pages = (total_records + page_size - 1) // page_size
-
-        if total_pages > 1:
-            tasks = [fetch_page(page) for page in range(2, total_pages + 1)]
-            results = await asyncio.gather(*tasks)
-            for result in results:
-                all_data.extend(get_items_from_response(script_payload,result))
-
-        return all_data
-
-    except Exception as e:
-        raise ExportExcelException("Error in fetch_post_paginated_api", e)
-
-
-def get_items_from_response(script_payload, data):
-    if(script_payload.exportDataPaginationTotalRecordCountKey == "totalRecords"):
-        return data.get('result', [])
-    elif(script_payload.exportDataPaginationTotalRecordCountKey == "totalItems"):
-        return data.get('items', [])
-    else:
-        raise ExportExcelException("get_items_from_response Response format not supported")
-
-   
-def get_total_records_count_from_response(script_payload, data):
-    if(script_payload.exportDataPaginationTotalRecordCountKey == "totalRecords"):
-        return data.get('paginationResponse', {}).get('totalRecords', 0)
-    elif(script_payload.exportDataPaginationTotalRecordCountKey == "totalItems"):
-        return data.get('totalItems', 0)
-    else:
-        raise ExportExcelException("get_total_records_count_from_response Response format not supported")
-    
-
-def create_excel_document(data, script_payload, name_prefix=None):
-    try:
-        if not os.path.exists('reports'):
-            os.makedirs('reports')
-
-        if name_prefix:
-            filename = f"reports/{name_prefix}{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.xlsx"
-        else:
-            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            filename = f"reports/output_{timestamp}.xlsx"
-
-        wb = Workbook()
-        ws = wb.active
-        headers = [col for col in script_payload.exportExcelColumns if col in data[0]]
-        ws.append(headers)
-
-        for row in data:
-            filtered_row = {key: row[key] for key in headers}
-            ws.append(list(filtered_row.values()))
-
-        wb.save(filename)
-        return filename
-    except Exception as error:
-        raise ExportExcelException("Error in create excel document", error)
-
-
-def upload_document(file_path, document_type_id, friendly_file_name, script_payload):
-    token = get_token(script_payload.customerId)
-    
-    try:
-        document_data = {
-            'documentypeId': document_type_id,
-            'friendlyFileName': friendly_file_name,
-            'isDownable': True,
-            'isReplicable': True,
-            'isLowBandwidth': True
-        }
-
-        mime_type, _ = mimetypes.guess_type(file_path)
-
-        if file_path.endswith('.xlsx'):
-            mime_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-
-        if not mime_type:
-            mime_type = 'application/octet-stream'
-
-        file = open(file_path, 'rb')
-        try:
-            files = {
-                'file': (file_path, file, mime_type)
-            }
-
-            headers = {
-                'Authorization': f'Bearer {token}',
-            }
-
-            url = generate_url(script_payload.documentBaseUrl, 'v1/pre-signed/uploadDocument')
-            response = requests.post(url, headers=headers, data=document_data, files=files)
-
-            if response.status_code == 201:
-                log("Document uploaded successfully")
-            else:
-                log(f"Error uploading document: {response.status_code}")
-                print(response.text)
-        finally:
-            file.close()
-
-        time.sleep(1)
-
-        try:
-            os.remove(file_path)
-            log(f"File {file_path} deleted successfully")
-        except Exception as delete_error:
-            log(f"Error deleting file {file_path}: {delete_error}")
-
-        return response.json() if response.status_code == 201 else None
-    except Exception as error:
-        raise ExportExcelException("Error in uploading document", error)
-
-
-async def send_notification(script_payload, redirect_url):
-    try:
-        created_datetime = datetime.now(timezone.utc).isoformat()
-
-        payload = {
-            "sender": script_payload.userId,
-            "receiver": [
-                {"userId": script_payload.userId, }
-                ],
-            "state": "Pending",
-            "subject": 'Your Excel File is Ready!',
-            "body": f'<p>Click <a href="{redirect_url}" download>Download</a> to get your file.</p>',
-            "icon": "ChatOutlinedIcon",
-            "acknowledgedDateTime": None,
-            "acknowledgedBy": None,
-            "redirectURL": redirect_url,
-            "acknowledgementType": "Direct",
-            "sourceApplicationId": script_payload.sourceApplicationId,
-            "acknowledgementRequired": False,
-            "priority": "Urgent",
-            "notificationId": 1,
-            "createdDateTime": created_datetime,
-            "taskId":script_payload.taskId 
-        }
-
-        token = get_token(script_payload.customerId)
-        headers = {
-        'Accept': 'application/json',
-        'Authorization': f'Bearer {token}',
-        'Content-Type': 'application/json'
-    }
-        url = script_payload.notificationBaseUrl + '/v1/notify'
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, data=json.dumps(payload)) as response:
-                response.raise_for_status()
-                return response
-    except Exception as error:
-        raise ExportExcelException("Error in sending notification", error)
-
-
-def get_token(customer_id):
-    try:
-        omni_jwt_issuer = os.environ.get('OMNI_JWT_ISSUER')
-        omni_client_id = os.environ.get('CLIENT_ID')
-        omni_client_secret = os.environ.get('CLIENT_SECRET')
-        
-        if omni_jwt_issuer:
-            omni_jwt_issuer = omni_jwt_issuer.split(',')[0]
- 
-            url = generate_url(omni_jwt_issuer, 'connect/token')
-            
-            data = {
-                "grant_type": 'client_credentials',
-                "client_id": omni_client_id,
-                "client_secret": omni_client_secret,
-                "CustomerId": customer_id
-            }
-            encoded_data = urlencode(data)
-            headers = {"Content-Type": "application/x-www-form-urlencoded"}
-            response = requests.post(url, data=encoded_data, headers=headers, verify=True)
-            success = response.json()
-            return success["access_token"]
-    except Exception as error:
-        raise ExportExcelException(f"Error in get token", error)
-
-
-def json_string_to_object(json_string, class_type):
-    try:
-        data = json.loads(json_string)
-        object_instance = class_type(**data)
-        return object_instance
-    except Exception as error:
-        raise ExportExcelException(f"Error in converting json string to object", error)
-
-
-def log(message):
-    logging.info(f"EXPORT EXCEL: {message}")
-
-
-def generate_url(base_url, path=''):
-    if not base_url.endswith('/'):
-        base_url += '/'
-    full_url = urljoin(base_url, path)
-    return full_url
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
-
-```
-
-
-## Step 3: Frontend Implementation
-The frontend integrates the export-to-Excel functionality by:
-1. Add one env variable (process.env.NEXT_PUBLIC_EXPORT_TO_EXCEL_PYTHON_SCRIPT_LIBRARY_ID) in .env file to get libraryId (libraryId is ID which we get once we upload the script in task library)
-2. Creating a manual type task.
-3. Updating it to a scheduled type task with the required payload.
-
-## Payload Details
-The payload structure consists of the following properties:
-
-| Property Name                                        | Description                                                                 | Required | Expected Values         |
-|------------------------------------------------------|-----------------------------------------------------------------------------|----------|-------------------------|
-| **libraryId**                                         | Identifies the VTask library (Python script)                                | Yes      | Integer                 |
-| **data**                                              | Contains required details for the script execution                         | Yes      | JSON Object             |
-| **data.exportDataUrl**                                | API endpoint URL for fetching data                                         | Yes      | String (URL)            |
-| **data.exportDataMethod**                             | HTTP method (POST/GET)                                                     | Yes      | "POST", "GET"           |
-| **data.exportDataIsPaginated**                        | Specifies if pagination is enabled                                         | Yes      | "True", "False"         |
-| **data.exportDataPageSize**                           | Page size for paginated responses. Set 0 if not required                   | Yes      | Integer                 |
-| **data.exportDataBody**                               | Request body for the API call. Set {} if not required                      | Yes      | JSON Object             |
-| **data.exportDataQueryParams**                        | Query parameters. Set {} if not required                                    | Yes      | JSON Object             |
-| **data.exportDataPaginationTotalRecordCountKey**      | KeyName for total record count in paginated responses. Set "" if not required | Yes      | String                  |
-| **data.documentBaseUrl**                              | Base URL for document service                                              | Yes      | String (URL)            |
-| **data.uploadDocumentTypeId**                         | Document type ID. Value you can get from VDocument service team            | Yes      | Integer                 |
-| **data.exportExcelColumns**                           | Columns to be included in the Excel file                                    | Yes      | Array of Strings        |
-| **data.exportExcelFileNamePrefix**                    | File name prefix for the exported Excel file                                | No       | String                  |
-| **data.notificationBaseUrl**                          | Base URL for notification service                                           | Yes      | String (URL)            |
-| **data.userId**                                       | Logged-in user ID                                                          | Yes      | String (UUID)           |
-| **data.sourceApplicationId**                          | Client application ID                                                      | Yes      | String                  |
-| **data.customerId**                                   | Customer ID                                                                | Yes      | Number                  |
-| **data.taskId**                                       | Task ID for Notification tracking                                                        | Yes      | Number                  |
-| **data.taskBaseUrl**                                  | Base URL for VTask service                                                 | Yes      | String (URL)            |
-
-
-
-### **Frontend Code Example**
 ```typescript
+
+// vlink.controller.ts
+
+export class VLinkController {
+  constructor(private readonly exportToExcelWorkflowService: ExportToExcelWorkflowService) { }
+
+@Post('export-to-excel')
+  @ApiOperation({
+    summary: 'Export to excel.',
+    description: 'This endpoint exports the provided data into an Excel file.',
+  })
+  @ApiCreatedResponse({
+    description: 'Excel file export has been successfully initiated.',
+    type: String,
+  })
+  @ApiBody({
+    description: 'Request body to exported to Excel.',
+    type: ExportExcelDataRequest,
+  })
+  async exportExcelData(
+    @Body() request: ExportExcelDataRequest,
+    @DecodeJwtToken() decodedToken: any,
+  ): Promise<string> {
+    const { customerId } = _getDecodedTokenData(decodedToken);
+    this.exportToExcelWorkflowService.exportData(request,customerId);
+    return Message.EXPORT_EXCEL_PROCESS_MESSAGE;
+  }
+
+}
+  ```
+
+
+  ```typescript
+//message.constant.ts
+
+export const Message = {
+  EXPORT_EXCEL_PROCESS_MESSAGE: 'Export to Excel process has started. You will be notified once completed.',
+};
+
+  ```
+
+
+
+```typescript
+  //export-to-excel.request.dto.ts
+
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import {
+    IsArray,
+    IsInt,
+    IsNotEmpty,
+    IsNumber,
+    IsObject,
+    IsString,
+    ValidateNested,
+} from 'class-validator';
+
+class DisplayColumn {
+    @ApiProperty({
+        description: 'Field name of the column.',
+        example: 'status',
+        type: String,
+        required: true,
+    })
+    @IsString()
+    @IsNotEmpty()
+    fieldName: string;
+
+    @ApiProperty({
+        description: 'Display column name.',
+        example: 'Status',
+        type: String,
+        required: true,
+    })
+    @IsString()
+    @IsNotEmpty()
+    displayColumnName: string;
+}
+
+class ExportDataBody {
+
+    @ApiProperty({
+        description: 'Task IDs to export.',
+        example: [13813, 13795, 13794],
+        type: [Number],
+        required: true,
+    })
+    @IsArray({ message: 'taskIds must be an array of numbers.' })
+    @IsNumber({}, { each: true, message: 'Each TaskId must be a number.' })
+    taskIds: number[];
+
+    @ApiProperty({
+        description: 'Page number for pagination.',
+        example: 1,
+        type: Number,
+        required: true,
+    })
+    @IsInt({ message: 'Page number must be an integer.' })
+    pageNumber: number;
+
+    @ApiProperty({
+        description: 'Page size for pagination.',
+        example: 10,
+        type: Number,
+        required: true,
+    })
+    @IsInt({ message: 'Page size must be an integer.' })
+    pageSize: number;
+
+    @ApiProperty({
+        description: 'List of columns to be displayed in the export.',
+        example: [
+            { fieldName: 'status', displayColumnName: 'Status' },
+        ],
+        type: [DisplayColumn],
+        required: true,
+    })
+    @IsArray()
+    @IsNotEmpty({ message: 'displayColumns cannot be empty.' })
+    @ValidateNested({ each: true })
+    @Type(() => DisplayColumn)
+    displayColumns: DisplayColumn[];
+
+}
+
+export class ExportExcelDataRequest {
+
+
+    @ApiProperty({
+        description: 'export data request body.',
+        example: {
+            taskIds: [
+                12907,
+                12904,
+                12902,
+                12892
+            ],
+            pageNumber: 1,
+            pageSize: 25,
+            displayColumns: [
+                {
+                    fieldName: "TICKETNUMBER",
+                    displayColumnName: "Ticket No."
+                },
+                {
+                    fieldName: "TITLE",
+                    displayColumnName: "Name"
+                },
+                {
+                    fieldName: "VESSEL",
+                    displayColumnName: "Vessel Name"
+                }
+            ]
+        },
+        type: ExportDataBody,
+        required: true,
+    })
+    @IsObject()
+    @IsNotEmpty({ message: 'exportDataRequestBody cannot be empty.' })
+    @ValidateNested()
+    @Type(() => ExportDataBody)
+    exportDataBody: ExportDataBody;
+
+
+    @ApiProperty({
+        description: 'Task ID for the export request.',
+        example: 12345,
+        type: Number,
+        required: true,
+    })
+    @IsNumber({}, { message: 'taskId must be a number.' })
+    taskId: number;
+
+    @ApiProperty({
+        description: 'Source application ID.',
+        example: '0896c4c3-e70b-4f84-9054-d6b57e5351d2',
+        type: String,
+        required: true,
+    })
+    @IsString()
+    @IsNotEmpty()
+    sourceApplicationId: string;
+
+    @ApiProperty({
+        description: 'User ID making the export request.',
+        example: '48ab3eaf-f856-4339-a004-4fe62b9544c7',
+        type: String,
+        required: true,
+    })
+    @IsString()
+    @IsNotEmpty()
+    userId: string;
+
+    @ApiProperty({
+        description: 'List of columns to be exported in the Excel file.',
+        example: ['Vessel Name', 'Resolver Group'],
+        type: [String],
+        required: true,
+    })
+    @IsArray()
+    @IsString({ each: true })
+    exportExcelColumns: string[];
+
+    @ApiProperty({
+        description: 'Document type ID for the upload.',
+        example: 5,
+        type: Number,
+        required: true,
+    })
+    @IsNumber({}, { message: 'uploadDocumentTypeId must be a number.' })
+    uploadDocumentTypeId: string;
+
+}
+
+```
+```typescript
+//export-excel-workflow.service.ts
+
+import { Injectable } from "@nestjs/common";
+import { LoggerHelperService } from "src/common/services/logger-helper.service";
+import { Workbook } from 'exceljs';
+import { existsSync, promises as fsPromise, mkdirSync } from 'fs';
+import axios, { AxiosResponse } from 'axios';
+import * as path from 'path';
+import { JWT_ISSUER, OMNI_JWT_CLIENT_ID, OMNI_JWT_CLIENT_SECRET, VDOCUMENTNODEJS_URL, VNOTIFICATION_BASE_API_URL, VTASK_BASE_API_URL } from "src/config";
+import { join } from "path";
+import { ExportExcelDataRequest } from "../dtos/request";
+import { UUID } from "mongodb";
+import { isValid, format, parseISO } from 'date-fns';
+
+@Injectable()
+export class ExportToExcelWorkflowService {
+    constructor(
+        private readonly loggerHelperService: LoggerHelperService
+    ) { }
+
+    async exportData(requestDto: ExportExcelDataRequest, customerId: number): Promise<void> {
+
+        const requestId = new UUID().toString();
+
+        try {
+
+            const taskDisplayColumns = await this.fetchAllTaskDisplayColumns(requestDto, customerId);
+
+            const filePath = await this.createExcelDocument(requestDto, taskDisplayColumns);
+
+            const uploadResponse = await this.uploadDocument(requestDto, filePath, customerId);
+
+            const preSignedUrlParams = uploadResponse["preSignedUrlParams"]
+            const downloadUrl = `${VDOCUMENTNODEJS_URL}/v1/pre-signed/download${preSignedUrlParams}`
+
+            await this.sendNotification(requestDto, downloadUrl, customerId);
+
+        } catch (error) {
+            this.loggerHelperService.logData(
+                'ExportToExcelWorkflow',
+                customerId,
+                error.stack,
+                "Export To Excel failed",
+                requestId,
+                true
+            )
+        }
+    }
+
+    private async fetchAllTaskDisplayColumns(requestDto: ExportExcelDataRequest, customerId: number): Promise<any> {
+        const token = await this.getOmniToken(customerId);
+        const headers = { Authorization: `Bearer ${token}` };
+        const url = `${VTASK_BASE_API_URL}/v1/my-tasks-display-columns`;
+
+        const request = requestDto.exportDataBody;
+
+        const { data: firstPageResponse } = await axios.post(url, request, { headers }) as AxiosResponse<{
+            paginationResponse: {
+                totalRecords: number;
+            };
+            result: any[];
+        }, any>;
+
+        const totalRecords = firstPageResponse.paginationResponse.totalRecords;
+        const totalPages = Math.ceil(totalRecords / request.pageSize);
+
+        let allResults = [];
+        allResults = allResults.concat(firstPageResponse.result);
+
+        if (totalPages > 1) {
+            const fetchPage = async (pageNumber: number) => {
+                const pageRequest = {
+                    ...request,
+                    pageNumber,
+                };
+
+                const { data } = await axios.post(url, pageRequest, { headers });
+                return data.result;
+            };
+
+            const tasks = [];
+            for (let page = 2; page <= totalPages; page++) {
+                tasks.push(fetchPage(page));
+            }
+
+            const pageResults = await Promise.all(tasks);
+
+            pageResults.forEach((result) => {
+                allResults = allResults.concat(result);
+            });
+        }
+
+        return allResults;
+    }
+
+    private async createExcelDocument(requestDto: ExportExcelDataRequest, data: any[]): Promise<string> {
+
+        const reportsDir = join(process.cwd(), 'reports');
+
+        if (!existsSync(reportsDir)) {
+            mkdirSync(reportsDir, { recursive: true });
+        }
+
+        const workbook = new Workbook();
+        const worksheet = workbook.addWorksheet('Exported Data');
+
+        const exportExcelColumns = requestDto.exportExcelColumns || [];
+
+        worksheet.columns = exportExcelColumns.map(h => ({ header: h, key: h }))
+
+        data.forEach(row => {
+            const rowData = exportExcelColumns.map(column => this.getRowData(row, column));
+            const addedRow = worksheet.addRow(rowData);
+
+            addedRow.eachCell((cell, colNumber) => {
+                const value = cell.value;
+
+                if (this.isValidDate(value)) {
+                    cell.numFmt = 'm/d/yyyy';
+                }
+            });
+
+        });
+
+        const currentDateTime = this.getFormattedDateTime();
+
+        const fileName = `ticketlist_${currentDateTime}.xlsx`;
+        const filePath = path.join(reportsDir, fileName);
+        await workbook.xlsx.writeFile(filePath);
+        return filePath;
+    }
+
+    private async uploadDocument(requestDto: ExportExcelDataRequest, filePath: string, customerId: number): Promise<{ preSignedUrlParams: string }> {
+        const token = await this.getOmniToken(customerId);
+        const fileBuffer = await fsPromise.readFile(filePath);
+        const fileBlob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = `${VDOCUMENTNODEJS_URL}/v1/pre-signed/uploadDocument`;
+
+        const formData = new FormData();
+        formData.append('file', fileBlob, path.basename(filePath));
+        formData.append('documentypeId', requestDto.uploadDocumentTypeId);
+        formData.append('isDownable', "true");
+        formData.append('isReplicable', "true");
+        formData.append('isLowBandwidth', "true");
+
+        const headers = { Authorization: `Bearer ${token}` };
+
+        const response = await axios.post(url, formData, { headers });
+
+        await fsPromise.unlink(filePath);
+
+        return response.data;
+    }
+
+    private async sendNotification(
+        requestDto: ExportExcelDataRequest,
+        downloadUrl: string,
+        customerId: number
+    ): Promise<void> {
+        const token = await this.getOmniToken(customerId);
+
+        const notificationPayload = {
+            sender: requestDto.userId,
+            receiver: [{ userId: requestDto.userId }],
+            state: "Pending",
+            subject: 'Your Excel File is Ready!',
+            body: `<p>Click <a href="${downloadUrl}" download>Download</a> to get your file.</p>`,
+            redirectURL: downloadUrl,
+            icon: "ChatOutlinedIcon",
+            acknowledgedDateTime: null,
+            acknowledgedBy: null,
+            acknowledgementType: "Direct",
+            sourceApplicationId: requestDto.sourceApplicationId,
+            acknowledgementRequired: false,
+            priority: "Urgent",
+            notificationId: 1,
+            createdDateTime: new Date().toISOString(),
+            taskId: requestDto.taskId
+        };
+
+        const headers = { Authorization: `Bearer ${token}` };
+        const url = `${VNOTIFICATION_BASE_API_URL}/v1/notify`;
+        await axios.post(url, notificationPayload, { headers });
+    }
+
+    private async getOmniToken(customerId: number): Promise<string> {
+
+        if (!JWT_ISSUER || !OMNI_JWT_CLIENT_ID || !OMNI_JWT_CLIENT_SECRET) {
+            throw new Error('Missing required environment variables');
+        }
+
+        let issuer = JWT_ISSUER;
+
+        if (issuer.includes(',')) {
+            issuer = issuer.split(',')[0];
+        }
+
+        const url = this.generateUrl(issuer, 'connect/token');
+
+        const data: any = {
+            grant_type: 'client_credentials',
+            client_id: OMNI_JWT_CLIENT_ID,
+            client_secret: OMNI_JWT_CLIENT_SECRET,
+            CustomerId: customerId,
+        };
+
+        const encodedData = new URLSearchParams(data).toString();
+        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+
+        const response = await axios.post(url, encodedData, { headers });
+        const success = response.data;
+        return success.access_token;
+    }
+
+    private generateUrl(baseUrl: string, path: string = ''): string {
+        if (!baseUrl.endsWith('/')) {
+            baseUrl += '/';
+        }
+        const fullUrl = new URL(path, baseUrl).toString();
+        return fullUrl;
+    }
+
+    private getFormattedDateTime() {
+        const currentDate = new Date();
+        return format(currentDate, 'yyyy-MM-dd_HH-mm-ss');
+    }
+
+    private isValidDate(str: any) {
+        try {
+            const parsedDate = parseISO(str);
+            return isValid(parsedDate);
+        } catch (error) {
+            return false
+        }
+    }
+
+    private getRowData(row: any, column: string): any {
+
+        const rowData = row[column];
+
+        if (rowData === undefined || rowData === null) {
+            return ""
+        } else if (!isNaN(rowData)) {
+            return rowData;
+        }
+        else if (this.isValidDate(rowData)) {
+            return new Date(rowData);
+        } else {
+            return rowData;
+        }
+    }
+
+}
+
+```
+
+Import **ExportToExcelWorkflowService** in module
+
+```typescript
+import { Module } from '@nestjs/common';
+import { VLinkController } from './controllers/vlink.controller';
+import { INTERFACES } from '../common/v1/constants';
+import { VLinkRepository } from './repositories/vlink.repository';
+import { VLinkService } from './services/vlink.service';
+import { MongoDBModule } from 'src/common/database/mongodb.module';
+import MSTSAuthService from 'src/common/services/msts-auth.service';
+import { CacheModule } from '@nestjs/cache-manager';
+import { AuthModule } from '@vplatform/auth';
+import { LoggerHelperService } from 'src/common/services/logger-helper.service';
+import { VLoggerModule } from '@vplatform/logger';
+import { ExportToExcelWorkflowService } from './services/export-excel-workflow.service';
+
+@Module({
+  imports: [MongoDBModule, CacheModule.register(),
+    AuthModule.register({issuer: process.env.OMNI_JWT_ISSUER}), VLoggerModule
+  ],
+  controllers: [VLinkController],
+  providers: [
+    VLinkService,
+    ExportToExcelWorkflowService,
+    {
+      provide: INTERFACES.IVLINKPOSITORY,
+      useClass: VLinkRepository,
+    },
+    MSTSAuthService,
+    LoggerHelperService
+
+  ],
+})
+export class VLinkModule {}
+
+
+```
+
+Change in **DockerFile** 
+
+
+```Dockerfile
+RUN mkdir -p /usr/src/app/reports && \
+    chown -R node:node /usr/src/app/reports
+
+```
+
+After adding above line it will look something like this
+
+```Dockerfile
+
+FROM node:18-alpine as builder
+
+USER node
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node .npmrc ./
+COPY --chown=node:node package*.json ./
+
+RUN npm ci
+
+RUN rm -f .npmrc
+
+COPY --chown=node:node . .
+
+RUN npm run build \
+    && npm prune --production
+
+
+
+FROM node:18-alpine
+
+ENV NODE_ENV production
+
+RUN mkdir -p /usr/src/app/logs && \
+    chown -R node:node /usr/src/app/logs
+
+RUN mkdir -p /usr/src/app/reports && \
+    chown -R node:node /usr/src/app/reports
+
+USER node
+
+WORKDIR /usr/src/app
+
+COPY --from=builder --chown=node:node /usr/src/app/node_modules/ ./node_modules/
+COPY --from=builder --chown=node:node /usr/src/app/dist/ ./dist/
+
+CMD ["node", "dist/main.js"]
+
+
+```
+
+In **.gitignore** add this 
+
+```bash
+/reports
+```
+
+### Step 2: Frontend changes
+
+1. Create Manual type task.
+2. Get the taskId.
+3. Get task Entity.
+4. Update Task type to ***Schedule*** task and add all **payload**.
+
+
+### Vlink Frontend Code Example
+
+
+```typescript
+
+const [isLoading, setIsLoading] = useState(false);
+const [localSelectedColumns, setLocalSelectedColumns] =
+		useState<Columns[]>(columnsConfig);
+
 const handleExportToExcel = async () => {
 		try {
 			setIsLoading(true);
@@ -556,10 +652,6 @@ const handleExportToExcel = async () => {
 				})
 				.replace(",", "");
 
-			const libraryId = Number(
-				process.env.NEXT_PUBLIC_EXPORT_TO_EXCEL_PYTHON_SCRIPT_LIBRARY_ID,
-			);
-
 			const createTaskRequest = {
 				schemaId: 1,
 				type: taskTypeEnum.MANUAL,
@@ -573,7 +665,7 @@ const handleExportToExcel = async () => {
 						value: `VLink Tickets Export To Excel: ${formattedDate}`,
 					},
 				],
-				taskExecutionType: "Python Script",
+				taskExecutionType: "API",
 			};
 
 			const createTaskResponse = await createTicketV3Api(createTaskRequest);
@@ -584,12 +676,9 @@ const handleExportToExcel = async () => {
 
 			task.type = taskTypeEnum.SCHEDULER;
 			task.payload = {
-				libraryId,
+				url: `${process.env.NEXT_PUBLIC_VLINK_BASE_API_URL}/v1/export-to-excel`,
+				method: "post",
 				data: {
-					exportDataUrl: `${process.env.NEXT_PUBLIC_VTASK_BASE_API_URL}/v1/my-tasks-display-columns`,
-					exportDataMethod: "POST",
-					exportDataIsPaginated: "True",
-					exportDataPageSize: 100,
 					exportDataBody: {
 						taskIds,
 						pageNumber: 1,
@@ -599,24 +688,21 @@ const handleExportToExcel = async () => {
 							displayColumnName: column.headerName,
 						})),
 					},
-					exportDataQueryParams: {},
-					documentBaseUrl: process.env.NEXT_PUBLIC_VDOCUMENTS_BASE_API_URL,
+                    //TaskId which is used to store notification under specific task for persistent.
+					taskId,
+                    //application Id
+					sourceApplicationId: process.env.NEXT_PUBLIC_CLIENT_ID,
+                    //User Id which get notify
+					userId: loggedInUserDetails.sub,
+					customerId: loggedInUserDetails.CustomerId,
+                    // Based on project id will change. You can get from Document Service Team.
 					uploadDocumentTypeId: 5,
+                    // Columns which is need to export in excel.
 					exportExcelColumns: localSelectedColumns?.map(
 						column => column.headerName,
 					),
-					notificationBaseUrl:
-						process.env.NEXT_PUBLIC_VNOTIFICATION_BASE_API_URL,
-					userId: loggedInUserDetails.sub,
-					sourceApplicationId: process.env.NEXT_PUBLIC_CLIENT_ID,
-					customerId: loggedInUserDetails.CustomerId,
-					taskId,
-					taskBaseUrl: process.env.NEXT_PUBLIC_VTASK_BASE_API_URL,
-					exportDataPaginationTotalRecordCountKey: "totalRecords",
-					exportExcelFileNamePrefix: "ticketlist_",
 				},
 			};
-
 			task.scheduleDetails = [
 				{
 					startDate: new Date(),
@@ -642,6 +728,7 @@ const handleExportToExcel = async () => {
 					</Box>
 				),
 			});
+			onModalClose();
 			setIsLoading(false);
 		} catch (error) {
 			console.error("Export to excel =>", error);
@@ -650,5 +737,6 @@ const handleExportToExcel = async () => {
 		}
 	};
 
-```
 
+
+```
