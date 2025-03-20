@@ -337,6 +337,7 @@ The `BulkEditType` interface is used to manage bulk editing operations in the da
 | `isChecked`            | `boolean`                                               | Indicates whether the checkbox for selecting rows is checked.                   | Yes          |
 | `setRejectPopup`       | `React.Dispatch<React.SetStateAction<boolean>>`          | A function to toggle the visibility of the reject popup.                        | Yes          |
 | `setMergePopup`        | `React.Dispatch<React.SetStateAction<boolean>>`          | A function to toggle the visibility of the merge popup.                         | Yes          |
+| `bulkSelectedContent`        | `string`          | Indicates the value of the type of selected content, e.g., Tasks, Tickets. By default, the value is set to **Tickets**.                         | No          |
 
 
 ### `AdvanceColumnLevelFilter` 
