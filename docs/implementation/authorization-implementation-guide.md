@@ -115,10 +115,11 @@ import { getGenerateCss } from "@/services/security.service";
 export const fetchAndApplyCss = async () => {
 	try {
 		const APIdata = await getGenerateCss();
-		let styleTag = document.getElementById("dynamic-css");
+		const elementId = `dynamic-css-${process.env.NEXT_PUBLIC_CLIENT_ID}`
+		let styleTag = document.getElementById(elementId);
 		if (!styleTag) {
 			styleTag = document.createElement("style");
-			styleTag.id = "dynamic-css";
+			styleTag.id = elementId;
 			document.head.appendChild(styleTag);
 		}
 		const cssContent = APIdata?.data?.result;
@@ -242,6 +243,7 @@ import useAxiosInterceptor from "./useAxiosInstance";
 
 export const useDynamicCss = () => {
 	const { axBe } = useAxiosInterceptor(BASE_URLS.VSECURITY);
+	const elementId = `dynamic-css-${process.env.NEXT_PUBLIC_CLIENT_ID}`
 
 	useEffect(() => {
 		const fetchAndApplyCss = async () => {
@@ -249,10 +251,10 @@ export const useDynamicCss = () => {
 				const response = await axBe.get(`${VSECURITY.COMPONENTACESS}`);
 				if (response && response?.data) {
 					const APIdata = response?.data?.result;
-					let styleTag = document.getElementById("dynamic-css");
+					let styleTag = document.getElementById(elementId);
 					if (!styleTag) {
 						styleTag = document.createElement("style");
-						styleTag.id = "dynamic-css";
+						styleTag.id = elementId;
 						document.head.appendChild(styleTag);
 					}
 					const cssContent = APIdata;
@@ -266,7 +268,7 @@ export const useDynamicCss = () => {
 		fetchAndApplyCss();
 
 		return () => {
-			const styleTag = document.getElementById("dynamic-css");
+			const styleTag = document.getElementById(elementId);
 			if (styleTag) {
 				styleTag.textContent = "";
 			}
@@ -295,7 +297,6 @@ export const BASE_URLS = {
 Remember:- 
 
 - Follow the steps above. However, if you export any page as a microfrontend, call the API on that page and import the CSS file there.
-- In a microfrontend, `document.getElementById("dynamic-css")` should be unique from the app; otherwise, it will override the app's CSS. Like:- document.getElementById("dynamic-css-vcron")
 
 Example:- 
 
