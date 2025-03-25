@@ -256,6 +256,12 @@ This prop is used to show the Loading Ui when the debounce function is being exe
 
 - This prop is used as the description content to be displayed in the editor.
 
+### 44 showAutoTagOptions(boolean, optional):- 
+- This prop is used as a flag for enabling the tags recommendation dropdown when < is pressed for adding a tag.
+
+### 45 autoTagsKeyList(string[], optional):- 
+- This prop is used to send the list of data that needs to be displayed in the tags suggestion dropdown when < is pressed.
+
 
 
 
