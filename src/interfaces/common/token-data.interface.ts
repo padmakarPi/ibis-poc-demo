@@ -19,5 +19,6 @@ export interface jwtDecodeData {
 	nbf?: number;
 	iat?: number;
 	jti?: string;
+	client_id: string;
 	ContactId?: number;
 }
