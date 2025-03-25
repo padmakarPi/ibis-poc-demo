@@ -21,6 +21,7 @@ In this below example
 
 `#btnUpdateDetails-` is `elementId` and `0896c4c3-e70b-4f84-9054-d6b57e5351d2` is `clientId`.
 
+> Note: CSS for each uiElements will be disabled by default.
 
 ### **Example CSS:**
 ```css
@@ -357,6 +358,8 @@ export default taskList;
 ## Step 4: Create a Script for Client ID Replacement
 A script should be created to replace the `clientId` in the CSS file before deployment.
 
+Note: Purpose of this script is to change the clientId based on environment. because clientId is different for SIT,UAT & PROD environment.
+
 ### **File Path:**
 `scripts/replace-client-id-in-css.js`
 
@@ -438,3 +441,21 @@ In **Shipyard**, configure the **Business Process** to provide access to specifi
 
 ---
 
+## Step 6: Map business process to role.
+In **VRudder**, map the business process to role.
+
+* Navigate to **Roles**.
+* Click on **three dots** and the click on **Edit**.
+* Select **business process** and click on **Save** button.
+
+![Map Business Process to Role](../assets/map-business-process-roles.png)
+
+
+## Step 7: Assign role to user.
+In **VRudder**, assign role to user
+
+* Navigate to **Roles**.
+* Click on **three dots** and the click on **Assign role to user**.
+* Select **User** and click on **Save** button.
+
+![Map Business Process to Role](../assets/map-role-to-user.png)
