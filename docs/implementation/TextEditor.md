@@ -263,6 +263,8 @@ This prop is used to show the Loading Ui when the debounce function is being exe
 - This prop is used to send the list of data that needs to be displayed in the tags suggestion dropdown when < is pressed.
 
 
+### 43 tableResizePortalId (string, optional):-
+This prop takes the dialog ID. If your table is not resizing and your text editor is inside a dialog, pass the dialog's ID to this prop and use it.
 
 
 
