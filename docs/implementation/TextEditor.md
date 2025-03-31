@@ -257,6 +257,8 @@ This prop is used to show the Loading Ui when the debounce function is being exe
 - This prop is used as the description content to be displayed in the editor.
 
 
+### 43 tableResizePortalId (string, optional):-
+This prop takes the dialog ID. If your table is not resizing and your text editor is inside a dialog, pass the dialog's ID to this prop and use it.
 
 
 
