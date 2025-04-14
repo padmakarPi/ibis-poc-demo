@@ -66,5 +66,9 @@
     "lint-staged": "^15.2.11",
     "prettier": "3.0.3",
     "ts-node": "^10.9.2"
+  },
+  "overrides": {
+    "koa": "2.16.1",
+    "esbuild": "0.25.0"
   }
 }
