@@ -9,10 +9,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "react-error-boundary";
 import { ThemeContextProvider } from "@/components/ThemeComponent/ThemeModeContext";
 import { useEffect } from "react";
+import { useDynamicCss } from "@/hooks/customhooks/useComponentAccess";
 import ErrorFallback from "./ErrorFallback";
 import RootLayout from "../global/layout";
+import "@/../public/css/access-control.css";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+	useDynamicCss();
+
 	useEffect(() => {
 		const preventDefault = (event: any) => {
 			event.preventDefault();

@@ -6,3 +6,7 @@ export const OIDC_CONFIG = {
 	scope: process.env.NEXT_PUBLIC_CLIENT_SCOPE,
 	post_logout_redirect_uri: "",
 };
+
+export const BASE_URLS = {
+	VSECURITY: process.env.NEXT_PUBLIC_VSECURITY_BASE_API_URL,
+};

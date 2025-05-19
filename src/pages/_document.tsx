@@ -25,6 +25,7 @@ export default function Document() {
 					rel="stylesheet"
 					as="style"
 				/>
+				<link as="style" rel="stylesheet" href="/css/access-control.css" />
 			</Head>
 
 			<body>

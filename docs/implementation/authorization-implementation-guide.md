@@ -70,12 +70,13 @@ On application startup, call a security service API to fetch the CSS configurati
 import React from 'react'
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { fetchAndApplyCss } from "@/lib/utils";
 import AuthService from "@/services/auth.service";
 
 
 function App() {
+	const [enableSecurityApiCss, setEnableSecurityApiCss] = useState(false);
 
 	const authService = new AuthService();
 
@@ -90,7 +91,29 @@ function App() {
 				// empty;
 			}
 		};
-		roleSecurity();
+		if (enableSecurityApiCss) {
+			roleSecurity();
+		}
+	}, [enableSecurityApiCss]);
+
+	useEffect(() => {
+		if (typeof window === "undefined") return undefined;
+		const targetIdSuffix = `-${process.env.NEXT_PUBLIC_CLIENT_ID}`;
+		let frame: number;
+		const checkForElement = () => {
+			const elements = document.querySelectorAll(`[id$="${targetIdSuffix}"]`);
+			if (elements.length > 0) {
+				setEnableSecurityApiCss(true);
+				elements.forEach((el: any) => {
+					el.setAttribute("tabindex", "-1");
+				});
+				return;
+			}
+			frame = requestAnimationFrame(checkForElement);
+		};
+
+		frame = requestAnimationFrame(checkForElement);
+		return () => cancelAnimationFrame(frame);
 	}, []);
 
 	return (
@@ -114,23 +137,60 @@ export default App;
 import { getGenerateCss } from "@/services/security.service";
 
 export const fetchAndApplyCss = async () => {
+	const appClientId = process.env.NEXT_PUBLIC_CLIENT_ID;
+
+	if (!appClientId) {
+		console.error("Application client ID is not defined");
+		return;
+	}
+
 	try {
-		const APIdata = await getGenerateCss();
-		const elementId = `dynamic-css-${process.env.NEXT_PUBLIC_CLIENT_ID}`
+		const response = await getGenerateCss();
+
+		if (!response || !response.data || !response.data.result) {
+			console.warn("No CSS data received from API");
+			return;
+		}
+
+		const elementId = `dynamic-css${appClientId}`;
 		let styleTag = document.getElementById(elementId);
+
 		if (!styleTag) {
 			styleTag = document.createElement("style");
 			styleTag.id = elementId;
 			document.head.appendChild(styleTag);
 		}
-		const cssContent = APIdata?.data?.result;
+
+		const cssContent = response.data.result;
 		styleTag.textContent = cssContent;
+
+		if (cssContent) {
+			const selectors = cssContent.split(",").map((sel: string) => sel.trim());
+
+			selectors.forEach((selector: string) => {
+				if (selector.startsWith("#")) {
+					const elementId = selector.slice(1);
+					const el = document.getElementById(elementId);
+					if (el) {
+						el.setAttribute("tabindex", "0");
+					}
+				}
+			});
+		}
 	} catch (error) {
 		console.error("Failed to fetch or apply CSS:", error);
 	}
 };
 
 ```
+- Call the fetchAndApplyCss into page/oidc-callback/page.tsx file 
+
+```
+
+await fetchAndApplyCss()
+
+```
+Note: Call fetchAndApplyCss funciton in getUser function in oidc-callbackpage before setRedirectUrl state.
 
 - Call the CSS API in one of the service file. 
 
@@ -216,6 +276,7 @@ export default function Document() {
 import type { AppProps } from "next/app";
 import Providers from "@/redux/provider";
 import { AuthProvider } from "@/authcontext/AuthContext";
+import "@/../public/css/access-control.css";
 import { useDynamicCss } from "@/hooks/customhooks/useComponentAccess";
 import RootLayout from "../global/layout";
 
@@ -233,20 +294,45 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 }
 
 ```
-- Call the hook in hook folder. Create new file in src/hooks/customhooks/useDynamicCss.tsx
+- Call the hook in hook folder. Create new file in src/hooks/customhooks/userComponentAccess.ts
 
 ```
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BASE_URLS } from "@/lib/config/config";
 import { VSECURITY } from "@/lib/constant/apiconstant";
 import useAxiosInterceptor from "./useAxiosInstance";
 
 export const useDynamicCss = () => {
+	const [enableSecurityApiCss, setEnableSecurityApiCss] = useState(false);
 	const { axBe } = useAxiosInterceptor(BASE_URLS.VSECURITY);
-	const elementId = `dynamic-css-${process.env.NEXT_PUBLIC_CLIENT_ID}`
+	const appClientId = process.env.NEXT_PUBLIC_CLIENT_ID;
+	const elementId = `dynamic-css${appClientId}`;
 
 	useEffect(() => {
+		if (typeof window === "undefined") return undefined;
+		
+		const targetIdSuffix = `-${appClientId}`;
+		let frame: number;
+		
+		const checkForElement = () => {
+			const elements = document.querySelectorAll(`[id$="${targetIdSuffix}"]`);
+			if (elements.length > 0) {
+				setEnableSecurityApiCss(true);
+				elements.forEach((el: any) => {
+					el.setAttribute("tabindex", "-1");
+				});
+				return;
+			}
+			frame = requestAnimationFrame(checkForElement);
+		};
+
+		frame = requestAnimationFrame(checkForElement);
+		return () => cancelAnimationFrame(frame);
+	}, [appClientId]);
+
+	useEffect(() => {
+		if (!enableSecurityApiCss) return undefined;
+
 		const fetchAndApplyCss = async () => {
 			try {
 				const response = await axBe.get(`${VSECURITY.COMPONENTACESS}`);
@@ -260,13 +346,27 @@ export const useDynamicCss = () => {
 					}
 					const cssContent = APIdata;
 					styleTag.textContent = cssContent;
+
+					if (cssContent) {
+						const selectors = cssContent.split(",").map((sel: string) => sel.trim());
+            
+						selectors.forEach((selector: string) => {
+							if (selector.startsWith("#")) {
+								const elementIds = selector.slice(1);
+								const el = document.getElementById(elementIds);
+								if (el) {
+									el.setAttribute("tabindex", "0");
+								}
+							}
+						});
+					}
 				}
 			} catch (error) {
 				console.error("Failed to fetch or apply CSS:", error);
 			}
 		};
 
-		fetchAndApplyCss();
+			fetchAndApplyCss();
 
 		return () => {
 			const styleTag = document.getElementById(elementId);
@@ -274,9 +374,8 @@ export const useDynamicCss = () => {
 				styleTag.textContent = "";
 			}
 		};
-	}, []);
-};
-
+	}, [enableSecurityApiCss, elementId, axBe]);
+}; 
 ```
 
 
@@ -324,7 +423,6 @@ or
 
 ```
 import "@/../public/css/access-control.css";   
-import { useDynamicCss } from "@/hooks/customhooks/useComponentAccess";
 import {Box} "@mui/material"
 import { useEffect } from "react";
 import { fetchAndApplyCss } from "@/lib/utils";
