@@ -266,7 +266,13 @@ This prop is used to show the Loading Ui when the debounce function is being exe
 ### 43 tableResizePortalId (string, optional):-
 This prop takes the dialog ID. If your table is not resizing and your text editor is inside a dialog, pass the dialog's ID to this prop and use it.
 
+### 47 isEmbeddedImageVDocument undefined (boolean, optional):-
+This prop takes the boolean value if the inline image on VTextEditor has to be uploaded to VDocumentFileUploader. 
 
+### 48 uploadInlineDocument (file: File, onSuccess?: ((src: string, documentId: number) => void), optional):-
+a. This prop takes a method which is called when isEmbeddedImageVDocument is true and an image is pasted on the editor. 
+b. This method contains accepts file as a parameter and an optional onSuccess method. 
+c. This method body should contain code to upload file to VFileuploader and pass updated src url and documentId to callback method. 
 
 
 
