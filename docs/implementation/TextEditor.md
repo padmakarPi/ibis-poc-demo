@@ -261,10 +261,26 @@ This prop is used to show the Loading Ui when the debounce function is being exe
 This prop takes the dialog ID. If your table is not resizing and your text editor is inside a dialog, pass the dialog's ID to this prop and use it.
 
 
+### 44. getDocumentImage?: (src: string) => any; 
+That is callback which take the image src url. which can be used to creates it into base64 string. 
 
 
+### 45. Image and attachment size limit props: 
 
+### i sizeLimitExceeded?: boolean;
+- size limit exceed true and false state. If true you can show the toaster which is used in your host application
 
+### ii setSizeLimitExceeded?: (x: boolean) => void;
+- You can false the popup on clean up useeffect or any other event. 
+
+### iii totalSizeLimitChat?: number;
+- Initial totalSizeLimitChat is 0. According the text and inline images size increase in texteditor, the totalSizeLimitChat will update. 
+
+### iv setTotalSizeLimitChat?: (x: number) => void;
+- Update state of totalSizeLimitChat.
+
+### v totalAttachmentSizeLimitChat?: number;
+- Calculate your attachment size and pass that props to texteditor. Texteditor will add that size in our total size (including text and inline image size). 
 
 
 

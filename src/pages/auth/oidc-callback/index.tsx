@@ -61,7 +61,7 @@ function CallbackPage() {
 			dispatch(
 				setAuthState({
 					isAuthenticated: true,
-					email: userData.profile.email,
+					email: userData?.profile?.email,
 					name: userData.profile.name,
 					userType: userData.profile.UserType,
 					sid: userData.profile.sid,

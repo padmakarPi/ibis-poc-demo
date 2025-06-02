@@ -13,7 +13,6 @@ export const useDynamicCss = () => {
 		if (typeof window === "undefined") return undefined;
 
 		const targetIdSuffix = `-${appClientId}`;
-		let frame: number;
 
 		const checkForElement = () => {
 			const elements = document.querySelectorAll(`[id$="${targetIdSuffix}"]`);
@@ -22,13 +21,20 @@ export const useDynamicCss = () => {
 				elements.forEach((el: any) => {
 					el.setAttribute("tabindex", "-1");
 				});
-				return;
+				
 			}
-			frame = requestAnimationFrame(checkForElement);
 		};
-
-		frame = requestAnimationFrame(checkForElement);
-		return () => cancelAnimationFrame(frame);
+		checkForElement();
+		const observe = new MutationObserver(() => {
+			checkForElement();
+		});
+		observe.observe(document.body, {
+			childList: true,
+			subtree: true,
+		});
+		return () => {
+			observe.disconnect();
+		};
 	}, [appClientId]);
 
 	useEffect(() => {

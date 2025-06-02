@@ -96,23 +96,30 @@ function App() {
 	}, [enableSecurityApiCss]);
 
 	useEffect(() => {
-		if (typeof window === "undefined") return undefined;
-		const targetIdSuffix = `-${process.env.NEXT_PUBLIC_CLIENT_ID}`;
-		let frame: number;
-		const checkForElement = () => {
+		if (typeof window === "undefined") return;
+
+		const targetIdSuffix = `-${process.env.NEXT_PUBLIC_VLINK_APP_CLIENT_ID}`;
+
+		const applyTabIndexToTargetElements = () => {
 			const elements = document.querySelectorAll(`[id$="${targetIdSuffix}"]`);
 			if (elements.length > 0) {
 				setEnableSecurityApiCss(true);
 				elements.forEach((el: any) => {
 					el.setAttribute("tabindex", "-1");
 				});
-				return;
 			}
-			frame = requestAnimationFrame(checkForElement);
 		};
 
-		frame = requestAnimationFrame(checkForElement);
-		return () => cancelAnimationFrame(frame);
+		const observer = new MutationObserver(applyTabIndexToTargetElements);
+
+		observer.observe(document.body, {
+			childList: true,
+			subtree: true,
+		});
+
+		applyTabIndexToTargetElements();
+
+		return () => observer.disconnect();
 	}, []);
 
 	return (
@@ -309,10 +316,9 @@ export const useDynamicCss = () => {
 
 	useEffect(() => {
 		if (typeof window === "undefined") return undefined;
-		
+
 		const targetIdSuffix = `-${appClientId}`;
-		let frame: number;
-		
+
 		const checkForElement = () => {
 			const elements = document.querySelectorAll(`[id$="${targetIdSuffix}"]`);
 			if (elements.length > 0) {
@@ -322,11 +328,18 @@ export const useDynamicCss = () => {
 				});
 				return;
 			}
-			frame = requestAnimationFrame(checkForElement);
 		};
-
-		frame = requestAnimationFrame(checkForElement);
-		return () => cancelAnimationFrame(frame);
+		checkForElement()
+		const observe = new MutationObserver(() => {
+			checkForElement()
+		})
+		observe.observe(document.body, {
+			childList:true,
+			subtree:true
+		})
+		return () => {
+			observe.disconnect()
+		}
 	}, [appClientId]);
 
 	useEffect(() => {
@@ -347,8 +360,10 @@ export const useDynamicCss = () => {
 					styleTag.textContent = cssContent;
 
 					if (cssContent) {
-						const selectors = cssContent.split(",").map((sel: string) => sel.trim());
-            
+						const selectors = cssContent
+							.split(",")
+							.map((sel: string) => sel.trim());
+
 						selectors.forEach((selector: string) => {
 							if (selector.startsWith("#")) {
 								const elementIds = selector.slice(1);
@@ -365,7 +380,7 @@ export const useDynamicCss = () => {
 			}
 		};
 
-			fetchAndApplyCss();
+		fetchAndApplyCss();
 
 		return () => {
 			const styleTag = document.getElementById(elementId);
@@ -374,7 +389,7 @@ export const useDynamicCss = () => {
 			}
 		};
 	}, [enableSecurityApiCss, elementId, axBe]);
-}; 
+};
 ```
 
 
