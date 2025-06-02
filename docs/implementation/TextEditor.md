@@ -256,6 +256,12 @@ This prop is used to show the Loading Ui when the debounce function is being exe
 
 - This prop is used as the description content to be displayed in the editor.
 
+### 44 showAutoTagOptions(boolean, optional):- 
+- This prop is used as a flag for enabling the tags recommendation dropdown when < is pressed for adding a tag.
+
+### 45 autoTagsKeyList(string[], optional):- 
+- This prop is used to send the list of data that needs to be displayed in the tags suggestion dropdown when < is pressed.
+
 
 ### 43 tableResizePortalId (string, optional):-
 This prop takes the dialog ID. If your table is not resizing and your text editor is inside a dialog, pass the dialog's ID to this prop and use it.
@@ -281,6 +287,18 @@ That is callback which take the image src url. which can be used to creates it i
 
 ### v totalAttachmentSizeLimitChat?: number;
 - Calculate your attachment size and pass that props to texteditor. Texteditor will add that size in our total size (including text and inline image size). 
+
+### 47 isEmbeddedImageVDocument undefined (boolean, optional):-
+This prop takes the boolean value if the inline image on VTextEditor has to be uploaded to VDocumentFileUploader. 
+
+### 48 uploadInlineDocument (file: File, onSuccess?: ((src: string, documentId: number) => void), optional):-
+a. This prop takes a method which is called when isEmbeddedImageVDocument is true and an image is pasted on the editor. 
+b. This method contains accepts file as a parameter and an optional onSuccess method. 
+c. This method body should contain code to upload file to VFileuploader and pass updated src url and documentId to callback method. 
+
+
+
+
 
 
 
