@@ -52,7 +52,7 @@ function CallbackPage() {
 
 	const getUserData = async (state: { returnUrl: string }) => {
 		const userData = await getUser();
-		if (userData && userData.profile && userData.profile.email) {
+		if (userData && userData.profile) {
 			saveToken(userData);
 			Cookies.set("isAuthenticated", "true", {
 				sameSite: "None",
@@ -61,7 +61,7 @@ function CallbackPage() {
 			dispatch(
 				setAuthState({
 					isAuthenticated: true,
-					email: userData.profile.email,
+					email: userData?.profile?.email,
 					name: userData.profile.name,
 					userType: userData.profile.UserType,
 					sid: userData.profile.sid,
