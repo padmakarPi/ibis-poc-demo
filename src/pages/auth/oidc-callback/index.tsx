@@ -52,7 +52,7 @@ function CallbackPage() {
 
 	const getUserData = async (state: { returnUrl: string }) => {
 		const userData = await getUser();
-		if (userData && userData.profile && userData.profile.email) {
+		if (userData && userData.profile) {
 			saveToken(userData);
 			Cookies.set("isAuthenticated", "true", {
 				sameSite: "None",

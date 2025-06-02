@@ -97,9 +97,9 @@ function App() {
 	}, [enableSecurityApiCss]);
 
 	useEffect(() => {
-		if (typeof window === "undefined") return;
+		if (typeof window === "undefined") return undefined;
 
-		const targetIdSuffix = `-${process.env.NEXT_PUBLIC_VLINK_APP_CLIENT_ID}`;
+		const targetIdSuffix = `-${process.env.NEXT_PUBLIC_CLIENT_ID}`;
 
 		const applyTabIndexToTargetElements = () => {
 			const elements = document.querySelectorAll(`[id$="${targetIdSuffix}"]`);
