@@ -7,11 +7,12 @@ import { VSessionExpiredAlertDialog } from "@vplatform/shared-components";
 import { SESSION_STORAGE_KEYS } from "@/lib/constant/oidc";
 import { getOriginalRoute } from "@/lib/utils";
 import { AuthContext } from "@/authcontext/AuthContext";
-import { useRouter } from "next/router";
+import { useRouter, usePathname } from "next/navigation";
 import { ThemeProvider } from "@mui/material";
 import { useSelector } from "react-redux";
 import { IRootState } from "@/interfaces/states/theme.interfaces";
 import { darkTheme, lightTheme } from "@/styles/theme";
+import "./globals.css";
 
 export default function RootLayout({
 	children,
@@ -23,6 +24,7 @@ export default function RootLayout({
 	const { userManager, login } = useAuth();
 	const { getUser } = React.useContext(AuthContext);
 	const router = useRouter();
+	const pathname = usePathname();
 	const isDarkMode = useSelector((state: IRootState) => state.theme.isDarkMode);
 	const currentTheme = isDarkMode ? darkTheme : lightTheme;
 
@@ -56,14 +58,14 @@ export default function RootLayout({
 	};
 
 	useEffect(() => {
-		const isNotCallbackRoute = !router.asPath.startsWith("/auth/oidc-callback");
+		const isNotCallbackRoute = !pathname.startsWith("/auth/oidc-callback");
 		if (isNotCallbackRoute) {
-			sessionStorage.setItem(SESSION_STORAGE_KEYS.ORIGINALROUTE, router.asPath);
+			sessionStorage.setItem(SESSION_STORAGE_KEYS.ORIGINALROUTE, pathname);
 		}
 		if (isNotCallbackRoute) {
 			initializeAuth();
 		}
-	}, []);
+	}, [pathname]);
 
 	return (
 		<>
