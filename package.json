@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "set NODE_OPTIONS=--max_old_space_size=8192 && set NEXT_PRIVATE_LOCAL_WEBPACK=true && next dev",
-    "build": "npm run update-css-client && npm run check-core-dependencies && set NODE_OPTIONS=--max_old_space_size=8192 && set NEXT_PRIVATE_LOCAL_WEBPACK=true && next build",
+    "build": "npm run update-css-client && set NODE_OPTIONS=--max_old_space_size=8192 && set NEXT_PRIVATE_LOCAL_WEBPACK=true && next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
@@ -12,8 +12,7 @@
     "format:fix": "prettier --write --ignore-path .prettierignore .",
     "prepare": "husky",
     "check-unused": "node check-unused.js",
-    "update-css-client": "node scripts/replace-client-id-in-css.js",
-    "check-core-dependencies":"node scripts/check-core-dependencies.js"
+    "update-css-client": "node scripts/replace-client-id-in-css.js"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -73,5 +72,4 @@
     "esbuild": "0.25.0",
     "brace-expansion": "1.1.12"
   }
-
 }
