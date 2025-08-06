@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { IRootState } from "@/interfaces/states/theme.interfaces";
 import { darkTheme, lightTheme } from "@/styles/theme";
 import "./globals.css";
+import { useDynamicCss } from "@/hooks/customhooks/useComponentAccess";
 
 export default function RootLayout({
 	children,
@@ -63,9 +64,10 @@ export default function RootLayout({
 			sessionStorage.setItem(SESSION_STORAGE_KEYS.ORIGINALROUTE, pathname);
 		}
 		if (isNotCallbackRoute) {
-			initializeAuth();
+			setTimeout(() => initializeAuth(), 0);
 		}
 	}, [pathname]);
+	useDynamicCss();
 
 	return (
 		<>

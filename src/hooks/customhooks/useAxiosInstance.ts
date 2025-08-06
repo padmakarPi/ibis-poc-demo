@@ -6,10 +6,11 @@ import { COMMON_METADATA } from "@/lib/constant/oidc";
 import { AuthContext } from "@/authcontext/AuthContext";
 import { jwtDecode } from "jwt-decode";
 import { jwtDecodeData } from "@/interfaces/common/token-data.interface";
+import { useRuntimeEnv } from "./useRuntimeEnv";
 
 const useAxiosInterceptor = (baseURL: string | undefined) => {
 	const axBackendInstance = axios.create({ baseURL });
-
+	const { NEXT_PUBLIC_STS_AUTHORITY } = useRuntimeEnv();
 	const { logout, login } = useContext(AuthContext);
 
 	const getStoredTokenData = () => {
@@ -48,7 +49,7 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 
 		try {
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_STS_AUTHORITY}/connect/token`,
+				`${NEXT_PUBLIC_STS_AUTHORITY}connect/token`,
 				{
 					method: "POST",
 					headers: {
