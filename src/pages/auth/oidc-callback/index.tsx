@@ -9,18 +9,25 @@ import axios from "axios";
 import WelcomeScreenMicroFrontEnd from "@/components/microfrontends/WelcomeScreenMicrofrontend";
 import { SESSION_STORAGE_KEYS } from "@/lib/constant/oidc";
 import { getOriginalRoute } from "@/lib/utils";
+import { useRuntimeEnv } from "@/hooks/customhooks/useRuntimeEnv";
 
 function CallbackPage() {
 	const router = useRouter();
 	const { getUser, saveToken, userManager } = useContext(AuthContext);
 	const dispatch = useDispatch();
-	const clientId = process.env.NEXT_PUBLIC_CLIENT_ID || "";
+	const {
+		NEXT_PUBLIC_CLIENT_ID,
+		NEXT_PUBLIC_VSECURITY_BASE_API_URL,
+		NEXT_PUBLIC_STS_AUTHORITY,
+		NEXT_PUBLIC_ORIGIN,
+		NEXT_PUBLIC_BASE_PATH,
+	} = useRuntimeEnv();
+	const clientId = NEXT_PUBLIC_CLIENT_ID || "";
 	const [redirectUrl, setRedirectUrl] = useState("");
-
 	const checkApplicationAccess = async (token: string) => {
 		try {
 			const axiosInstance = axios.create({
-				baseURL: process.env.NEXT_PUBLIC_VSECURITY_BASE_API_URL,
+				baseURL: NEXT_PUBLIC_VSECURITY_BASE_API_URL,
 			});
 
 			const res = await axiosInstance.get(
@@ -81,9 +88,7 @@ function CallbackPage() {
 				const userData = await getUser();
 
 				if (!userData?.access_token) {
-					router.push(
-						`${process.env.NEXT_PUBLIC_STS_AUTHORITY}/Account/AccessDenied`,
-					);
+					router.push(`${NEXT_PUBLIC_STS_AUTHORITY}Account/AccessDenied`);
 					return;
 				}
 
@@ -91,9 +96,7 @@ function CallbackPage() {
 					userData.access_token,
 				);
 				if (!canApplicationAccessible) {
-					router.push(
-						`${process.env.NEXT_PUBLIC_STS_AUTHORITY}/Account/AccessDenied`,
-					);
+					router.push(`${NEXT_PUBLIC_STS_AUTHORITY}Account/AccessDenied`);
 					return;
 				}
 				getUserData(user.state);
@@ -105,7 +108,7 @@ function CallbackPage() {
 		const originalRoute = sessionStorage.getItem(
 			SESSION_STORAGE_KEYS.ORIGINALROUTE,
 		);
-		const pathBasedUrl = `${process.env.NEXT_PUBLIC_ORIGIN}${process.env.NEXT_PUBLIC_BASE_PATH}`;
+		const pathBasedUrl = `${NEXT_PUBLIC_ORIGIN}${NEXT_PUBLIC_BASE_PATH}`;
 
 		if (originalRoute) {
 			return `${pathBasedUrl}${originalRoute}`;

@@ -22,6 +22,7 @@ import {
 	selectedOpenPanel,
 	setOpenPanel,
 } from "@/redux/reducers/applicaiton-config.reducer";
+import { useRuntimeEnv } from "@/hooks/customhooks/useRuntimeEnv";
 import Dashboard from "../common/Dashboard";
 
 const drawerWidth = 64;
@@ -30,7 +31,10 @@ const AppBarHeader = () => {
 	const { logout } = useContext(AuthContext);
 	const theme: any = useTheme();
 	const dispatch = useDispatch();
-
+	const {
+		NEXT_PUBLIC_VDOCUMENT_BASE_API_URL,
+		NEXT_PUBLIC_VSECURITY_BASE_API_URL,
+	} = useRuntimeEnv();
 	const { mode, setMode } = useContext(ThemeContext);
 
 	const authDetails: AuthState = useSelector((state: RootState) => state.auth);
@@ -42,11 +46,9 @@ const AppBarHeader = () => {
 	const [name, setName] = useState("VTemplate");
 
 	const { axBe: vdocumentServiceAxios }: any = useAxiosInterceptor(
-		process.env.NEXT_PUBLIC_VDOCUMENT_BASE_API_URL,
+		NEXT_PUBLIC_VDOCUMENT_BASE_API_URL,
 	);
-	const { axBe }: any = useAxiosInterceptor(
-		process.env.NEXT_PUBLIC_VSECURITY_BASE_API_URL,
-	);
+	const { axBe }: any = useAxiosInterceptor(NEXT_PUBLIC_VSECURITY_BASE_API_URL);
 
 	const setUserProfile = async (data: ISetUserProfile) =>
 		axBe

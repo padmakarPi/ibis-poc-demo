@@ -1,15 +1,19 @@
+import { useRuntimeEnv } from "@/hooks/customhooks/useRuntimeEnv";
 import { Button } from "@mui/material";
 import React from "react";
 
-const Dashboard = () => (
-	<Button
-		size="small"
-		onClick={() => {
-			console.log("click");
-		}}
-		id={`btnUpdateDetails-${process.env.NEXT_PUBLIC_CLIENT_ID}`}
-	>
-		Update
-	</Button>
-);
+const Dashboard = () => {
+	const { NEXT_PUBLIC_CLIENT_ID } = useRuntimeEnv();
+	return (
+		<Button
+			size="small"
+			onClick={() => {
+				console.log("click");
+			}}
+			id={`btnUpdateDetails-${NEXT_PUBLIC_CLIENT_ID}`}
+		>
+			Update
+		</Button>
+	);
+};
 export default Dashboard;

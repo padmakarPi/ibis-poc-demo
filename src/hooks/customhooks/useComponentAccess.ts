@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { BASE_URLS } from "@/lib/config/config";
 import { VSECURITY } from "@/lib/constant/apiconstant";
 import useAxiosInterceptor from "./useAxiosInstance";
+import { useRuntimeEnv } from "./useRuntimeEnv";
 
 export const useDynamicCss = () => {
 	const [enableSecurityApiCss, setEnableSecurityApiCss] = useState(false);
-	const { axBe } = useAxiosInterceptor(BASE_URLS.VSECURITY);
-	const appClientId = process.env.NEXT_PUBLIC_CLIENT_ID;
+	const { NEXT_PUBLIC_VSECURITY_BASE_API_URL, NEXT_PUBLIC_CLIENT_ID } =
+		useRuntimeEnv();
+	const { axBe } = useAxiosInterceptor(NEXT_PUBLIC_VSECURITY_BASE_API_URL);
+	const appClientId = NEXT_PUBLIC_CLIENT_ID;
 	const elementId = `dynamic-css${appClientId}`;
 
 	useEffect(() => {
@@ -21,7 +23,6 @@ export const useDynamicCss = () => {
 				elements.forEach((el: any) => {
 					el.setAttribute("tabindex", "-1");
 				});
-				
 			}
 		};
 		checkForElement();
@@ -42,7 +43,9 @@ export const useDynamicCss = () => {
 
 		const fetchAndApplyCss = async () => {
 			try {
-				const response = await axBe.get(`${VSECURITY.COMPONENTACESS}`);
+				const response = await axBe.get(
+					`${VSECURITY.COMPONENTACESS}?applicationId=${NEXT_PUBLIC_CLIENT_ID}`,
+				);
 				if (response && response?.data) {
 					const APIdata = response?.data?.result;
 					let styleTag = document.getElementById(elementId);
