@@ -219,6 +219,16 @@ export const SecureEnvWrapper = ({
 
 ```
 
+## 🐳 Dockerfile Update for env.json Runtime Injection
+Add the following to your Dockerfile after installing dependencies:
+
+```
+COPY ./generate-env-js.sh ./generate-env-js.sh
+RUN rm -f /app/public/env.json && chmod +x ./generate-env-js.sh && chown nextjs:nodejs ./generate-env-js.sh && chown -R nextjs:nodejs ./public && sed -i 's/\r$//' ./generate-env-js.sh
+
+```
+Note :  you can check in template Dockerfile
+
 ### ⚠️ Important Notes
 - Sometimes URLs in your environment config already end with a slash (/).
 

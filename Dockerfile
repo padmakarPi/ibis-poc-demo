@@ -35,6 +35,10 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/public ./public
 
+COPY ./generate-env-js.sh ./generate-env-js.sh
+RUN rm -f /app/public/env.json && chmod +x ./generate-env-js.sh && chown nextjs:nodejs ./generate-env-js.sh && chown -R nextjs:nodejs ./public && sed -i 's/\r$//' ./generate-env-js.sh
+
+
 USER nextjs
 
 EXPOSE 3000
