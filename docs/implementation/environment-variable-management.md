@@ -22,7 +22,9 @@ project-root/
 │ │ └── constant/
 │ │     └── env.constant.ts
 │ └── pages/
-│       └── _app.tsx
+|       └── api/
+|            └── env.ts
+|       └── _app.tsx
 ```
 
 ---
@@ -46,25 +48,89 @@ This file contains all the environment variables needed by the application. Exam
   "NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT": "DEV"
 }
 ```
+## 🌐 API Route: `pages/api/env.ts`
+
+```
+import type { NextApiRequest, NextApiResponse } from "next";
+import fs from "fs";
+import path from "path";
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+	const filePath = path.join(process.cwd(), "public", "env.json");
+
+	try {
+		const fileContents = fs.readFileSync(filePath, "utf8");
+		const json = JSON.parse(fileContents);
+		res.status(200).json(json);
+	} catch (error) {
+		res.status(500).json({ error: "Unable to load env.json" });
+	}
+}
+```
+
 
 ### `Context Setup: SecureEnvContext.tsx`
 This file creates a React context to provide the environment variables to the entire app.
 
 ```
-import { createContext, ReactNode, useContext } from "react";
-import envData from "../../public/env.json";
+import {
+	createContext,
+	ReactNode,
+	useContext,
+	useEffect,
+	useState,
+} from "react";
 
 type SecureWrapperProviderType = {
-  children: ReactNode;
+	children: ReactNode;
 };
 
-export const SecureContext = createContext<{ [key: string]: string }>({});
+type SecureEnvType = { [key: string]: string };
+let cachedEnvData: SecureEnvType | null = null;
+export const SecureContext = createContext<SecureEnvType>({});
 
-export const SecureWrapperProvider = ({ children }: SecureWrapperProviderType) => (
-  <SecureContext.Provider value={envData}>{children}</SecureContext.Provider>
-);
+export const SecureWrapperProvider = ({
+	children,
+}: SecureWrapperProviderType) => {
+	const [envData, setEnvData] = useState<SecureEnvType | null>(cachedEnvData);
+
+	useEffect(() => {
+		const fetchEnv = async () => {
+			if (cachedEnvData) return;
+			const isDev =
+					typeof window !== "undefined" &&
+					window.location.hostname === "localhost";
+				// add base path if your DNS contain the base path else use `/api/env`.
+				const url = isDev ? "/api/env" : "/vtask/api/env";
+
+			try {
+				const res = await fetch(url, {
+					headers: { "Cache-Control": "no-cache" },
+				});
+				if (!res.ok) throw new Error("Failed to fetch env via API");
+				const data = await res.json();
+				cachedEnvData = data;
+				setEnvData(data);
+			} catch (e) {
+				console.error("API call to /api/env failed:", e);
+				setEnvData({});
+			}
+		};
+
+		fetchEnv();
+	}, []);
+
+
+	if (!envData || Object.keys(envData).length === 0) {
+		return null;
+	}
+	return (
+		<SecureContext.Provider value={envData}>{children}</SecureContext.Provider>
+	);
+};
 
 export const useSecureEnv = () => useContext(SecureContext);
+
 ```
 
 ### Runtime Hook: useRuntimeEnv.ts
@@ -225,6 +291,8 @@ Add the following to your Dockerfile after installing dependencies:
 ```
 COPY ./generate-env-js.sh ./generate-env-js.sh
 RUN rm -f /app/public/env.json && chmod +x ./generate-env-js.sh && chown nextjs:nodejs ./generate-env-js.sh && chown -R nextjs:nodejs ./public && sed -i 's/\r$//' ./generate-env-js.sh
+
+CMD ["/bin/sh", "-c", "./generate-env-js.sh && npm start"]
 
 ```
 Note :  you can check in template Dockerfile
