@@ -285,6 +285,12 @@ export const SecureEnvWrapper = ({
 
 ```
 
+## Update AuthContext.tsx
+Note: If you are using new template code then update the AuthContext.tsx file, follow below PR.
+```
+https://dev.azure.com/vgroupframework/VPlatform-Apps/_git/Vplatform-Frontend-Template/pullrequest/157740
+```
+
 ## 🐳 Dockerfile Update for env.json Runtime Injection
 Add the following to your Dockerfile after installing dependencies:
 
