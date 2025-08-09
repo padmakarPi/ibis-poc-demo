@@ -1,3 +1,5 @@
+"use client";
+
 import { ReactNode, createContext, useEffect } from "react";
 import { User, UserManager } from "oidc-client";
 import { jwtDecode } from "jwt-decode";
@@ -9,7 +11,7 @@ import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { setAuthState } from "@/redux/slices/authslice";
 import { getOriginalRoute } from "@/lib/utils";
-import { useRuntimeEnv } from "@/hooks/customhooks/useRuntimeEnv";
+import { useUserManager } from "@/hooks/customhooks/useUserManager";
 
 interface defaultState {
 	userManager: UserManager | null;
@@ -20,29 +22,13 @@ interface defaultState {
 }
 
 export const AuthContext = createContext<defaultState>({} as defaultState);
-let userManager: UserManager;
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const dispatch = useDispatch();
-	const {
-		NEXT_PUBLIC_BASE_PATH,
-		NEXT_PUBLIC_CLIENT_SCOPE,
-		NEXT_PUBLIC_ORIGIN,
-		NEXT_PUBLIC_REDIRECT_URL,
-		NEXT_PUBLIC_RESPONSE_TYPE,
-		NEXT_PUBLIC_STS_AUTHORITY,
-		NEXT_PUBLIC_CLIENT_ID,
-	} = useRuntimeEnv();
-	const OIDC_CONFIG = {
-		authority: NEXT_PUBLIC_STS_AUTHORITY,
-		client_id: NEXT_PUBLIC_CLIENT_ID,
-		redirect_uri: NEXT_PUBLIC_REDIRECT_URL || "",
-		response_type: NEXT_PUBLIC_RESPONSE_TYPE,
-		scope: NEXT_PUBLIC_CLIENT_SCOPE,
-		post_logout_redirect_uri: "",
-	};
+	const userManager = useUserManager();
+
 	const checkAuthentication = async () => {
 		const token = localStorage.getItem(COMMON_METADATA.OMNI_TOKEN_STORE_KEY);
 		if (token) {
@@ -161,17 +147,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			console.error(error);
 		}
 	};
-	const initializeAuth = async () => {
-		const baseUrl = `${NEXT_PUBLIC_ORIGIN || ""}${NEXT_PUBLIC_BASE_PATH || ""}`;
-		OIDC_CONFIG.redirect_uri = `${baseUrl}auth/oidc-callback`;
-		OIDC_CONFIG.post_logout_redirect_uri = `${baseUrl}signout-callback-oidc`;
-
-		userManager = new UserManager(OIDC_CONFIG);
-	};
-
-	useEffect(() => {
-		initializeAuth();
-	}, []);
 
 	return (
 		<AuthContext.Provider
