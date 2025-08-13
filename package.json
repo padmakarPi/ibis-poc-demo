@@ -26,6 +26,7 @@
     "@reduxjs/toolkit": "^1.9.6",
     "@vplatform/shared-components": "^1.9.5",
     "axios": "^1.5.1",
+    "cors": "^2.8.5",
     "css-loader": "^6.11.0",
     "dayjs": "^1.11.11",
     "depcheck": "^1.4.7",
@@ -48,6 +49,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/js-cookie": "^3.0.4",
     "@types/node": "^22.10.0",
     "@types/react": "^18.3.1",
