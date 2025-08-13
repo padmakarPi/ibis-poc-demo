@@ -7,9 +7,7 @@ const Dashboard = () => {
 	return (
 		<Button
 			size="small"
-			onClick={() => {
-				console.log("click");
-			}}
+			onClick={() => {}}
 			id={`btnUpdateDetails-${NEXT_PUBLIC_CLIENT_ID}`}
 		>
 			Update
