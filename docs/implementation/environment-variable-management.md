@@ -24,6 +24,7 @@ project-root/
 │ └── pages/
 |       └── api/
 |            └── env.ts
+|            └── corsMiddleware.ts
 |       └── _app.tsx
 ```
 
@@ -49,30 +50,71 @@ This file contains all the environment variables needed by the application. Exam
 }
 ```
 ## 🌐 API Route: `pages/api/env.ts`
+Install:- `npm i cors` and `npm i --save-dev @types/cors`
 
 ```
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
+import Cors from "cors";
+import runMiddleware from "./corsMiddleware";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-	const filePath = path.join(process.cwd(), "public", "env.json");
+const cors = Cors({
+	methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+	origin: "*",
+});
 
+export default async function handler(
+	req: NextApiRequest,
+	res: NextApiResponse,
+) {
+	await runMiddleware(req, res, cors);
 	try {
+		const filePath = path.join(process.cwd(), "public", "env.json");
 		const fileContents = fs.readFileSync(filePath, "utf8");
 		const json = JSON.parse(fileContents);
+		res.setHeader("Content-Type", "application/json");
 		res.status(200).json(json);
 	} catch (error) {
 		res.status(500).json({ error: "Unable to load env.json" });
 	}
 }
+
 ```
 
+## 🌐 API Middleware: `pages/api/corsMiddleware.ts`
+
+```
+import { NextApiRequest, NextApiResponse } from "next";
+
+function runMiddleware(
+	req: NextApiRequest,
+	res: NextApiResponse,
+	fn: (
+		request: NextApiRequest,
+		response: NextApiResponse,
+		next: (result?: unknown) => void,
+	) => void,
+) {
+	return new Promise((resolve, reject) => {
+		fn(req, res, (result: any) => {
+			if (result instanceof Error) {
+				return reject(result);
+			}
+			return resolve(result);
+		});
+	});
+}
+
+export default runMiddleware;
+
+```
 
 ### `Context Setup: SecureEnvContext.tsx`
 This file creates a React context to provide the environment variables to the entire app.
 
 ```
+import axios from "axios";
 import {
 	createContext,
 	ReactNode,
@@ -83,34 +125,35 @@ import {
 
 type SecureWrapperProviderType = {
 	children: ReactNode;
+	baseUrl?: string;
 };
 
 type SecureEnvType = { [key: string]: string };
 let cachedEnvData: SecureEnvType | null = null;
+
 export const SecureContext = createContext<SecureEnvType>({});
 
 export const SecureWrapperProvider = ({
 	children,
+	baseUrl,
 }: SecureWrapperProviderType) => {
 	const [envData, setEnvData] = useState<SecureEnvType | null>(cachedEnvData);
 
 	useEffect(() => {
 		const fetchEnv = async () => {
 			if (cachedEnvData) return;
-			const isDev =
-					typeof window !== "undefined" &&
-					window.location.hostname === "localhost";
-				// add base path if your DNS contain the base path else use `/api/env`.
-				const url = isDev ? "/api/env" : "/vtask/api/env";
+
+			// add base path if your DNS contain the base path like  /vtask/api/env.
 
 			try {
-				const res = await fetch(url, {
+				const url = baseUrl
+					? `${baseUrl.replace(/\/$/, "")}/api/env`
+					: "/api/env";
+				const response = await axios.get(url, {
 					headers: { "Cache-Control": "no-cache" },
 				});
-				if (!res.ok) throw new Error("Failed to fetch env via API");
-				const data = await res.json();
-				cachedEnvData = data;
-				setEnvData(data);
+				cachedEnvData = response.data;
+				setEnvData(response.data);
 			} catch (e) {
 				console.error("API call to /api/env failed:", e);
 				setEnvData({});
@@ -118,18 +161,19 @@ export const SecureWrapperProvider = ({
 		};
 
 		fetchEnv();
-	}, []);
-
+	}, [baseUrl]);
 
 	if (!envData || Object.keys(envData).length === 0) {
 		return null;
 	}
+
 	return (
 		<SecureContext.Provider value={envData}>{children}</SecureContext.Provider>
 	);
 };
 
 export const useSecureEnv = () => useContext(SecureContext);
+
 
 ```
 
@@ -231,7 +275,7 @@ const Checklist = (props: IChecklistProps) => {
   const { subTaskId, themeMode = false } = props;
 
   return (
-    <SecureWrapperProvider>
+    <SecureWrapperProvider  baseUrl={props?.baseUrl}>
       <SecureEnvWrapper sectionName={"Check list"}>
         <ModuleFedaraionWrapper themeMode={themeMode}>
           <Box padding={4} paddingTop={1}>
@@ -247,6 +291,9 @@ export default Checklist;
 
 
 ```
+#### Notes
+- baseUrl is provided by the host application.
+- baseUrl should be the DNS or deployment URL of the microfrontend.
 
 ### SecureEnvWrapper Component Example
 
