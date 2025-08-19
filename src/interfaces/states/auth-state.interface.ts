@@ -9,5 +9,6 @@ export interface AuthState {
 		sid: string;
 		name: string;
 		expires_at: number;
+		user_id: string;
 	};
 }
