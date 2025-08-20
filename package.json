@@ -24,6 +24,7 @@
     "@mui/system": "^5.15.9",
     "@mui/x-date-pickers": "^6.16.0",
     "@reduxjs/toolkit": "^1.9.6",
+    "@sentry/nextjs": "^10.5.0",
     "@vplatform/shared-components": "^1.9.5",
     "axios": "^1.5.1",
     "cors": "^2.8.5",
