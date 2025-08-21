@@ -10,6 +10,7 @@ const initialState: AuthState = {
 		sid: "",
 		name: "",
 		expires_at: 0,
+		user_id: "",
 	},
 };
 

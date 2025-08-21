@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { setAuthState } from "@/redux/slices/authslice";
 import { getOriginalRoute } from "@/lib/utils";
 import { useUserManager } from "@/hooks/customhooks/useUserManager";
+import * as Sentry from "@sentry/nextjs";
 
 interface defaultState {
 	userManager: UserManager | null;
@@ -86,6 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				sessionStorage.removeItem(key);
 			});
 		Cookies.remove("isAuthenticated");
+		Sentry.setUser(null);
 	};
 
 	const login = async () => {
