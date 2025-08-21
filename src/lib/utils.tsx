@@ -37,3 +37,17 @@ export function getOriginalRoute() {
 	}
 	return originalRoute;
 }
+
+export async function loadRemoteContainer(remoteName: string, url: string) {
+	await new Promise<void>((resolve, reject) => {
+		const script = document.createElement("script");
+		script.src = url;
+		script.type = "text/javascript";
+		script.async = true;
+		script.onload = () => resolve();
+		script.onerror = reject;
+		document.head.appendChild(script);
+	});
+
+	return window[remoteName];
+}

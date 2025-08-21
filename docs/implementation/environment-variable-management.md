@@ -258,6 +258,144 @@ const MyComponent = () => {
 };
 ```
 
+
+### update next.config.js file 
+
+- Add publicpath as auto and update the webpack remote. Now webpack remote will update the env on the runtime. For reference:- go to the next.config.js file in template. 
+
+
+```
+module.exports = withSentryConfig({
+  basePath: process.env.NODE_ENV === "production" ?  '':"",
+  reactStrictMode: false,
+  compiler: {
+    removeConsole: process.env.NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT === 'DEV' ? false : true,
+  },
+  webpack(config, options) {
+    const { webpack } = options;
+
+    const vWelcomeApp = ensureTrailingSlash(process.env.NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL)
+    const appbar = ensureTrailingSlash(process.env.NEXT_PUBLIC_APPBAR)
+    if (!config.output) {
+      config.output = {};
+    }
+ if (!options.isServer) {
+    config.output.publicPath = "auto";
+  }    
+  config.plugins.push(
+      new NextFederationPlugin({
+        name: 'Template',
+        filename: 'static/chunks/remoteEntry.js',
+        remotes: {
+          VWelcomeApp: `VWelcomeApp@${vWelcomeApp}_next/static/chunks/remoteEntry.js`,
+          appbar: `appbar@${appbar}_next/static/chunks/remoteEntry.js`,
+        },
+        exposes: {},
+
+        shared: {},
+        extraOptions: {},
+       
+      }),
+    );
+    
+    config.module.rules.push(
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'style-loader',
+          "css-loader",
+          "sass-loader",
+        ],
+      }
+    );
+
+    return config;
+  },
+})
+
+```
+
+### Importing Pages as Microfrontends :
+- import loadRemoteContainer function into the microfrontend. Suppose if you import microfrontend calling multiple time in the project then run that useEffect on the parent component. 
+
+
+```
+
+useEffect(() => {
+			async function load() {
+				const remoteUrl = `${NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL}_next/static/chunks/remoteEntry.js`;
+				await loadRemoteContainer("microfrontend", remoteUrl);
+			}
+			load();
+		}, []);
+
+```
+else your remote microfrontend calling only time then set the useEffect where the dynamic import the remote.
+
+```
+
+import { useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
+import { useRuntimeEnv } from "@/hooks/customhooks/useRuntimeEnv";
+import { loadRemoteContainer } from "@/lib/utils";
+
+const WelcomeScreenMicroFrontEnd = (props: any) => {
+	const {NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL} = useRuntimeEnv()
+		useEffect(() => {
+			async function load() {
+				const remoteUrl = `${NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL}_next/static/chunks/remoteEntry.js`;
+				await loadRemoteContainer("VWelcomeApp", remoteUrl);
+			}
+			load();
+		}, []);
+	const WelcomeScreenMemo = useMemo(
+		() =>
+			dynamic<any>(() => import("VWelcomeApp/welcome-screen"), {
+				ssr: false,
+			}),
+		[],
+	);
+	return <WelcomeScreenMemo {...props} />;
+};
+
+export default WelcomeScreenMicroFrontEnd;
+
+
+```
+
+- Note: loadRemoteContainer function will take the remote url and remote name. 
+
+### src/lib/util.ts
+
+- Add async  function of loadRemoteContainer into the util file.
+
+
+```
+export async function loadRemoteContainer(remoteName: string, url: string) {
+	await new Promise<void>((resolve, reject) => {
+		const script = document.createElement("script");
+		script.src = url;
+		script.type = "text/javascript";
+		script.async = true;
+		script.onload = () => resolve();
+		script.onerror = reject;
+		document.head.appendChild(script);
+	});
+
+	return window[remoteName];
+}
+```
+
+
+
+
 ### 📦 Exporting Pages as Microfrontends with Environment and MicroFrontendAccessControl
 
 When you export pages as microfrontends, it's recommended to wrap them using your environment.

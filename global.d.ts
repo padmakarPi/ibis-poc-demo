@@ -7,3 +7,7 @@ declare module "appbar/appbarwithsidebar" {
 	const appbar: React.ComponentType<any>;
 	export default appbar;
 }
+
+interface Window {
+	[key: string]: any;
+}
