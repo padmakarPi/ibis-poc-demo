@@ -1,35 +1,43 @@
 
 const NextFederationPlugin = require('@module-federation/nextjs-mf');
 const { withSentryConfig } = require("@sentry/nextjs");
+function ensureTrailingSlash(url) {
+  return url?.endsWith('/') ? url : url + '/';
+}
 
 module.exports = withSentryConfig({
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH,
+  basePath: process.env.NODE_ENV === "production" ?  '':"",
   reactStrictMode: false,
   compiler: {
     removeConsole: process.env.NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT === 'DEV' ? false : true,
   },
   webpack(config, options) {
     const { webpack } = options;
-    const baseUrl = `${process.env.NEXT_PUBLIC_ORIGIN || ''}${process.env.NEXT_PUBLIC_BASE_PATH || ''}`;
 
-    config.plugins.push(
+    const vWelcomeApp = ensureTrailingSlash(process.env.NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL)
+    const appbar = ensureTrailingSlash(process.env.NEXT_PUBLIC_APPBAR)
+    if (!config.output) {
+      config.output = {};
+    }
+ if (!options.isServer) {
+    config.output.publicPath = "auto";
+  }    
+  config.plugins.push(
       new NextFederationPlugin({
         name: 'Template',
         filename: 'static/chunks/remoteEntry.js',
         remotes: {
-          VWelcomeApp: `VWelcomeApp@${process.env.NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL}/_next/static/chunks/remoteEntry.js`,
-          appbar: `appbar@${process.env.NEXT_PUBLIC_APPBAR}/_next/static/chunks/remoteEntry.js`,
+          VWelcomeApp: `VWelcomeApp@${vWelcomeApp}_next/static/chunks/remoteEntry.js`,
+          appbar: `appbar@${appbar}_next/static/chunks/remoteEntry.js`,
         },
         exposes: {},
 
         shared: {},
         extraOptions: {},
+       
       }),
     );
-    if (!config.output) {
-      config.output = {};
-    }
-    config.output.publicPath = `${baseUrl}/_next/`;
+    
     config.module.rules.push(
       {
         test: /\.css$/,

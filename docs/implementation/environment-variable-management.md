@@ -149,9 +149,7 @@ export const SecureWrapperProvider = ({
 				const url = baseUrl
 					? `${baseUrl.replace(/\/$/, "")}/api/env`
 					: "/api/env";
-				const response = await axios.get(url, {
-					headers: { "Cache-Control": "no-cache" },
-				});
+				const response = await axios.get(url);
 				cachedEnvData = response.data;
 				setEnvData(response.data);
 			} catch (e) {
@@ -258,6 +256,144 @@ const MyComponent = () => {
 };
 ```
 
+
+### update next.config.js file 
+
+- In your webpack config (host and remote apps), make sure the config.output.publicPath is set to auto so that webpack can resolve chunks dynamically at runtime.
+
+
+```
+module.exports = withSentryConfig({
+  basePath: process.env.NODE_ENV === "production" ?  '':"",
+  reactStrictMode: false,
+  compiler: {
+    removeConsole: process.env.NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT === 'DEV' ? false : true,
+  },
+  webpack(config, options) {
+    const { webpack } = options;
+
+    const vWelcomeApp = ensureTrailingSlash(process.env.NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL)
+    const appbar = ensureTrailingSlash(process.env.NEXT_PUBLIC_APPBAR)
+    if (!config.output) {
+      config.output = {};
+    }
+ if (!options.isServer) {
+    config.output.publicPath = "auto";
+  }    
+  config.plugins.push(
+      new NextFederationPlugin({
+        name: 'Template',
+        filename: 'static/chunks/remoteEntry.js',
+        remotes: {
+          VWelcomeApp: `VWelcomeApp@${vWelcomeApp}_next/static/chunks/remoteEntry.js`,
+          appbar: `appbar@${appbar}_next/static/chunks/remoteEntry.js`,
+        },
+        exposes: {},
+
+        shared: {},
+        extraOptions: {},
+       
+      }),
+    );
+    
+    config.module.rules.push(
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'style-loader',
+          "css-loader",
+          "sass-loader",
+        ],
+      }
+    );
+
+    return config;
+  },
+})
+
+```
+
+### Importing Pages as Microfrontends :
+- import loadRemoteContainer function into the microfrontend. 
+- If your microfrontend is imported multiple times, don’t load it in every component. Instead, use a parent-level useEffect so the remote is registered once.
+
+```
+
+useEffect(() => {
+			async function load() {
+				const remoteUrl = `${NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL}_next/static/chunks/remoteEntry.js`;
+				await loadRemoteContainer("microfrontend", remoteUrl);
+			}
+			load();
+		}, []);
+
+```
+else your remote microfrontend calling only time then set the useEffect where the dynamic import the remote.
+
+```
+
+import { useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
+import { useRuntimeEnv } from "@/hooks/customhooks/useRuntimeEnv";
+import { loadRemoteContainer } from "@/lib/utils";
+
+const WelcomeScreenMicroFrontEnd = (props: any) => {
+	const {NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL} = useRuntimeEnv()
+		useEffect(() => {
+			async function load() {
+				const remoteUrl = `${NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL}_next/static/chunks/remoteEntry.js`;
+				await loadRemoteContainer("VWelcomeApp", remoteUrl);
+			}
+			load();
+		}, []);
+	const WelcomeScreenMemo = useMemo(
+		() =>
+			dynamic<any>(() => import("VWelcomeApp/welcome-screen"), {
+				ssr: false,
+			}),
+		[],
+	);
+	return <WelcomeScreenMemo {...props} />;
+};
+
+export default WelcomeScreenMicroFrontEnd;
+
+
+```
+
+- Note: loadRemoteContainer function will take the remote url and remote name. 
+
+### src/lib/util.ts
+
+- Add async  function of loadRemoteContainer into the util file.
+
+
+```
+export async function loadRemoteContainer(remoteName: string, url: string) {
+	await new Promise<void>((resolve, reject) => {
+		const script = document.createElement("script");
+		script.src = url;
+		script.type = "text/javascript";
+		script.async = true;
+		script.onload = () => resolve();
+		script.onerror = reject;
+		document.head.appendChild(script);
+	});
+
+	return window[remoteName];
+}
+```
+
+
+
+
 ### 📦 Exporting Pages as Microfrontends with Environment and MicroFrontendAccessControl
 
 When you export pages as microfrontends, it's recommended to wrap them using your environment.
@@ -349,6 +485,29 @@ CMD ["/bin/sh", "-c", "./generate-env-js.sh && npm start"]
 
 ```
 Note :  you can check in template Dockerfile
+
+
+
+## Script folder
+
+If your project contain the node script then follow that rule: 
+
+- A scripts folder with a Node script.
+
+- You run that script before npm start.
+
+- This way, the frontend app can read env.json at runtime instead of embedding process.env at build time.
+
+- fetch values from env.json instead of process.env.
+
+Reference:- 
+
+- Go to the scripts folder in the template project :  scripts/replace-client-id-in-css.js → takes process.env, writes public/env.json.
+
+- Go to the Dockerfile → Dockerfile → runs this script before the app starts (so runtime envs are available inside container).
+
+- Go to package.json → package.json → ensures the script runs automatically before start
+
 
 ### ⚠️ Important Notes
 - Sometimes URLs in your environment config already end with a slash (/).
