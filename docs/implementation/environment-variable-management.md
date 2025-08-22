@@ -149,9 +149,7 @@ export const SecureWrapperProvider = ({
 				const url = baseUrl
 					? `${baseUrl.replace(/\/$/, "")}/api/env`
 					: "/api/env";
-				const response = await axios.get(url, {
-					headers: { "Cache-Control": "no-cache" },
-				});
+				const response = await axios.get(url);
 				cachedEnvData = response.data;
 				setEnvData(response.data);
 			} catch (e) {
@@ -487,6 +485,29 @@ CMD ["/bin/sh", "-c", "./generate-env-js.sh && npm start"]
 
 ```
 Note :  you can check in template Dockerfile
+
+
+
+## Script folder
+
+If you project contain the node script then follow that rule: 
+
+- A scripts folder with a Node script.
+
+- You run that script before npm start.
+
+- This way, the frontend app can read env.json at runtime instead of embedding process.env at build time.
+
+- fetch values from env.json instead of process.env.
+
+Reference:- 
+
+- Go to the scripts folder in the template project :  scripts/replace-client-id-in-css.js → takes process.env, writes public/env.json.
+
+- Go to the Dockerfile → Dockerfile → runs this script before the app starts (so runtime envs are available inside container).
+
+- Go to package.json → package.json → ensures the script runs automatically before start
+
 
 ### ⚠️ Important Notes
 - Sometimes URLs in your environment config already end with a slash (/).

@@ -1,7 +1,9 @@
 require('dotenv').config();
+
 const fs = require('fs').promises;
 const path = require('path');
 
+const envFilePath = path.join(__dirname, '..', 'public', 'env.json');
 const cssFilePath = path.join(__dirname, '..', 'public', 'css', 'access-control.css');
 
 // Array to map each environment variable to its corresponding dev client ID
@@ -17,22 +19,39 @@ const clientIdMappings = [
   },
 ];
 
-clientIdMappings.forEach(mapping => {
-  mapping.newClientId = process.env[mapping.envVarName];
-});
-
-const missingClientIds = clientIdMappings.filter(m => !m.newClientId);
-
-if (missingClientIds.length > 0) {
-  console.error('Error: Missing environment variables in .env file:');
-  missingClientIds.forEach(m => {
-    console.error(`- Missing environment variable: ${m.envVarName} (for devClientId: ${m.devClientId})`);
-  });
-  process.exit(1);
+// Load env.json dynamically
+async function loadEnv() {
+  try {
+    const rawData = await fs.readFile(envFilePath, 'utf8');
+    const envData = JSON.parse(rawData);
+    return envData;
+  } catch (err) {
+    console.warn('env.json not found or unreadable, falling back to process.env');
+    return {}; // fallback to empty object
+  }
 }
 
-
+// Main function to update CSS
 async function updateCssFile() {
+  const envData = await loadEnv();
+  console.log("anilog ~ envData=", envData)
+
+  // Fill newClientId from env.json first, then fallback to process.env
+  clientIdMappings.forEach(mapping => {
+    mapping.newClientId = envData[mapping.envVarName];
+  });
+
+  // Check for missing variables
+  const missingClientIds = clientIdMappings.filter(m => !m.newClientId);
+
+  if (missingClientIds.length > 0) {
+    console.error('Error: Missing environment variables:');
+    missingClientIds.forEach(m => {
+      console.error(`- Missing: ${m.envVarName} (for devClientId: ${m.devClientId})`);
+    });
+    process.exit(1);
+  }
+
   try {
     let data = await fs.readFile(cssFilePath, 'utf8');
 

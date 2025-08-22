@@ -31,9 +31,7 @@ export const SecureWrapperProvider = ({
 				const url = baseUrl
 					? `${baseUrl.replace(/\/$/, "")}/api/env`
 					: "/api/env";
-				const response = await axios.get(url, {
-					headers: { "Cache-Control": "no-cache" },
-				});
+				const response = await axios.get(url);
 				cachedEnvData = response.data;
 				setEnvData(response.data);
 			} catch (e) {
