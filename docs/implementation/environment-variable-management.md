@@ -259,7 +259,7 @@ const MyComponent = () => {
 
 ### update next.config.js file 
 
-- Add publicpath as auto and update the webpack remote. Now webpack remote will update the env on the runtime. For reference:- go to the next.config.js file in template. 
+- In your webpack config (host and remote apps), make sure the config.output.publicPath is set to auto so that webpack can resolve chunks dynamically at runtime.
 
 
 ```
@@ -321,8 +321,8 @@ module.exports = withSentryConfig({
 ```
 
 ### Importing Pages as Microfrontends :
-- import loadRemoteContainer function into the microfrontend. Suppose if you import microfrontend calling multiple time in the project then run that useEffect on the parent component. 
-
+- import loadRemoteContainer function into the microfrontend. 
+- If your microfrontend is imported multiple times, don’t load it in every component. Instead, use a parent-level useEffect so the remote is registered once.
 
 ```
 
@@ -490,7 +490,7 @@ Note :  you can check in template Dockerfile
 
 ## Script folder
 
-If you project contain the node script then follow that rule: 
+If your project contain the node script then follow that rule: 
 
 - A scripts folder with a Node script.
 
