@@ -78,7 +78,7 @@ The `VSearchInput` component accepts the following props:
 | `setSelectedOptions`| `Function`      | `undefined` | Yes      | Function to update the selected options.                                                     |
 | `setTableData`     | `Function`       | `undefined` | No       | Function to clean the table data according to selected option in search  |
 | `queryToggle`     | `boolean`         | `true`      | No       | If false then hide the query toggle  |
-
+|`optionsKeyColumnWidth`| `responsiveWidthType` |`undefined`| No | Object containing mui responsive style properties for options key column width. |
 
 
 ### `searchTypes` Props
@@ -118,6 +118,17 @@ export const iconMap: IconMapType = {
 
 ```
 
+### `responsiveWidthType` Props
+{xs:string|number,sm:string|number,md:string|number,xl:string|number}
+
+- Used to pass width in dropdown for options key column.
+
+- Example 
+
+```
+optionsKeyColumnWidth={{ xs: 180, sm: 370, md: 180, xl: 180 }}
+
+```
 
 ## Design ConfigData 
 
