@@ -121,43 +121,42 @@ export async function resilientApiCall<TReq, TRes>({
 
 ```ts
 const response = await resilientApiCall<
-			ContactListCloudfareRequest,
-			Array<ContactsCloudfareResponse> | null
-		>({
-			request,
-			serviceName: "contacts",
-			primaryInstance: contactCloudfareAxiosInstance,
-			primaryConfig: {
-				url: "/api/getcontact-list",
-				method: "POST",
-			},
-			mapPrimaryRequest: req => ({
-				customerid: customerId,
-				environment: APPEnvironment.PROD.toLowerCase(),
-				...req,
-			}),
-			mapPrimaryResponse: res => res,
-			fallbackInstance: contactServiceAxios,
-			fallbackConfig: {
-				url: "/v5/contacts",
-				method: "POST",
-			},
-			mapFallbackRequest: (req) => {
+  ContactListCloudfareRequest,
+  Array<ContactsCloudfareResponse> | null
+>({
+  request,
+  serviceName: "contacts",
+  primaryInstance: contactCloudfareAxiosInstance,
+  primaryConfig: {
+    url: "/api/getcontact-list",
+    method: "POST",
+  },
+  mapPrimaryRequest: (req) => ({
+    customerid: customerId,
+    environment: APPEnvironment.PROD.toLowerCase(),
+    ...req,
+  }),
+  mapPrimaryResponse: (res) => res,
+  fallbackInstance: contactServiceAxios,
+  fallbackConfig: {
+    url: "/v5/contacts",
+    method: "POST",
+  },
+  mapFallbackRequest: (req) => {
+    if (Array.isArray(req.contactIds)) {
+      (req.contactIds as any) = req.contactIds.join(",");
+    }
 
-				if(Array.isArray(req.contactIds)) {
-					(req.contactIds as any) = req.contactIds.join(',')
-				}
+    if (Array.isArray(req.userIds)) {
+      (req.userIds as any) = req.userIds.join(",");
+    }
 
-				if(Array.isArray(req.userIds)) {
-					(req.userIds as any) = req.userIds.join(',')
-				}
-
-				return {
-					...req,
-				};
-			},
-			mapFallbackResponse: res => res?.result?.result || [],
-		});
+    return {
+      ...req,
+    };
+  },
+  mapFallbackResponse: (res) => res?.result?.result || [],
+});
 ```
 
 * In this example:
