@@ -31,68 +31,89 @@ import { VHandleError } from "@vplatform/shared-components";
 import { ENV_METADATA } from "@/constants/metadata/env.metadata";
 
 interface ResilientOptions<TReq, TRes> {
-  request: TReq;
-  serviceName: string;
-  primaryInstance: AxiosInstance;
-  primaryConfig: Omit<AxiosRequestConfig, "data">;
-  mapPrimaryRequest?: (req: TReq) => any;
-  mapPrimaryResponse?: (res: any) => TRes;
-  fallbackInstance: AxiosInstance;
-  fallbackConfig: Omit<AxiosRequestConfig, "data">;
-  mapFallbackRequest?: (req: TReq) => any;
-  mapFallbackResponse?: (res: any) => TRes;
-  retries?: number;
-  retryDelayMs?: number;
+	request: TReq;
+	serviceName: string;
+	primaryInstance: AxiosInstance;
+	primaryConfig: Omit<AxiosRequestConfig, "data">;
+	mapPrimaryRequest?: (req: TReq) => any;
+	mapPrimaryResponse?: (res: any) => TRes;
+	fallbackInstance: AxiosInstance;
+	fallbackConfig: Omit<AxiosRequestConfig, "data">;
+	mapFallbackRequest?: (req: TReq) => any;
+	mapFallbackResponse?: (res: any) => TRes;
+	retries?: number;
+	retryDelayMs?: number;
 }
 
+// eslint-disable-next-line consistent-return
 export async function resilientApiCall<TReq, TRes>({
-  request,
-  serviceName,
-  primaryInstance,
-  primaryConfig,
-  mapPrimaryRequest = r => r,
-  mapPrimaryResponse = r => r,
-  fallbackInstance,
-  fallbackConfig,
-  mapFallbackRequest = r => r,
-  mapFallbackResponse = r => r,
-  retries = 0,
-  retryDelayMs = 200,
+	request,
+	serviceName,
+	primaryInstance,
+	primaryConfig,
+	mapPrimaryRequest = r => r,
+	mapPrimaryResponse = r => r,
+	fallbackInstance,
+	fallbackConfig,
+	mapFallbackRequest = r => r,
+	mapFallbackResponse = r => r,
+	retries = 0,
+	retryDelayMs = 200,
 }: ResilientOptions<TReq, TRes>): Promise<TRes> {
-  let lastError: any;
+	for (let attempt = 0; attempt <= retries; attempt++) {
+		try {
+			// eslint-disable-next-line no-await-in-loop
+			const res = await primaryInstance.request({
+				...primaryConfig,
+				...(primaryConfig.method?.toUpperCase() === "GET"
+					? { params: mapPrimaryRequest(request) }
+					: { data: mapPrimaryRequest(request) }),
+			});
+			if (
+				typeof res.data === "string" &&
+				res.headers["content-type"]?.includes("text/html")
+			) {
+				throw new Error(`Primary API returned HTML error page`);
+			}
 
-  for (let attempt = 0; attempt <= retries; attempt++) {
-    try {
-      const res = await primaryInstance.request({
-        ...primaryConfig,
-        data: mapPrimaryRequest(request),
-      });
-      return mapPrimaryResponse(res.data);
-    } catch (error: any) {
-      lastError = error;
-      console.warn(`Attempt ${attempt + 1} failed for ${serviceName}: ${error.message}`);
-      if (attempt < retries) {
-        const backoffDelay = retryDelayMs * Math.pow(2, attempt);
-        console.log(`Retrying in ${backoffDelay}ms...`);
-        await new Promise(r => setTimeout(r, backoffDelay));
-      }
-    }
-  }
+			return mapPrimaryResponse(res.data);
+		} catch (error: any) {
+			const status = error?.response?.status;
+			if (attempt < retries && (status === 429 || status === 503 || !status)) {
+				const backoffDelay = retryDelayMs * 2 ** attempt;
+				// eslint-disable-next-line no-await-in-loop
+				await new Promise<void>(resolve => {
+					setTimeout(resolve, backoffDelay);
+				});
+			}
+		}
+	}
 
-  try {
-    const res = await fallbackInstance.request({
-      ...fallbackConfig,
-      data: mapFallbackRequest(request),
-    });
-    return mapFallbackResponse(res.data);
-  } catch (fallbackError: any) {
-    console.error(`Fallback request failed for ${serviceName}: ${fallbackError.message}`);
-    VHandleError(
-      fallbackError,
-      { service: `${serviceName}-fallback` },
-      ENV_METADATA.SUPPRESS_API_TOASTER_ERROR_MESSAGE,
-    );
-  }
+	try {
+		const res = await fallbackInstance.request({
+			...fallbackConfig,
+			...(fallbackConfig.method?.toUpperCase() === "GET"
+				? { params: mapFallbackRequest(request) }
+				: { data: mapFallbackRequest(request) }),
+		});
+
+		if (
+			typeof res.data === "string" &&
+			res.headers["content-type"]?.includes("text/html")
+		) {
+			throw new Error(`Fallback API returned HTML error page`);
+		}
+		return mapFallbackResponse(res.data);
+	} catch (fallbackError: any) {
+		console.error(
+			`Fallback request failed for ${serviceName}: ${fallbackError.message}`,
+		);
+		VHandleError(
+			fallbackError,
+			{ service: `${serviceName}-fallback` },
+			ENV_METADATA.SUPPRESS_API_TOASTER_ERROR_MESSAGE,
+		);
+	}
 }
 
 ```
@@ -124,39 +145,42 @@ const response = await resilientApiCall<
   ContactListCloudfareRequest,
   Array<ContactsCloudfareResponse> | null
 >({
-  request,
+  request, // The incoming request object containing all properties required by both APIs
   serviceName: "contacts",
-  primaryInstance: contactCloudfareAxiosInstance,
+  primaryInstance: contactCloudfareAxiosInstance, // Axios instance for Cloudflare
   primaryConfig: {
-    url: "/api/getcontact-list",
+    url: "/api/getcontactslist", // Cloudflare endpoint
     method: "POST",
   },
   mapPrimaryRequest: (req) => ({
+    // Transform request before sending to Cloudflare
     customerid: customerId,
     environment: APPEnvironment.PROD.toLowerCase(),
     ...req,
   }),
-  mapPrimaryResponse: (res) => res,
-  fallbackInstance: contactServiceAxios,
+  mapPrimaryResponse: (res) => res, // Transform the Primary response
+  fallbackInstance: contactServiceAxios, // Axios instance for internal service
   fallbackConfig: {
-    url: "/v5/contacts",
+    url: "/v5/contacts", // Internal endpoint
     method: "POST",
   },
   mapFallbackRequest: (req) => {
+    // Transform request before sending to internal service
     if (Array.isArray(req.contactIds)) {
-      (req.contactIds as any) = req.contactIds.join(",");
+      req.contactIds = req.contactIds.join(",");
     }
 
     if (Array.isArray(req.userIds)) {
-      (req.userIds as any) = req.userIds.join(",");
+      req.userIds = req.userIds.join(",");
     }
 
     return {
       ...req,
     };
   },
-  mapFallbackResponse: (res) => res?.result?.result || [],
+  mapFallbackResponse: (res) => res?.result?.result || [] // Transform the fallback response
 });
+
 ```
 
 * In this example:
