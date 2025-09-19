@@ -3,14 +3,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 function runMiddleware(
 	req: NextApiRequest,
 	res: NextApiResponse,
-	fn: (
-		request: NextApiRequest,
-		response: NextApiResponse,
+	fn?: (
+		req: NextApiRequest,
+		res: NextApiResponse,
 		next: (result?: unknown) => void,
 	) => void,
-) {
+): void | Response | Promise<void | Response> {
 	return new Promise((resolve, reject) => {
-		fn(req, res, (result: any) => {
+		fn?.(req, res, (result: any) => {
 			if (result instanceof Error) {
 				return reject(result);
 			}

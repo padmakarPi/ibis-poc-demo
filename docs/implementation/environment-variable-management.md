@@ -53,32 +53,28 @@ This file contains all the environment variables needed by the application. Exam
 Install:- `npm i cors` and `npm i --save-dev @types/cors`
 
 ```
-import type { NextApiRequest, NextApiResponse } from "next";
-import fs from "fs";
-import path from "path";
-import Cors from "cors";
-import runMiddleware from "./corsMiddleware";
+import { NextApiRequest, NextApiResponse } from "next";
 
-const cors = Cors({
-	methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-	origin: "*",
-});
-
-export default async function handler(
+function runMiddleware(
 	req: NextApiRequest,
 	res: NextApiResponse,
-) {
-	await runMiddleware(req, res, cors);
-	try {
-		const filePath = path.join(process.cwd(), "public", "env.json");
-		const fileContents = fs.readFileSync(filePath, "utf8");
-		const json = JSON.parse(fileContents);
-		res.setHeader("Content-Type", "application/json");
-		res.status(200).json(json);
-	} catch (error) {
-		res.status(500).json({ error: "Unable to load env.json" });
-	}
+	fn?: (
+		req: NextApiRequest,
+		res: NextApiResponse,
+		next: (result?: unknown) => void,
+	) => void,
+): void | Response | Promise<void | Response> {
+	return new Promise((resolve, reject) => {
+		fn?.(req, res, (result: any) => {
+			if (result instanceof Error) {
+				return reject(result);
+			}
+			return resolve(result);
+		});
+	});
 }
+
+export default runMiddleware;
 
 ```
 
