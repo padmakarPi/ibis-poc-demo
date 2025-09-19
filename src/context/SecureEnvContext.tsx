@@ -43,6 +43,12 @@ export const SecureWrapperProvider = ({
 		fetchEnv();
 	}, [baseUrl]);
 
+	if (envData && envData.NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT !== "DEV") {
+		console.log = () => {};
+		console.error = () => {};
+		console.warn = () => {};
+	}
+
 	if (!envData || Object.keys(envData).length === 0) {
 		return null;
 	}

@@ -160,7 +160,11 @@ export const SecureWrapperProvider = ({
 
 		fetchEnv();
 	}, [baseUrl]);
-
+if (envData && envData.NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT !== "DEV") {
+  console.log = () => {};
+  console.error = () => {};
+  console.warn = () => {};
+}
 	if (!envData || Object.keys(envData).length === 0) {
 		return null;
 	}
@@ -263,17 +267,16 @@ const MyComponent = () => {
 
 
 ```
+const envData = require('./public/env.json')
+
 module.exports = withSentryConfig({
   basePath: process.env.NODE_ENV === "production" ?  '':"",
   reactStrictMode: false,
-  compiler: {
-    removeConsole: process.env.NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT === 'DEV' ? false : true,
-  },
   webpack(config, options) {
     const { webpack } = options;
 
-    const vWelcomeApp = ensureTrailingSlash(process.env.NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL)
-    const appbar = ensureTrailingSlash(process.env.NEXT_PUBLIC_APPBAR)
+   const vWelcomeApp = ensureTrailingSlash(envData.NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL)
+    const appbar = ensureTrailingSlash(envData.NEXT_PUBLIC_APPBAR)
     if (!config.output) {
       config.output = {};
     }

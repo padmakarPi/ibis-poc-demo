@@ -1,6 +1,8 @@
 
 const NextFederationPlugin = require('@module-federation/nextjs-mf');
 const { withSentryConfig } = require("@sentry/nextjs");
+const envData = require('./public/env.json')
+
 function ensureTrailingSlash(url) {
   return url?.endsWith('/') ? url : url + '/';
 }
@@ -8,14 +10,11 @@ function ensureTrailingSlash(url) {
 module.exports = withSentryConfig({
   basePath: process.env.NODE_ENV === "production" ?  '':"",
   reactStrictMode: false,
-  compiler: {
-    removeConsole: process.env.NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT === 'DEV' ? false : true,
-  },
   webpack(config, options) {
     const { webpack } = options;
 
-    const vWelcomeApp = ensureTrailingSlash(process.env.NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL)
-    const appbar = ensureTrailingSlash(process.env.NEXT_PUBLIC_APPBAR)
+    const vWelcomeApp = ensureTrailingSlash(envData.NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL)
+    const appbar = ensureTrailingSlash(envData.NEXT_PUBLIC_APPBAR)
     if (!config.output) {
       config.output = {};
     }
@@ -55,7 +54,6 @@ module.exports = withSentryConfig({
         ],
       }
     );
-
     return config;
   },
 },

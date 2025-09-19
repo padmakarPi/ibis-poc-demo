@@ -1,6 +1,6 @@
 import React from "react";
 import { FallbackProps } from "react-error-boundary";
-import { VErrorFallBack } from "@vplatform/shared-components";
+import { VErrorFallBack } from "@vplatform/core";
 
 const ErrorFallback = React.memo(
 	({
