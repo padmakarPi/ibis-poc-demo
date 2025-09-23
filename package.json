@@ -15,6 +15,9 @@
     "update-css-client": "node scripts/replace-client-id-in-css.js"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@module-federation/nextjs-mf": "^8.8.23",
@@ -25,15 +28,16 @@
     "@mui/x-date-pickers": "^6.16.0",
     "@reduxjs/toolkit": "^1.9.6",
     "@sentry/nextjs": "^10.5.0",
-    "@vplatform/shared-components": "^1.9.5",
-    "axios": "^1.5.1",
+    "@vplatform/core": "^1.0.0",
+    "axios": "^1.12.0",
+    "babel-loader": "^10.0.0",
     "cors": "^2.8.5",
     "css-loader": "^6.11.0",
     "dayjs": "^1.11.11",
     "depcheck": "^1.4.7",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
-    "next": "^15.3.3",
+    "next": "^15.5.3",
     "oidc-client": "^1.11.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -71,7 +75,7 @@
     "ts-node": "^10.9.2"
   },
   "overrides": {
-    "koa": "2.16.1",
+    "koa": "2.16.2",
     "esbuild": "0.25.0",
     "brace-expansion": "1.1.12"
   }

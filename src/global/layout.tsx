@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useAuth } from "@/hooks/customhooks/useAuth";
 import { useEffect, useState } from "react";
-import { VSessionExpiredAlertDialog } from "@vplatform/shared-components";
+import { VSessionExpiredAlertDialog } from "@vplatform/core";
 import { SESSION_STORAGE_KEYS } from "@/lib/constant/oidc";
 import { getOriginalRoute } from "@/lib/utils";
 import { AuthContext } from "@/authcontext/AuthContext";

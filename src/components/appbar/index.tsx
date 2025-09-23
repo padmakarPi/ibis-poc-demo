@@ -9,7 +9,7 @@ import { Box, useTheme } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { VHandleError } from "@vplatform/shared-components";
+import { VHandleError } from "@vplatform/core";
 import AppbarSidebar from "@/components/microfrontends/AppbarSidebarMicrofrontend";
 import { ThemeContext } from "@/components/ThemeComponent/ThemeModeContext";
 import { RootState } from "@/redux/store";
