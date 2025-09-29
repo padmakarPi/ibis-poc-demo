@@ -22,7 +22,7 @@ import {
 	selectedOpenPanel,
 	setOpenPanel,
 } from "@/redux/reducers/applicaiton-config.reducer";
-import { useRuntimeEnv } from "@/hooks/customhooks/useRuntimeEnv";
+import { useSecureEnv } from "@/context/SecureEnvContext";
 import Dashboard from "../common/Dashboard";
 
 const drawerWidth = 64;
@@ -34,7 +34,7 @@ const AppBarHeader = () => {
 	const {
 		NEXT_PUBLIC_VDOCUMENT_BASE_API_URL,
 		NEXT_PUBLIC_VSECURITY_BASE_API_URL,
-	} = useRuntimeEnv();
+	} = useSecureEnv();
 	const { mode, setMode } = useContext(ThemeContext);
 
 	const authDetails: AuthState = useSelector((state: RootState) => state.auth);

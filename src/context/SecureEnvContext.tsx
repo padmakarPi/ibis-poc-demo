@@ -1,3 +1,4 @@
+import { NON_URL_KEYS, URL_KEYS } from "@/lib/constant/env.constant";
 import axios from "axios";
 import {
 	createContext,
@@ -11,11 +12,31 @@ type SecureWrapperProviderType = {
 	children: ReactNode;
 	baseUrl?: string;
 };
+type SecureEnvType = Record<string, string | undefined>;
 
-type SecureEnvType = { [key: string]: string };
 let cachedEnvData: SecureEnvType | null = null;
 
 export const SecureContext = createContext<SecureEnvType>({});
+export const getSecureEnv = (): SecureEnvType | null => cachedEnvData;
+
+const normalizeUrl = (url?: string): string | undefined =>
+	url?.endsWith("/") ? url : `${url}/`;
+
+const normalizeEnv = (
+	rawEnv: Record<string, string | undefined>,
+): SecureEnvType => {
+	const urls = URL_KEYS.reduce((acc, key) => {
+		acc[key] = normalizeUrl(rawEnv[key]);
+		return acc;
+	}, {} as SecureEnvType);
+
+	const nonUrls = NON_URL_KEYS.reduce((acc, key) => {
+		acc[key] = rawEnv[key];
+		return acc;
+	}, {} as SecureEnvType);
+
+	return { ...urls, ...nonUrls };
+};
 
 export const SecureWrapperProvider = ({
 	children,
@@ -32,8 +53,9 @@ export const SecureWrapperProvider = ({
 					? `${baseUrl.replace(/\/$/, "")}/api/env`
 					: "/api/env";
 				const response = await axios.get(url);
-				cachedEnvData = response.data;
-				setEnvData(response.data);
+				const normalized = normalizeEnv(response.data);
+				cachedEnvData = normalized;
+				setEnvData(normalized);
 			} catch (e) {
 				console.error("API call to /api/env failed:", e);
 				setEnvData({});
@@ -58,4 +80,9 @@ export const SecureWrapperProvider = ({
 	);
 };
 
-export const useSecureEnv = () => useContext(SecureContext);
+export const useSecureEnv = (): SecureEnvType => {
+	const env = useContext(SecureContext);
+	if (!env)
+		throw new Error("useSecureEnv must be used within SecureWrapperProvider");
+	return env;
+};

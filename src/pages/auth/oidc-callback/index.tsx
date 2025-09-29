@@ -9,7 +9,7 @@ import axios from "axios";
 import WelcomeScreenMicroFrontEnd from "@/components/microfrontends/WelcomeScreenMicrofrontend";
 import { SESSION_STORAGE_KEYS } from "@/lib/constant/oidc";
 import { getOriginalRoute } from "@/lib/utils";
-import { useRuntimeEnv } from "@/hooks/customhooks/useRuntimeEnv";
+import { useSecureEnv } from "@/context/SecureEnvContext";
 
 function CallbackPage() {
 	const router = useRouter();
@@ -21,7 +21,7 @@ function CallbackPage() {
 		NEXT_PUBLIC_STS_AUTHORITY,
 		NEXT_PUBLIC_ORIGIN,
 		NEXT_PUBLIC_BASE_PATH,
-	} = useRuntimeEnv();
+	} = useSecureEnv();
 	const clientId = NEXT_PUBLIC_CLIENT_ID || "";
 	const [redirectUrl, setRedirectUrl] = useState("");
 	const checkApplicationAccess = async (token: string) => {
