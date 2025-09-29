@@ -1,6 +1,6 @@
 import { UserManager, WebStorageStateStore } from "oidc-client";
 import { useMemo } from "react";
-import { useRuntimeEnv } from "./useRuntimeEnv";
+import { useSecureEnv } from "@/context/SecureEnvContext";
 
 export function useUserManager() {
 	const {
@@ -11,7 +11,7 @@ export function useUserManager() {
 		NEXT_PUBLIC_RESPONSE_TYPE,
 		NEXT_PUBLIC_STS_AUTHORITY,
 		NEXT_PUBLIC_CLIENT_ID,
-	} = useRuntimeEnv();
+	} = useSecureEnv();
 
 	const userManager = useMemo(() => {
 		if (

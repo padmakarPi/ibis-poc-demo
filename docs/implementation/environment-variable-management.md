@@ -15,9 +15,6 @@ project-root/
 ├── src/
 │ ├── context/
 │ │ └── SecureEnvContext.tsx
-| | ── hook/
-│ │     └── customhook/
-│ │         └── useRuntimeEnv.ts
 │ ├── lib/
 │ │ └── constant/
 │ │     └── env.constant.ts
@@ -114,6 +111,7 @@ export default runMiddleware;
 This file creates a React context to provide the environment variables to the entire app.
 
 ```
+import { NON_URL_KEYS, URL_KEYS } from "@/lib/constant/env.constant";
 import axios from "axios";
 import {
 	createContext,
@@ -127,11 +125,31 @@ type SecureWrapperProviderType = {
 	children: ReactNode;
 	baseUrl?: string;
 };
+type SecureEnvType = Record<string, string | undefined>;
 
-type SecureEnvType = { [key: string]: string };
 let cachedEnvData: SecureEnvType | null = null;
 
 export const SecureContext = createContext<SecureEnvType>({});
+export const getSecureEnv = (): SecureEnvType | null => cachedEnvData;
+
+const normalizeUrl = (url?: string): string | undefined =>
+	url?.endsWith("/") ? url : url ? `${url}/` : undefined;
+
+const normalizeEnv = (
+	rawEnv: Record<string, string | undefined>,
+): SecureEnvType => {
+	const urls = URL_KEYS.reduce((acc, key) => {
+		acc[key] = normalizeUrl(rawEnv[key]);
+		return acc;
+	}, {} as SecureEnvType);
+
+	const nonUrls = NON_URL_KEYS.reduce((acc, key) => {
+		acc[key] = rawEnv[key];
+		return acc;
+	}, {} as SecureEnvType);
+
+	return { ...urls, ...nonUrls };
+};
 
 export const SecureWrapperProvider = ({
 	children,
@@ -143,15 +161,14 @@ export const SecureWrapperProvider = ({
 		const fetchEnv = async () => {
 			if (cachedEnvData) return;
 
-			// add base path if your DNS contain the base path like  /vtask/api/env.
-
 			try {
 				const url = baseUrl
 					? `${baseUrl.replace(/\/$/, "")}/api/env`
 					: "/api/env";
 				const response = await axios.get(url);
-				cachedEnvData = response.data;
-				setEnvData(response.data);
+				const normalized = normalizeEnv(response.data);
+				cachedEnvData = normalized;
+				setEnvData(normalized);
 			} catch (e) {
 				console.error("API call to /api/env failed:", e);
 				setEnvData({});
@@ -160,11 +177,13 @@ export const SecureWrapperProvider = ({
 
 		fetchEnv();
 	}, [baseUrl]);
-if (envData && envData.NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT !== "DEV") {
-  console.log = () => {};
-  console.error = () => {};
-  console.warn = () => {};
-}
+
+	if (envData && envData.NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT !== "DEV") {
+		console.log = () => {};
+		console.error = () => {};
+		console.warn = () => {};
+	}
+
 	if (!envData || Object.keys(envData).length === 0) {
 		return null;
 	}
@@ -174,38 +193,16 @@ if (envData && envData.NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT !== "DEV") {
 	);
 };
 
-export const useSecureEnv = () => useContext(SecureContext);
-
-
-```
-
-### Runtime Hook: useRuntimeEnv.ts
-This hook is used to retrieve and normalize URLs or non-URL keys from the context.
-```
-import { useContext } from "react";
-import { SecureContext } from "@/context/SecureEnvContext"; 
-import { NON_URL_KEYS, URL_KEYS } from "@/lib/constant/env.constant";
-
-const normalizeUrl = (url?: string): string | undefined =>
-  url?.endsWith("/") ? url : `${url}/`;
-
-export const useRuntimeEnv = () => {
-  const env = useContext(SecureContext);
-  if (!env) throw new Error("useRuntimeEnv must be used within SecureContext.Provider");
-
-  const urls = URL_KEYS.reduce((acc, key) => {
-    acc[key] = normalizeUrl(env[key]);
-    return acc;
-  }, {} as Record<string, string | undefined>);
-
-  const nonUrls = NON_URL_KEYS.reduce((acc, key) => {
-    acc[key] = env[key];
-    return acc;
-  }, {} as Record<string, string | undefined>);
-
-  return { ...urls, ...nonUrls };
+export const useSecureEnv = (): SecureEnvType => {
+	const env = useContext(SecureContext);
+	if (!env)
+		throw new Error("useSecureEnv must be used within SecureWrapperProvider");
+	return env;
 };
+
 ```
+
+
 ### Example of URL_KEYS and NON_URL_KEYS:
 
 ```
@@ -245,13 +242,13 @@ export const NON_URL_KEYS = [
 ### ✅ How to Use in Any Component
 
 ```
-import { useRuntimeEnv } from "@/hooks/useRuntimeEnv";
+import { useSecureEnv } from "@/context/SecureEnvContext";
 
 const MyComponent = () => {
   const {
     NEXT_PUBLIC_VSECURITY_BASE_API_URL,
     NEXT_PUBLIC_CLIENT_ID
-  } = useRuntimeEnv();
+  } = useSecureEnv();
 
   console.log("Base API URL:", NEXT_PUBLIC_VSECURITY_BASE_API_URL);
   console.log("Client ID:", NEXT_PUBLIC_CLIENT_ID);
@@ -344,11 +341,11 @@ else your remote microfrontend calling only time then set the useEffect where th
 
 import { useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
-import { useRuntimeEnv } from "@/hooks/customhooks/useRuntimeEnv";
+import { useSecureEnv } from "@/context/SecureEnvContext";
 import { loadRemoteContainer } from "@/lib/utils";
 
 const WelcomeScreenMicroFrontEnd = (props: any) => {
-	const {NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL} = useRuntimeEnv()
+	const {NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL} = useSecureEnv()
 		useEffect(() => {
 			async function load() {
 				const remoteUrl = `${NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL}_next/static/chunks/remoteEntry.js`;
@@ -438,7 +435,7 @@ export default Checklist;
 
 ```
 import useAxiosInterceptor from "@/hooks/customhooks/useAxiosInstance";
-import { useRuntimeEnv } from "@/hooks/customhooks/useRuntimeEnv";
+import { useSecureEnv } from "@/context/SecureEnvContext";
 import { VMicroFrontendAccessControl } from "@vplatform/shared-components";
 import React, { ReactNode } from "react";
 
@@ -452,7 +449,7 @@ export const SecureEnvWrapper = ({
   sectionName,
 }: SecureEnvWrapperType) => {
   const { NEXT_PUBLIC_VTASK_APP_CLIENT_ID, NEXT_PUBLIC_VSECURITY_API_URL } =
-    useRuntimeEnv();
+    useSecureEnv();
 
   const { axBe: securityServiceAxios } = useAxiosInterceptor(
     NEXT_PUBLIC_VSECURITY_API_URL
@@ -469,6 +466,12 @@ export const SecureEnvWrapper = ({
   );
 };
 
+```
+
+## If your app contain the old authentication code (contain service folder) then follow below PR:
+
+```
+https://dev.azure.com/vgroupframework/VPlatform-Apps/_git/PurchaseOrder%20-%20App/pullrequest/164418
 ```
 
 ## Update AuthContext.tsx
@@ -515,12 +518,12 @@ Reference:-
 ### ⚠️ Important Notes
 - Sometimes URLs in your environment config already end with a slash (/).
 
-- You do NOT need to manually add or check for trailing slashes in your code because the useRuntimeEnv hook  automatically normalizes URLs to always end with a slash.
+- You do NOT need to manually add or check for trailing slashes in your code because the useSecureEnv hook  automatically normalizes URLs to always end with a slash.
 
-- This means when you use URLs from useRuntimeEnv, you can safely concatenate paths without worrying about missing or double slashes.
+- This means when you use URLs from useSecureEnv, you can safely concatenate paths without worrying about missing or double slashes.
 
 ```
-const { NEXT_PUBLIC_STS_AUTHORITY } = useRuntimeEnv();
+const { NEXT_PUBLIC_STS_AUTHORITY } = useSecureEnv();
 
 // NEXT_PUBLIC_STS_AUTHORITY is guaranteed to end with '/'
 // So simply append your path without adding an extra slash
@@ -530,9 +533,9 @@ const redirectUri = `${NEXT_PUBLIC_STS_AUTHORITY}auth/oidc-callback`;
 // This is safe and will NOT produce double slashes
 OIDC_CONFIG.redirect_uri = redirectUri;
 ```
-- Do NOT Use useRuntimeEnv Hook Outside the SecureWrapperProvider
-- Always wrap your component tree (or at least the part where you call useRuntimeEnv) inside SecureWrapperProvider
-- Since useRuntimeEnv is a React hook, it can only be used inside functional components or other custom hooks—not in regular constant files. Attempting to access runtime environment variables in such files will not work and may lead to unexpected behavior.
+- Do NOT Use useSecureEnv Hook Outside the SecureWrapperProvider
+- Always wrap your component tree (or at least the part where you call useSecureEnv) inside SecureWrapperProvider
+- Since useSecureEnv is a React hook, it can only be used inside functional components or other custom hooks—not in regular constant files. Attempting to access runtime environment variables in such files will not work and may lead to unexpected behavior.
 ### Benefits of This Approach
 ✅ All environment variables are centrally managed.
 

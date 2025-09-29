@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { VSECURITY } from "@/lib/constant/apiconstant";
+import { useSecureEnv } from "@/context/SecureEnvContext";
 import useAxiosInterceptor from "./useAxiosInstance";
-import { useRuntimeEnv } from "./useRuntimeEnv";
 
 export const useDynamicCss = () => {
 	const [enableSecurityApiCss, setEnableSecurityApiCss] = useState(false);
 	const { NEXT_PUBLIC_VSECURITY_BASE_API_URL, NEXT_PUBLIC_CLIENT_ID } =
-		useRuntimeEnv();
+		useSecureEnv();
 	const { axBe } = useAxiosInterceptor(NEXT_PUBLIC_VSECURITY_BASE_API_URL);
 	const appClientId = NEXT_PUBLIC_CLIENT_ID;
 	const elementId = `dynamic-css${appClientId}`;

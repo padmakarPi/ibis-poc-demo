@@ -6,11 +6,11 @@ import { COMMON_METADATA } from "@/lib/constant/oidc";
 import { AuthContext } from "@/authcontext/AuthContext";
 import { jwtDecode } from "jwt-decode";
 import { jwtDecodeData } from "@/interfaces/common/token-data.interface";
-import { useRuntimeEnv } from "./useRuntimeEnv";
+import { useSecureEnv } from "@/context/SecureEnvContext";
 
 const useAxiosInterceptor = (baseURL: string | undefined) => {
 	const axBackendInstance = axios.create({ baseURL });
-	const { NEXT_PUBLIC_STS_AUTHORITY } = useRuntimeEnv();
+	const { NEXT_PUBLIC_STS_AUTHORITY } = useSecureEnv();
 	const { logout, login } = useContext(AuthContext);
 
 	const getStoredTokenData = () => {

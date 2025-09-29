@@ -307,11 +307,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 import { useEffect, useState } from "react";
 import { BASE_URLS } from "@/lib/config/config";
 import useAxiosInterceptor from "./useAxiosInstance";
-import { useRuntimeEnv } from "./useRuntimeEnv";
+import { useSecureEnv } from "@/context/SecureEnvContext";
 
 export const useDynamicCss = () => {
 	const [enableSecurityApiCss, setEnableSecurityApiCss] = useState(false);
-	const {NEXT_PUBLIC_VSECURITY_BASE_API_URL,NEXT_PUBLIC_CLIENT_ID} = useRuntimeEnv()
+	const {NEXT_PUBLIC_VSECURITY_BASE_API_URL,NEXT_PUBLIC_CLIENT_ID} = useSecureEnv()
 	const { axBe } = useAxiosInterceptor(NEXT_PUBLIC_VSECURITY_BASE_API_URL);
 	const appClientId = process.env.NEXT_PUBLIC_CLIENT_ID;
 	const elementId = `dynamic-css${appClientId}`;
