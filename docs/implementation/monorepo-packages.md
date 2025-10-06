@@ -232,15 +232,28 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 ```
 3. After then do npm i in host app(vchat). 
 
+4. Add below config in host applicaiton next.config.js file
 
-4. if you got below error: 
+```
+const path = require('path')
+```
+
+```
+  config.resolve.alias = {
+  ...(config.resolve.alias || {}),
+  react: path.resolve(__dirname, 'node_modules/react'),
+  'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+};
+```
+
+5. if you got below error: 
 
 ```
 Module parse failed: Unexpected token (1:7) You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
 
 ```
 
-5. Then install the babel loader in your host application
+6. Then install the babel loader in your host application
 
 ```
 "@babel/preset-env": "^7.28.3",
@@ -248,6 +261,8 @@ Module parse failed: Unexpected token (1:7) You may need an appropriate loader t
 "@babel/preset-typescript": "^7.27.1",
 "babel-loader": "^10.0.0",
 ```
+
+
 
 ### How to Update Existing Packages
 

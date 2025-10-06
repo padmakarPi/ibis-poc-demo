@@ -2,6 +2,7 @@
 const NextFederationPlugin = require('@module-federation/nextjs-mf');
 const { withSentryConfig } = require("@sentry/nextjs");
 const envData = require('./public/env.json')
+const path = require('path')
 
 function ensureTrailingSlash(url) {
   return url?.endsWith('/') ? url : url + '/';
@@ -54,6 +55,11 @@ module.exports = withSentryConfig({
         ],
       }
     );
+    config.resolve.alias = {
+  ...(config.resolve.alias || {}),
+  react: path.resolve(__dirname, 'node_modules/react'),
+  'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+};
     return config;
   },
 },
