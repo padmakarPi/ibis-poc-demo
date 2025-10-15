@@ -2,120 +2,48 @@
 
 ## 1. What is the Fallback Pattern?
 
-The **Fallback Pattern** is a **resilience design pattern** used to ensure system reliability when a dependency (such as a third-party API or service) becomes unavailable or fails.
+The **Fallback Pattern** is a **resilience design pattern** that ensures system reliability when a dependency (like a third-party API or service) becomes unavailable or fails.
 
-* Instead of failing the request completely, the system falls back to an **alternative source** (like our internal API) to continue serving data.
-* This minimizes downtime and ensures users still receive a response, even if it is degraded compared to the primary source.
+* Instead of letting the entire request fail, the system **falls back to an alternative source** (like an internal API).
+* This reduces downtime and ensures users still receive data — even if it’s a degraded response.
 
 ---
 
 ## 2. Why Do We Need It?
 
-We depend on **third-party APIs** to deliver certain functionalities. However, these services may face outages, latency, or rate-limiting issues. Without a fallback mechanism, such failures could directly impact our application and end-user experience.
+Our applications rely on **external APIs and services** for key functionality. However, these can experience:
 
-By implementing the fallback pattern:
+* Outages
+* High latency
+* Rate limiting
 
-* ✅ We improve **system reliability** and **availability**.
-* ✅ Users are **shielded from third-party downtime**.
-* ✅ We gain control to serve responses from **our own API** when the third-party fails.
+Without a fallback mechanism, such failures can **break the user experience**.
+
+By using the fallback pattern:
+
+* We improve **system reliability** and **availability**.
+* Users are **shielded from external service downtime**.
+* We can serve data from **our internal services** when the primary fails.
 
 ---
 
-## 3. Frontend Fallback Utility
+## 3. Fallback Utility — Now a Shared Package
 
-We provide a utility function `resilientApiCall` to handle fallback logic in frontend apps.
+The fallback logic previously implemented as a frontend utility is now extracted into a shared NPM package:
 
-```ts
-import { AxiosInstance, AxiosRequestConfig } from "axios";
-import { VHandleError } from "@vplatform/shared-components";
-import { ENV_METADATA } from "@/constants/metadata/env.metadata";
+> **Package:** `@vplatform/resilient-api-call`
 
-interface ResilientOptions<TReq, TRes> {
-	request: TReq;
-	serviceName: string;
-	primaryInstance: AxiosInstance;
-	primaryConfig: Omit<AxiosRequestConfig, "data">;
-	mapPrimaryRequest?: (req: TReq) => any;
-	mapPrimaryResponse?: (res: any) => TRes;
-	fallbackInstance: AxiosInstance;
-	fallbackConfig: Omit<AxiosRequestConfig, "data">;
-	mapFallbackRequest?: (req: TReq) => any;
-	mapFallbackResponse?: (res: any) => TRes;
-	retries?: number;
-	retryDelayMs?: number;
-}
+This package provides a robust `resilientApiCall` utility that handles:
 
-// eslint-disable-next-line consistent-return
-export async function resilientApiCall<TReq, TRes>({
-	request,
-	serviceName,
-	primaryInstance,
-	primaryConfig,
-	mapPrimaryRequest = r => r,
-	mapPrimaryResponse = r => r,
-	fallbackInstance,
-	fallbackConfig,
-	mapFallbackRequest = r => r,
-	mapFallbackResponse = r => r,
-	retries = 0,
-	retryDelayMs = 200,
-}: ResilientOptions<TReq, TRes>): Promise<TRes> {
-	for (let attempt = 0; attempt <= retries; attempt++) {
-		try {
-			// eslint-disable-next-line no-await-in-loop
-			const res = await primaryInstance.request({
-				...primaryConfig,
-				...(primaryConfig.method?.toUpperCase() === "GET"
-					? { params: mapPrimaryRequest(request) }
-					: { data: mapPrimaryRequest(request) }),
-			});
-			if (
-				typeof res.data === "string" &&
-				res.headers["content-type"]?.includes("text/html")
-			) {
-				throw new Error(`Primary API returned HTML error page`);
-			}
+* Primary + Fallback API logic
+* Retries with exponential backoff
+* Request/response mapping
+* Error handling hooks
 
-			return mapPrimaryResponse(res.data);
-		} catch (error: any) {
-			const status = error?.response?.status;
-			if (attempt < retries && (status === 429 || status === 503 || !status)) {
-				const backoffDelay = retryDelayMs * 2 ** attempt;
-				// eslint-disable-next-line no-await-in-loop
-				await new Promise<void>(resolve => {
-					setTimeout(resolve, backoffDelay);
-				});
-			}
-		}
-	}
+Install it with:
 
-	try {
-		const res = await fallbackInstance.request({
-			...fallbackConfig,
-			...(fallbackConfig.method?.toUpperCase() === "GET"
-				? { params: mapFallbackRequest(request) }
-				: { data: mapFallbackRequest(request) }),
-		});
-
-		if (
-			typeof res.data === "string" &&
-			res.headers["content-type"]?.includes("text/html")
-		) {
-			throw new Error(`Fallback API returned HTML error page`);
-		}
-		return mapFallbackResponse(res.data);
-	} catch (fallbackError: any) {
-		console.error(
-			`Fallback request failed for ${serviceName}: ${fallbackError.message}`,
-		);
-		VHandleError(
-			fallbackError,
-			{ service: `${serviceName}-fallback` },
-			ENV_METADATA.SUPPRESS_API_TOASTER_ERROR_MESSAGE,
-		);
-	}
-}
-
+```bash
+npm install @vplatform/resilient-api-call axios
 ```
 
 ---
@@ -124,73 +52,65 @@ export async function resilientApiCall<TReq, TRes>({
 
 1. **Primary Call Attempted:**
 
-   * Tries the **primary API** (e.g., third-party service).
-   * Supports **retries** before failing over.
+   * The request first goes to the **primary API** (e.g., a Cloudflare Worker or third-party service).
+   * Supports **automatic retries** with backoff.
 
 2. **Fallback Triggered:**
 
-   * If primary fails after all retries, the request is sent to the **fallback API** (e.g., our backend).
+   * If all retries fail, the request is routed to the **fallback API** (e.g., an internal service).
 
-3. **Error Handling & Alerts:**
+3. **Error Handling:**
 
-   * If the fallback request also fails, `VHandleError` displays an **error alert popup** to the user.
-   * The popup includes the **service name** (e.g., `contacts-fallback`) so users know which service failed.
+   * Optional custom error handlers can log or show alerts when both APIs fail.
 
 ---
 
 ## 5. Example Usage
 
 ```ts
-const response = await resilientApiCall<
-  ContactListCloudfareRequest,
-  Array<ContactsCloudfareResponse> | null
->({
-  request, // The incoming request object containing all properties required by both APIs
-  serviceName: "contacts",
-  primaryInstance: contactCloudfareAxiosInstance, // Axios instance for Cloudflare
-  primaryConfig: {
-    url: "/api/getcontactslist", // Cloudflare endpoint
-    method: "POST",
-  },
-  mapPrimaryRequest: (req) => ({
-    // Transform request before sending to Cloudflare
-    customerid: customerId,
-    environment: APPEnvironment.PROD.toLowerCase(),
-    ...req,
-  }),
-  mapPrimaryResponse: (res) => res, // Transform the Primary response
-  fallbackInstance: contactServiceAxios, // Axios instance for internal service
-  fallbackConfig: {
-    url: "/v5/contacts", // Internal endpoint
-    method: "POST",
-  },
-  mapFallbackRequest: (req) => {
-    // Transform request before sending to internal service
-    if (Array.isArray(req.contactIds)) {
-      req.contactIds = req.contactIds.join(",");
-    }
+import { resilientApiCall } from '@vplatform/resilient-api-call';
 
-    if (Array.isArray(req.userIds)) {
-      req.userIds = req.userIds.join(",");
-    }
+async function fetchContacts(request) {
+  return resilientApiCall({
+    request, // The incoming request object containing all properties required by both APIs
+    serviceName: 'contacts',
 
-    return {
-      ...req,
-    };
-  },
-  mapFallbackResponse: (res) => res?.result?.result || [] // Transform the fallback response
-});
+    primary: {
+      axiosInstance: contactCloudflareAxios,
+      axiosConfig: { 
+        url: '/api/getcontactslist',// Cloudflare endpoint 
+        method: 'POST' 
+      },
+      mapRequest: (req) => ({
+        // Transform request before sending to Cloudflare
+        customerid: req.customerId,
+        environment: 'prod',
+        ...req,
+      }),
+      mapResponse: (res) => res, // transform Cloudflare response if needed
+    },
+
+    fallback: {
+      axiosInstance: contactInternalAxios,
+      axiosConfig: { url: '/v5/contacts', method: 'POST' },
+      mapRequest: (req) => ({
+        ...req,
+        contactIds: Array.isArray(req.contactIds)
+          ? req.contactIds.join(',')
+          : req.contactIds,
+        userIds: Array.isArray(req.userIds)
+          ? req.userIds.join(',')
+          : req.userIds,
+      }),
+      mapResponse: (res) => res?.result?.result || [],
+      onError: (error, { serviceName }) =>
+        console.error(`Fallback failed for ${serviceName}:`, error.message),
+    },
+  });
+}
 
 ```
 
-* In this example:
 
-  * Primary API: **Cloudflare contact worker service**.
-  * Fallback API: **our internal contact service**.
-  * Automatic retry before switching.
-  * If both fail, the user will see an **alert popup**.
 
----
-
-With this approach, our application remains resilient even if external dependencies are unreliable, and users are kept informed through **error popups** when both APIs fail.
 
