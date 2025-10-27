@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		};
 
 		authenticate();
-	}, []);
+	}, [pathname]);
 
 	const clearAppStates = () => {
 		if (Cookies.get(COMMON_METADATA.OMNI_TOKEN_ALREADY_REQUESTED)) {
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 		const keys = Object.keys(sessionStorage);
 
-		const excludeSessionKeys = ["oidc.user:", "originalRoute"];
+		const excludeSessionKeys = ["oidc.", "originalRoute"];
 
 		keys
 			.filter(k => !excludeSessionKeys.some(e => k.startsWith(e)))
@@ -93,7 +93,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const login = async () => {
 		try {
 			if (userManager) {
-				clearAppStates();
 				const originalRoute = getOriginalRoute();
 				const loginData = await userManager.signinRedirect({
 					state: { returnUrl: originalRoute },

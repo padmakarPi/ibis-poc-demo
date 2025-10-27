@@ -83,12 +83,14 @@ function CallbackPage() {
 	};
 
 	useEffect(() => {
-		if (userManager) {
-			userManager.signinRedirectCallback().then(async user => {
-				const userData = await getUser();
+		const handleCallback = async () => {
+			try {
+				if (!userManager) return;
 
+				const user = await userManager.signinRedirectCallback();
+
+				const userData = await getUser();
 				if (!userData?.access_token) {
-					router.push(`${NEXT_PUBLIC_STS_AUTHORITY}Account/AccessDenied`);
 					return;
 				}
 
@@ -99,9 +101,18 @@ function CallbackPage() {
 					router.push(`${NEXT_PUBLIC_STS_AUTHORITY}Account/AccessDenied`);
 					return;
 				}
+
 				getUserData(user.state);
-			});
-		}
+			} catch (error: any) {
+				console.error("OIDC callback error:", error);
+				if (userManager && error.message?.includes("login_required")) {
+					console.warn("Session expired on IDP — forcing re-login");
+					await userManager.signinRedirect();
+				}
+			}
+		};
+
+		handleCallback();
 	}, [userManager]);
 
 	const getWelcomeScreenRefreshRedirectUrl = () => {
