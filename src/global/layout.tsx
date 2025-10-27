@@ -4,7 +4,6 @@ import * as React from "react";
 import { useAuth } from "@/hooks/customhooks/useAuth";
 import { useEffect, useState } from "react";
 import { VSessionExpiredAlertDialog } from "@vplatform/core";
-import { SESSION_STORAGE_KEYS } from "@/lib/constant/oidc";
 import { getOriginalRoute } from "@/lib/utils";
 import { AuthContext } from "@/authcontext/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
@@ -29,16 +28,6 @@ export default function RootLayout({
 	const isDarkMode = useSelector((state: IRootState) => state.theme.isDarkMode);
 	const currentTheme = isDarkMode ? darkTheme : lightTheme;
 
-	useEffect(() => {
-		if (!userManager) {
-			return;
-		}
-		userManager.events.addUserSignedOut(async () => {
-			await userManager.removeUser();
-			setSessionExpiredAlertDialogOpen(true);
-		});
-	}, [userManager]);
-
 	const onRetry = async () => {
 		await login();
 	};
@@ -59,14 +48,28 @@ export default function RootLayout({
 	};
 
 	useEffect(() => {
-		const isNotCallbackRoute = !pathname.startsWith("/auth/oidc-callback");
-		if (isNotCallbackRoute) {
-			sessionStorage.setItem(SESSION_STORAGE_KEYS.ORIGINALROUTE, pathname);
+		if (pathname.startsWith("/auth/oidc-callback")) {
+			console.log("Skipping initializeAuth during OIDC callback");
+			return;
 		}
-		if (isNotCallbackRoute) {
-			setTimeout(() => initializeAuth(), 0);
-		}
+
+		initializeAuth();
 	}, [pathname]);
+
+	useEffect(() => {
+		const attachSignedOutListener = async () => {
+			const user = await getUser();
+			if (!user) return;
+
+			userManager?.events.addUserSignedOut(async () => {
+				console.log("OIDC: user signed out");
+				await userManager.removeUser();
+				setSessionExpiredAlertDialogOpen(true);
+			});
+		};
+
+		attachSignedOutListener();
+	}, [userManager]);
 	useDynamicCss();
 
 	return (
