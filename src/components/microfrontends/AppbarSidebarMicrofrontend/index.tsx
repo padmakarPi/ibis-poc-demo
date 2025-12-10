@@ -1,26 +1,32 @@
-import { useEffect, useMemo } from "react";
-import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { loadRemoteContainer } from "@/lib/utils";
 import { useSecureEnv } from "@/context/SecureEnvContext";
 
 const AppbarSidebar = (props: any) => {
-	const { NEXT_PUBLIC_APPBAR } = useSecureEnv();
+	const { NEXT_PUBLIC_APPBAR_URL } = useSecureEnv();
+	const [RemoteComponent, setRemoteComponent] = useState<any>(null);
+
 	useEffect(() => {
+		let mounted = true;
+
 		async function load() {
-			const remoteUrl = `${NEXT_PUBLIC_APPBAR}_next/static/chunks/remoteEntry.js`;
-			await loadRemoteContainer("appbar", remoteUrl);
+			const remoteUrl = `${NEXT_PUBLIC_APPBAR_URL}_next/static/chunks/remoteEntry.js`;
+			const container: any = await loadRemoteContainer("appbar", remoteUrl);
+			const factory = await container.get("./appbarwithsidebar");
+			const test = factory();
+			if (mounted) {
+				setRemoteComponent(() => test.default);
+			}
 		}
 		load();
-	}, []);
-	const AppbarWithSidebar = useMemo(
-		() =>
-			dynamic<any>(() => import("appbar/appbarwithsidebar"), {
-				ssr: false,
-			}),
-		[],
-	);
 
-	return <AppbarWithSidebar {...props} />;
+		return () => {
+			mounted = false;
+		};
+	}, [NEXT_PUBLIC_APPBAR_URL]);
+
+	if (!RemoteComponent) return null;
+	return <RemoteComponent {...props} />;
 };
 
 export default AppbarSidebar;

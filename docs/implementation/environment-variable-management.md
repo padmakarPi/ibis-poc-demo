@@ -42,7 +42,7 @@ This file contains all the environment variables needed by the application. Exam
   "NEXT_PUBLIC_VDOCUMENT_BASE_API_URL": "https://dev-vdoc.azurewebsites.net/api/Document",
   "BASE_PATH": "<your-application-base-path>",
   "NEXT_PUBLIC_ORIGIN": "http://localhost:3000",
-  "NEXT_PUBLIC_APPBAR": "https://dev.shipsure.com/appbar",
+  "NEXT_PUBLIC_APPBAR_URL": "https://dev.shipsure.com/appbar",
   "NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT": "DEV"
 }
 ```
@@ -261,10 +261,10 @@ const MyComponent = () => {
 ### update next.config.js file 
 
 - In your webpack config (host and remote apps), make sure the config.output.publicPath is set to auto so that webpack can resolve chunks dynamically at runtime.
+- Remove remote from next.config.js file
 
 
 ```
-const envData = require('./public/env.json')
 
 module.exports = withSentryConfig({
   basePath: process.env.NODE_ENV === "production" ?  '':"",
@@ -272,8 +272,6 @@ module.exports = withSentryConfig({
   webpack(config, options) {
     const { webpack } = options;
 
-   const vWelcomeApp = ensureTrailingSlash(envData.NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL)
-    const appbar = ensureTrailingSlash(envData.NEXT_PUBLIC_APPBAR)
     if (!config.output) {
       config.output = {};
     }
@@ -284,10 +282,6 @@ module.exports = withSentryConfig({
       new NextFederationPlugin({
         name: 'Template',
         filename: 'static/chunks/remoteEntry.js',
-        remotes: {
-          VWelcomeApp: `VWelcomeApp@${vWelcomeApp}_next/static/chunks/remoteEntry.js`,
-          appbar: `appbar@${appbar}_next/static/chunks/remoteEntry.js`,
-        },
         exposes: {},
 
         shared: {},
@@ -322,48 +316,46 @@ module.exports = withSentryConfig({
 
 ### Importing Pages as Microfrontends :
 - import loadRemoteContainer function into the microfrontend. 
-- If your microfrontend is imported multiple times, don’t load it in every component. Instead, use a parent-level useEffect so the remote is registered once.
+- Update import remote app code. 
+
 
 ```
-
-useEffect(() => {
-			async function load() {
-				const remoteUrl = `${NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL}_next/static/chunks/remoteEntry.js`;
-				await loadRemoteContainer("microfrontend", remoteUrl);
-			}
-			load();
-		}, []);
-
-```
-else your remote microfrontend calling only time then set the useEffect where the dynamic import the remote.
-
-```
-
-import { useEffect, useMemo } from "react";
-import dynamic from "next/dynamic";
-import { useSecureEnv } from "@/context/SecureEnvContext";
+import { useEffect, useState } from "react";
 import { loadRemoteContainer } from "@/lib/utils";
+import { useSecureEnv } from "@/context/SecureEnvContext";
 
 const WelcomeScreenMicroFrontEnd = (props: any) => {
-	const {NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL} = useSecureEnv()
-		useEffect(() => {
-			async function load() {
-				const remoteUrl = `${NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL}_next/static/chunks/remoteEntry.js`;
-				await loadRemoteContainer("VWelcomeApp", remoteUrl);
+	const { NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL } = useSecureEnv();
+	const [RemoteComponent, setRemoteComponent] = useState<any>(null);
+
+	useEffect(() => {
+		let mounted = true;
+
+		async function load() {
+			const remoteUrl = `${NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL}_next/static/chunks/remoteEntry.js`;
+			const container: any = await loadRemoteContainer(
+				"VWelcomeApp",
+				remoteUrl,
+			);
+			const factory = await container.get("./welcome-screen");
+			const Module = factory();
+			if (mounted) {
+				setRemoteComponent(() => Module.default);
 			}
-			load();
-		}, []);
-	const WelcomeScreenMemo = useMemo(
-		() =>
-			dynamic<any>(() => import("VWelcomeApp/welcome-screen"), {
-				ssr: false,
-			}),
-		[],
-	);
-	return <WelcomeScreenMemo {...props} />;
+		}
+		load();
+
+		return () => {
+			mounted = false;
+		};
+	}, [NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL]);
+
+	if (!RemoteComponent) return null;
+	return <RemoteComponent {...props} />;
 };
 
 export default WelcomeScreenMicroFrontEnd;
+
 
 
 ```
