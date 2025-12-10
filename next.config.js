@@ -1,12 +1,8 @@
 
 const NextFederationPlugin = require('@module-federation/nextjs-mf');
 const { withSentryConfig } = require("@sentry/nextjs");
-const envData = require('./public/env.json')
 const path = require('path')
 
-function ensureTrailingSlash(url) {
-  return url?.endsWith('/') ? url : url + '/';
-}
 
 module.exports = withSentryConfig({
   basePath: process.env.NODE_ENV === "production" ?  '':"",
@@ -14,8 +10,6 @@ module.exports = withSentryConfig({
   webpack(config, options) {
     const { webpack } = options;
 
-    const vWelcomeApp = ensureTrailingSlash(envData.NEXT_PUBLIC_WELCOME_APP_MICROFRONTEND_BASE_URL)
-    const appbar = ensureTrailingSlash(envData.NEXT_PUBLIC_APPBAR)
     if (!config.output) {
       config.output = {};
     }
@@ -26,10 +20,6 @@ module.exports = withSentryConfig({
       new NextFederationPlugin({
         name: 'Template',
         filename: 'static/chunks/remoteEntry.js',
-        remotes: {
-          VWelcomeApp: `VWelcomeApp@${vWelcomeApp}_next/static/chunks/remoteEntry.js`,
-          appbar: `appbar@${appbar}_next/static/chunks/remoteEntry.js`,
-        },
         exposes: {},
 
         shared: {},
