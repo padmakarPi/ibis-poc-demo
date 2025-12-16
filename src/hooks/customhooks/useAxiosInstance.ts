@@ -8,6 +8,8 @@ import { jwtDecode } from "jwt-decode";
 import { jwtDecodeData } from "@/interfaces/common/token-data.interface";
 import { useSecureEnv } from "@/context/SecureEnvContext";
 
+let refreshPromise: Promise<string> | null = null;
+
 const useAxiosInterceptor = (baseURL: string | undefined) => {
 	const axBackendInstance = axios.create({ baseURL });
 	const { NEXT_PUBLIC_STS_AUTHORITY } = useSecureEnv();
@@ -21,11 +23,6 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 			return tokenData;
 		}
 		return {};
-	};
-	const waitForTokenRefresh = async (localStorageKey: string) => {
-		while (localStorage.getItem(localStorageKey)) {
-			await new Promise(resolve => setTimeout(resolve, 1000));
-		}
 	};
 
 	const getClientIdFromToken = () => {
@@ -81,26 +78,25 @@ const useAxiosInterceptor = (baseURL: string | undefined) => {
 			!originalRequest.retry
 		) {
 			originalRequest.retry = true;
+			if (refreshPromise) {
+				const token = await refreshPromise;
 
-			const localStorageKey = COMMON_METADATA.OMNI_TOKEN_ALREADY_REQUESTED;
-
-			if (localStorage.getItem(localStorageKey)) {
-				await waitForTokenRefresh(localStorageKey);
-				const tokenData = getStoredTokenData();
-				originalRequest.headers.Authorization = `Bearer ${tokenData.access_token}`;
+				originalRequest.headers.Authorization = `Bearer ${token}`;
 				return axBackendInstance(originalRequest);
 			}
 
-			localStorage.setItem(localStorageKey, "true");
-			try {
-				const accessToken = await refreshToken();
-				localStorage.removeItem(localStorageKey);
-				originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-				return axBackendInstance(originalRequest);
-			} catch (err) {
-				localStorage.removeItem(localStorageKey);
-				throw err;
-			}
+			refreshPromise = (async () => {
+				try {
+					return await refreshToken();
+				} finally {
+					refreshPromise = null;
+				}
+			})();
+
+			const accessToken = await refreshPromise;
+
+			originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+			return axBackendInstance(originalRequest);
 		}
 		return Promise.reject(error);
 	};
