@@ -46,9 +46,40 @@ Install it with:
 npm install @vplatform/resilient-api-call axios
 ```
 
+## 4. Utility Overview
+
+### Function Signature
+
+```ts
+async function resilientApiCall<TReq, TRes>(
+  options: ResilientOptions<TReq, TRes>,
+): Promise<TRes>;
+```
+
+### `ResilientOptions<TReq, TRes>` Properties
+
+| Property       | Type     | Description                                                                |
+| -------------- | -------- | -------------------------------------------------------------------------- |
+| `request`      | `TReq`   | Payload for the request                                                    |
+| `serviceName`  | `string` | Name of the service (used in logs)                                         |
+| `primary`      | object   | Primary API configuration (Axios instance, config, mapping, error handler) |
+| `fallback`     | object   | Fallback API configuration                                                 |
+| `retries`      | `number` | Retry attempts for the primary API (default `0`)                           |
+| `retryDelayMs` | `number` | Base delay for retries in ms (default `200`)                               |
+
+#### `primary` / `fallback` fields:
+
+| Property        | Type                                                     | Description                               |
+| --------------- | -------------------------------------------------------- | ----------------------------------------- |
+| `axiosInstance` | `AxiosInstance`                                          | Axios instance for the request            |
+| `axiosConfig`   | `Omit<AxiosRequestConfig, 'data'>`                       | Axios config (URL, method, headers, etc.) |
+| `mapRequest?`   | `(req: TReq) => any`                                     | Optional request transformation           |
+| `mapResponse?`  | `(res: any) => TRes`                                     | Optional response transformation          |
+| `onError?`      | `(error: any, context: { serviceName: string }) => void` | Optional error handler                    |
+
 ---
 
-## 4. How It Works
+## 5. How It Works
 
 1. **Primary Call Attempted:**
 
