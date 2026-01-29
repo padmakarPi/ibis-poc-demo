@@ -1,3 +1,5 @@
+"use client";
+
 import { getColorsWithTheme } from "@/lib/config/avatar-colors";
 import { createContext, useEffect, useState } from "react";
 
