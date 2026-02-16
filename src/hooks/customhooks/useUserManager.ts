@@ -1,3 +1,5 @@
+"use client";
+
 import { UserManager, WebStorageStateStore } from "oidc-client";
 import { useMemo } from "react";
 import { useSecureEnv } from "@/context/SecureEnvContext";
@@ -23,6 +25,7 @@ export function useUserManager() {
 		) {
 			return null;
 		}
+		if (typeof window === "undefined") return null;
 
 		const basePath = NEXT_PUBLIC_BASE_PATH || "";
 		const origin = NEXT_PUBLIC_ORIGIN || "";

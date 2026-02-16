@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable consistent-return */
 /* eslint-disable no-await-in-loop */
 import { useContext } from "react";

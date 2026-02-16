@@ -1,8 +1,11 @@
+"use client";
+
 import { NON_URL_KEYS, URL_KEYS } from "@/lib/constant/env.constant";
 import axios from "axios";
 import {
 	createContext,
 	ReactNode,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
@@ -44,27 +47,24 @@ export const SecureWrapperProvider = ({
 }: SecureWrapperProviderType) => {
 	const [envData, setEnvData] = useState<SecureEnvType | null>(cachedEnvData);
 
-	useEffect(() => {
-		const fetchEnv = async () => {
-			if (cachedEnvData) return;
-
-			try {
-				const url = baseUrl
-					? `${baseUrl.replace(/\/$/, "")}/api/env`
-					: "/api/env";
-				const response = await axios.get(url);
-				const normalized = normalizeEnv(response.data);
-				cachedEnvData = normalized;
-				setEnvData(normalized);
-			} catch (e) {
-				console.error("API call to /api/env failed:", e);
-				setEnvData({});
-			}
-		};
-
-		fetchEnv();
+	const fetchEnv = useCallback(async () => {
+		if (cachedEnvData) return;
+		try {
+			const url = baseUrl
+				? `${baseUrl.replace(/\/$/, "")}/api/env`
+				: "/api/env";
+			const response = await axios.get(url);
+			const normalized = normalizeEnv(response.data);
+			cachedEnvData = normalized;
+			setEnvData(normalized);
+		} catch (e) {
+			console.error("API call to /api/env failed:", e);
+			setEnvData({});
+		}
 	}, [baseUrl]);
-
+	useEffect(() => {
+		fetchEnv();
+	}, [fetchEnv]);
 	if (envData && envData.NEXT_PUBLIC_APP_MANIFEST_ENVIRONMENT !== "DEV") {
 		console.log = () => {};
 		console.error = () => {};
