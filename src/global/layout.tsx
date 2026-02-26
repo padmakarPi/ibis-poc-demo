@@ -4,9 +4,8 @@ import * as React from "react";
 import { useAuth } from "@/hooks/customhooks/useAuth";
 import { useEffect, useState } from "react";
 import { VSessionExpiredAlertDialog } from "@vplatform/core";
-import { getOriginalRoute } from "@/lib/utils";
 import { AuthContext } from "@/authcontext/AuthContext";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { ThemeProvider } from "@mui/material";
 import { useSelector } from "react-redux";
 import { IRootState } from "@/interfaces/states/theme.interfaces";
@@ -23,7 +22,6 @@ export default function RootLayout({
 		useState(false);
 	const { userManager, login } = useAuth();
 	const { getUser } = React.useContext(AuthContext);
-	const router = useRouter();
 	const pathname = usePathname();
 	const isDarkMode = useSelector((state: IRootState) => state.theme.isDarkMode);
 	const currentTheme = isDarkMode ? darkTheme : lightTheme;
@@ -36,11 +34,10 @@ export default function RootLayout({
 		try {
 			const user = await getUser();
 			if (user) {
-				const originalRoute = getOriginalRoute();
-				router.push(originalRoute);
-			} else {
+				return null;
+			} 
 				await login();
-			}
+			
 			return null;
 		} catch {
 			return null;

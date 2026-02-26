@@ -126,7 +126,7 @@ This keeps implementation details organized.
 *   Shared internal functions used by components.
 
 
-📄 index.ts (Public API Entry Point)
+📄 index.ts
 ------------------------------------
 
 This is the **most important file in the package**.
@@ -141,7 +141,7 @@ export { InitVTemplate } from './lib/Util';
 ```
 
 
-How Developer Should Create a New App
+How Developer Should Create a New Package repo?
 =========================================
 
 Developers **do NOT need to create a new app using Nx commands**.
@@ -151,21 +151,13 @@ Instead, they should use the existing template project as a base and customize i
 Step 1: Copy the Template Application
 ---------------------------------------
 
-1.  Go to the existing template app (example):
+1.  Go to the existing Vtemplate  (example):
     
-```  
-apps/template 
-```
+https://dev.azure.com/vgroupframework/VPlatform-Utilities/_git/VTemplate
 
-1.  Copy the entire folder.
-    
-2.  Paste it inside the same apps/ directory (or new repository if required).
-    
 
-Example:
-```   
-apps/template  →  apps/slipway   
-```
+2.  Copy the entire folder and files.
+    
 
 Step 2: Rename All "template" References
 ------------------------------------------
@@ -186,6 +178,9 @@ template  →  appbar
 ```
 
 Search template in repo and modify with you package name
+NOTE:- Don't modify the package-lock.json, docs 
+NOTE:-  Replace the package/template folder to your packagename (ex:- packages/slipway)
+
 
 ![alt text](../assets/templatekey.png)
 
@@ -194,7 +189,7 @@ Search template in repo and modify with you package name
 Step 3: Update Package Usage
 ------------------------------
 
-Inside the new app:
+Inside the package/packagename/package.json:
 
 *   Replace @vplatform/template with your required package name.
 
@@ -284,7 +279,17 @@ export default function Page() {
 }
 
 ``` 
+Consume Configuration in Components in packages folder
 
+```
+
+import { getConfig } from '../../lib/Util';
+
+const AppBar = () => {
+  const { VPrsenceAPIUrl } = getConfig();
+  return <></>
+}
+```
 ### Structure
 
 ```
@@ -306,10 +311,15 @@ Run the application use
 npm run dev
 ```
 
-Build the application use
+Build the packages folder use
 
 ```
 npm run build
+```
+Build the apps folder use
+
+```
+npm run build:apps
 ```
 
 
