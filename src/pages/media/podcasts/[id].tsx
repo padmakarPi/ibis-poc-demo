@@ -23,9 +23,13 @@ function parseBuzzsproutEmbed(html: string): {
 	// <script src="https://www.buzzsprout.com/...js?container_id=buzzsprout-player-16987733&player=small"></script>
 	const containerMatch = html.match(/id="(buzzsprout-player-[^"]+)"/i);
 	const scriptMatch = html.match(/<script[^>]+src="([^"]+buzzsprout[^"]+)"/i);
+	const rawScriptSrc = scriptMatch?.[1];
+	const decodedScriptSrc = rawScriptSrc
+		? rawScriptSrc.replace(/&#038;/g, "&").replace(/&amp;/g, "&")
+		: undefined;
 	return {
 		containerId: containerMatch?.[1],
-		scriptSrc: scriptMatch?.[1],
+		scriptSrc: decodedScriptSrc,
 	};
 }
 

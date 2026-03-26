@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
 
 import { Box, Typography } from "@mui/material";
@@ -61,35 +63,6 @@ export default function IbsPodcastPlayerScreen({
 						/>
 					</Box>
 				</Box>
-			</Box>
-
-			<Box
-				sx={{
-					flex: 1,
-					minHeight: 0,
-					overflowY: "auto",
-					px: 2,
-					pt: 1.75,
-					pb: 3,
-				}}
-			>
-				<Typography
-					variant="subtitle1"
-					component="h2"
-					fontWeight={700}
-					sx={{ lineHeight: 1.3 }}
-				>
-					{title}
-				</Typography>
-				{description ? (
-					<Typography
-						variant="body2"
-						color="text.secondary"
-						sx={{ mt: 1, whiteSpace: "pre-wrap" }}
-					>
-						{description}
-					</Typography>
-				) : null}
 			</Box>
 		</Box>
 	);
