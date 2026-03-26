@@ -1,0 +1,96 @@
+"use client";
+
+import { Box, Typography } from "@mui/material";
+import BuzzsproutPlayer from "./BuzzsproutPlayer";
+
+export interface IbsPodcastPlayerScreenProps {
+	title: string;
+	description?: string;
+	buzzsproutScriptSrc: string;
+	buzzsproutContainerId: string;
+}
+
+export default function IbsPodcastPlayerScreen({
+	title,
+	description,
+	buzzsproutScriptSrc,
+	buzzsproutContainerId,
+}: IbsPodcastPlayerScreenProps) {
+	return (
+		<Box
+			sx={{
+				height: "100dvh",
+				maxHeight: "100dvh",
+				display: "flex",
+				flexDirection: "column",
+				overflow: "hidden",
+				bgcolor: "background.default",
+				maxWidth: 480,
+				mx: "auto",
+				width: "100%",
+			}}
+		>
+			<Box
+				sx={{
+					flexShrink: 0,
+					px: 2,
+					py: 1.5,
+					borderBottom: 1,
+					borderColor: "divider",
+				}}
+			>
+				<Typography variant="h6" component="h1" fontWeight={700}>
+					Podcasts
+				</Typography>
+			</Box>
+
+			<Box sx={{ flexShrink: 0, px: 2, pt: 2 }}>
+				<Box
+					sx={{
+						borderRadius: 3,
+						overflow: "hidden",
+						bgcolor: "background.paper",
+						border: 1,
+						borderColor: "divider",
+					}}
+				>
+					<Box sx={{ p: 1.5 }}>
+						<BuzzsproutPlayer
+							scriptSrc={buzzsproutScriptSrc}
+							containerId={buzzsproutContainerId}
+						/>
+					</Box>
+				</Box>
+			</Box>
+
+			<Box
+				sx={{
+					flex: 1,
+					minHeight: 0,
+					overflowY: "auto",
+					px: 2,
+					pt: 1.75,
+					pb: 3,
+				}}
+			>
+				<Typography
+					variant="subtitle1"
+					component="h2"
+					fontWeight={700}
+					sx={{ lineHeight: 1.3 }}
+				>
+					{title}
+				</Typography>
+				{description ? (
+					<Typography
+						variant="body2"
+						color="text.secondary"
+						sx={{ mt: 1, whiteSpace: "pre-wrap" }}
+					>
+						{description}
+					</Typography>
+				) : null}
+			</Box>
+		</Box>
+	);
+}

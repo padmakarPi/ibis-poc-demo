@@ -1,19 +1,16 @@
 "use client";
 
-import Head from "next/head";
-import type { AppProps } from "next/app";
+import "@/../public/css/access-control.css";
+import { ThemeContextProvider } from "@/components/ThemeComponent/ThemeModeContext";
 import Providers from "@/redux/provider";
-import { AuthProvider } from "@/authcontext/AuthContext";
+import type { AppProps } from "next/app";
+import Head from "next/head";
+import { useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ErrorBoundary } from "react-error-boundary";
-import { ThemeContextProvider } from "@/components/ThemeComponent/ThemeModeContext";
-import { useEffect } from "react";
-import { SecureWrapperProvider } from "@/context/SecureEnvContext";
-import SentrySetUser from "@/components/common/SentrySetUser";
-import ErrorFallback from "./ErrorFallback";
 import RootLayout from "../global/layout";
-import "@/../public/css/access-control.css";
+import ErrorFallback from "./ErrorFallback";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
 	useEffect(() => {
@@ -34,21 +31,21 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 			<Head>
 				<title>V.Template</title>
 			</Head>
-			<SecureWrapperProvider>
-				<Providers>
-					<SentrySetUser />
-					<ThemeContextProvider>
-						<AuthProvider>
-							<RootLayout>
-								<ToastContainer />
-								<ErrorBoundary FallbackComponent={ErrorFallback}>
-									<Component {...pageProps} />
-								</ErrorBoundary>
-							</RootLayout>
-						</AuthProvider>
-					</ThemeContextProvider>
-				</Providers>
-			</SecureWrapperProvider>
+			{/* <SecureWrapperProvider> */}
+			<Providers>
+				{/* <SentrySetUser /> */}
+				<ThemeContextProvider>
+					{/* <AuthProvider> */}
+					<RootLayout>
+						<ToastContainer />
+						<ErrorBoundary FallbackComponent={ErrorFallback}>
+							<Component {...pageProps} />
+						</ErrorBoundary>
+					</RootLayout>
+					{/* </AuthProvider> */}
+				</ThemeContextProvider>
+			</Providers>
+			{/* </SecureWrapperProvider> */}
 		</>
 	);
 }

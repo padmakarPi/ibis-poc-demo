@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { AuthContext } from "@/authcontext/AuthContext";
 import { useDispatch } from "react-redux";
 import { setAuthState } from "@/redux/slices/authslice";

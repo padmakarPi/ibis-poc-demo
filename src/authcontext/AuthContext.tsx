@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 
 import { COMMON_METADATA } from "@/lib/constant/oidc";
 import { jwtDecodeData } from "@/interfaces/common/token-data.interface";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { setAuthState } from "@/redux/slices/authslice";
@@ -26,7 +26,6 @@ export const AuthContext = createContext<defaultState>({} as defaultState);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const router = useRouter();
-	const pathname = usePathname();
 	const dispatch = useDispatch();
 	const userManager = useUserManager();
 
@@ -53,24 +52,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	useEffect(() => {
+		if (!router.isReady) return;
+
 		const authenticate = async () => {
+			const { pathname } = router;
 			if (
-				pathname?.startsWith("/auth") ||
+				pathname.startsWith("/auth") ||
 				pathname === "/" ||
 				pathname === "/health/ready" ||
 				pathname === "/health/live"
 			) {
-				return null;
+				return;
 			}
 			const isAuthenticated = await checkAuthentication();
 			if (!isAuthenticated) {
-				router.push("/");
+				await router.push("/");
 			}
-			return null;
 		};
 
-		authenticate();
-	}, [pathname]);
+		authenticate().catch(() => undefined);
+	}, [router.isReady, router.pathname]);
 
 	const clearAppStates = () => {
 		if (Cookies.get(COMMON_METADATA.OMNI_TOKEN_ALREADY_REQUESTED)) {

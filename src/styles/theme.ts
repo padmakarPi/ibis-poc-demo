@@ -71,6 +71,14 @@ export const lightTheme = createTheme({
 				},
 			},
 		},
+		MuiBottomNavigation: {
+			styleOverrides: {
+				root: {
+					borderTopLeftRadius: 16,
+					borderTopRightRadius: 16,
+				},
+			},
+		},
 	},
 	typography: {
 		fontFamily: "Inter, sans-serif",
@@ -85,7 +93,7 @@ export const darkTheme = createTheme({
 			default: "black",
 		},
 		primary: {
-			main: "#90caf9",
+			main: "#f48fb1",
 		},
 		secondary: {
 			main: "#f48fb1",
@@ -128,6 +136,14 @@ export const darkTheme = createTheme({
 					backgroundColor: "#68da6a",
 					color: "#68da6a",
 					borderColor: "red",
+				},
+			},
+		},
+		MuiBottomNavigation: {
+			styleOverrides: {
+				root: {
+					borderTopLeftRadius: 16,
+					borderTopRightRadius: 16,
 				},
 			},
 		},
