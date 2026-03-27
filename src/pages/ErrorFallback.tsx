@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { FallbackProps } from "react-error-boundary";
-import { VErrorFallBack } from "@vplatform/core";
 
 const ErrorFallback = React.memo(
 	({
@@ -8,11 +8,7 @@ const ErrorFallback = React.memo(
 		error,
 		absolute,
 	}: FallbackProps & { absolute?: boolean }) => (
-		<VErrorFallBack
-			resetErrorBoundary={resetErrorBoundary}
-			error={error}
-			absolute={absolute}
-		/>
+		<></>
 	),
 );
 
