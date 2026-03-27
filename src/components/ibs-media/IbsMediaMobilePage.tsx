@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -38,7 +40,7 @@ const SCROLL_ID = "ibs-media-scroll";
 /** Public WordPress REST base (no trailing slash). Override via NEXT_PUBLIC_IBS_WP_REST_BASE. */
 const WP_REST_BASE =
 	process.env.NEXT_PUBLIC_IBS_WP_REST_BASE?.replace(/\/$/, "") ??
-	"https://ibsintelligence.com/wp-json/wp/v2";
+	"https://stg-newibsintelligence-ibsistgapr25.kinsta.cloud/wp-json/wp/v2";
 
 async function fetchMediaPage(
 	type: "videos" | "podcasts" | "webinars",
@@ -573,7 +575,7 @@ export default function IbsMediaMobilePage() {
 						}}
 					/>
 				</Box>
-				{searchOpen ? (
+				{searchOpen && (
 					<TextField
 						inputRef={searchInputRef}
 						value={searchText}
@@ -583,10 +585,6 @@ export default function IbsMediaMobilePage() {
 						autoComplete="off"
 						sx={{ flex: 1, mx: 0.5 }}
 					/>
-				) : (
-					<Typography variant="h6" component="h1" fontWeight={700}>
-						{tabTitle}
-					</Typography>
 				)}
 
 				<IconButton

@@ -2,7 +2,8 @@
 
 "use client";
 
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import BuzzsproutPlayer from "./BuzzsproutPlayer";
 
 export interface IbsPodcastPlayerScreenProps {
@@ -35,12 +36,25 @@ export default function IbsPodcastPlayerScreen({
 			<Box
 				sx={{
 					flexShrink: 0,
-					px: 2,
+					px: 1,
 					py: 1.5,
 					borderBottom: 1,
 					borderColor: "divider",
+					display: "flex",
+					alignItems: "center",
+					gap: 1,
 				}}
 			>
+				<IconButton
+					aria-label="Back"
+					onClick={() => {
+						if (typeof window === "undefined") return;
+						if (window.history.length > 1) window.history.back();
+						else window.location.assign("/media");
+					}}
+				>
+					<ArrowBackIcon />
+				</IconButton>
 				<Typography variant="h6" component="h1" fontWeight={700}>
 					Podcasts
 				</Typography>

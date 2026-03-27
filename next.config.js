@@ -7,6 +7,15 @@ const path = require('path')
 module.exports = withSentryConfig({
   basePath: process.env.NODE_ENV === "production" ?  '':"",
   reactStrictMode: false,
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/media",
+        permanent: false,
+      },
+    ];
+  },
   webpack(config, options) {
     const { webpack } = options;
 
