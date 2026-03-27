@@ -20,6 +20,7 @@ import {
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import PodcastsIcon from "@mui/icons-material/Podcasts";
 import SchoolIcon from "@mui/icons-material/School";
+import ArticleIcon from "@mui/icons-material/Article";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -33,6 +34,7 @@ import {
 } from "@/lib/ibs-wp-utils";
 import VideoCard, { type VideoCardProps } from "./VideoCard";
 import PodcastCard, { type PodcastCardProps } from "./PodcastCard";
+import NewsCard, { type NewsCardProps } from "./NewsCard";
 
 const PER_PAGE = 10;
 const SCROLL_ID = "ibs-media-scroll";
@@ -43,12 +45,11 @@ const WP_REST_BASE =
 	"https://stg-newibsintelligence-ibsistgapr25.kinsta.cloud/wp-json/wp/v2";
 
 async function fetchMediaPage(
-	type: "videos" | "podcasts" | "webinars",
+	type: "videos" | "podcasts" | "webinars" | "ibsi_news",
 	page: number,
 	search?: string,
 	categoriesId?: number,
 ): Promise<{ items: WpMediaPost[]; totalPages: number | null }> {
-	console.log("fetchMediaPage", type, page, search, categoriesId);
 	const s = (search || "").trim();
 	const searchParam = s ? `&search=${encodeURIComponent(s)}` : "";
 		const categoriesParam =
@@ -130,6 +131,19 @@ function toWebinarProps(post: WpMediaPost): VideoCardProps {
 	};
 }
 
+function toNewsProps(post: WpMediaPost): NewsCardProps {
+	const rawTitle = stripHtmlTags(post.title.rendered);
+	const title = decodeWpEntities(rawTitle);
+
+	return {
+		id: post.id,
+		title,
+		imageUrl: getOgImageUrl(post),
+		date: post.date,
+		href: `/media/news/${post.id}`,
+	};
+}
+
 export default function IbsMediaMobilePage() {
 	// IMPORTANT: keep initial render identical between server and client to avoid hydration mismatch
 	const [tab, setTab] = useState(0);
@@ -141,18 +155,23 @@ export default function IbsMediaMobilePage() {
 	const [videos, setVideos] = useState<WpMediaPost[]>([]);
 	const [podcasts, setPodcasts] = useState<WpMediaPost[]>([]);
 	const [webinars, setWebinars] = useState<WpMediaPost[]>([]);
+	const [news, setNews] = useState<WpMediaPost[]>([]);
 	const [videoPage, setVideoPage] = useState(0);
 	const [podcastPage, setPodcastPage] = useState(0);
 	const [webinarPage, setWebinarPage] = useState(0);
+	const [newsPage, setNewsPage] = useState(0);
 	const [hasMoreVideos, setHasMoreVideos] = useState(true);
 	const [hasMorePodcasts, setHasMorePodcasts] = useState(true);
 	const [hasMoreWebinars, setHasMoreWebinars] = useState(true);
+	const [hasMoreNews, setHasMoreNews] = useState(true);
 	const [loadingVideos, setLoadingVideos] = useState(false);
 	const [loadingPodcasts, setLoadingPodcasts] = useState(false);
 	const [loadingWebinars, setLoadingWebinars] = useState(false);
+	const [loadingNews, setLoadingNews] = useState(false);
 	const [videoError, setVideoError] = useState<string | null>(null);
 	const [podcastError, setPodcastError] = useState<string | null>(null);
 	const [webinarError, setWebinarError] = useState<string | null>(null);
+	const [newsError, setNewsError] = useState<string | null>(null);
 	const [categories, setCategories] = useState<
 		Array<{ id: number; name: string }>
 	>([]);
@@ -164,9 +183,11 @@ export default function IbsMediaMobilePage() {
 	const videosLoadedRef = useRef(false);
 	const podcastsLoadedRef = useRef(false);
 	const webinarsLoadedRef = useRef(false);
+	const newsLoadedRef = useRef(false);
 	const videoSearchRef = useRef("");
 	const podcastSearchRef = useRef("");
 	const webinarSearchRef = useRef("");
+	const newsSearchRef = useRef("");
 	const videoCategoryRef = useRef(0);
 	const podcastCategoryRef = useRef(0);
 	const webinarCategoryRef = useRef(0);
@@ -177,6 +198,7 @@ export default function IbsMediaMobilePage() {
 		let nextTab = 0;
 		if (raw === "1") nextTab = 1;
 		else if (raw === "2") nextTab = 2;
+		else if (raw === "3") nextTab = 3;
 		setTab(nextTab);
 		return undefined;
 	}, []);
@@ -379,6 +401,32 @@ export default function IbsMediaMobilePage() {
 		[webinarsCategoryId],
 	);
 
+	const loadFirstNews = useCallback(async (search: string) => {
+		if (newsSearchRef.current !== search) {
+			setNews([]);
+			setNewsPage(0);
+			setHasMoreNews(true);
+		}
+		setLoadingNews(true);
+		setNewsError(null);
+		try {
+			const { items, totalPages } = await fetchMediaPage(
+				"ibsi_news",
+				1,
+				search,
+			);
+			setNews(items);
+			setNewsPage(1);
+			setHasMoreNews(hasMoreAfterPage(1, items, totalPages));
+			newsLoadedRef.current = true;
+			newsSearchRef.current = search;
+		} catch (e) {
+			setNewsError(e instanceof Error ? e.message : "Failed to load news");
+		} finally {
+			setLoadingNews(false);
+		}
+	}, []);
+
 	// Initial load: Videos when tab first opened
 	useEffect(() => {
 		if (tab !== 0 || videosLoadedRef.current) {
@@ -406,6 +454,15 @@ export default function IbsMediaMobilePage() {
 		return undefined;
 	}, [tab]);
 
+	// Initial load: News when tab first opened
+	useEffect(() => {
+		if (tab !== 3 || newsLoadedRef.current) {
+			return undefined;
+		}
+		loadFirstNews("");
+		return undefined;
+	}, [tab, loadFirstNews]);
+
 	// When search changes, reload current tab from page 1 (backend search param)
 	useEffect(() => {
 		const s = debouncedSearch;
@@ -425,7 +482,7 @@ export default function IbsMediaMobilePage() {
 			)
 				return undefined;
 			loadFirstPodcasts(s, podcastsCategoryId).catch(() => undefined);
-		} else {
+		} else if (tab === 2) {
 			if (
 				webinarsLoadedRef.current &&
 				webinarSearchRef.current === s &&
@@ -433,6 +490,10 @@ export default function IbsMediaMobilePage() {
 			)
 				return undefined;
 			loadFirstWebinars(s, webinarsCategoryId).catch(() => undefined);
+		} else {
+			if (newsLoadedRef.current && newsSearchRef.current === s)
+				return undefined;
+			loadFirstNews(s).catch(() => undefined);
 		}
 		return undefined;
 	}, [
@@ -444,7 +505,29 @@ export default function IbsMediaMobilePage() {
 		loadFirstVideos,
 		loadFirstPodcasts,
 		loadFirstWebinars,
+		loadFirstNews,
 	]);
+
+	const loadMoreNews = useCallback(async () => {
+		if (!hasMoreNews || loadingNews) return;
+		setLoadingNews(true);
+		setNewsError(null);
+		try {
+			const next = newsPage + 1;
+			const { items, totalPages } = await fetchMediaPage(
+				"ibsi_news",
+				next,
+				newsSearchRef.current,
+			);
+			setNews(prev => [...prev, ...items]);
+			setNewsPage(next);
+			setHasMoreNews(hasMoreAfterPage(next, items, totalPages));
+		} catch (e) {
+			setNewsError(e instanceof Error ? e.message : "Failed to load more news");
+		} finally {
+			setLoadingNews(false);
+		}
+	}, [hasMoreNews, loadingNews, newsPage]);
 
 	const loadMoreVideos = useCallback(async () => {
 		if (!hasMoreVideos || loadingVideos) return;
@@ -518,14 +601,17 @@ export default function IbsMediaMobilePage() {
 		}
 	}, [hasMoreWebinars, loadingWebinars, webinarPage, webinarsCategoryId]);
 
-	let tabTitle = "Webinars";
-	let tabSearchLabel = "webinars";
+	let tabTitle = "News";
+	let tabSearchLabel = "news";
 	if (tab === 0) {
 		tabTitle = "Videos";
 		tabSearchLabel = "videos";
 	} else if (tab === 1) {
 		tabTitle = "Podcasts";
 		tabSearchLabel = "podcasts";
+	} else if (tab === 2) {
+		tabTitle = "Webinars";
+		tabSearchLabel = "webinars";
 	}
 
 	const bottomNav = (
@@ -558,6 +644,7 @@ export default function IbsMediaMobilePage() {
 				<BottomNavigationAction label="Videos" icon={<VideoLibraryIcon />} />
 				<BottomNavigationAction label="Podcasts" icon={<PodcastsIcon />} />
 				<BottomNavigationAction label="Webinars" icon={<SchoolIcon />} />
+				<BottomNavigationAction label="News" icon={<ArticleIcon />} />
 			</BottomNavigation>
 		</Paper>
 	);
@@ -877,6 +964,62 @@ export default function IbsMediaMobilePage() {
 							>
 								{webinars.map(p => (
 									<VideoCard key={p.id} {...toWebinarProps(p)} />
+								))}
+							</InfiniteScroll>
+						)}
+					</>
+				)}
+				{tab === 3 && (
+					<>
+						{newsError && (
+							<Typography color="error" variant="body2" sx={{ mb: 2 }}>
+								{newsError}
+							</Typography>
+						)}
+						{loadingNews && news.length === 0 ? (
+							<Box display="flex" justifyContent="center" py={6}>
+								<CircularProgress color="primary" />
+							</Box>
+						) : (
+							<InfiniteScroll
+								dataLength={news.length}
+								next={loadMoreNews}
+								hasMore={hasMoreNews}
+								loader={
+									<Box
+										display="flex"
+										justifyContent="center"
+										py={2}
+										key="n-loader"
+									>
+										<CircularProgress size={32} />
+									</Box>
+								}
+								endMessage={
+									news.length > 0 ? (
+										<Typography
+											align="center"
+											color="text.secondary"
+											variant="body2"
+											py={2}
+										>
+											You have seen all news
+										</Typography>
+									) : (
+										<Typography
+											align="center"
+											color="text.secondary"
+											variant="body2"
+											py={2}
+										>
+											No news to show
+										</Typography>
+									)
+								}
+								scrollableTarget={SCROLL_ID}
+							>
+								{news.map(p => (
+									<NewsCard key={p.id} {...toNewsProps(p)} />
 								))}
 							</InfiniteScroll>
 						)}
