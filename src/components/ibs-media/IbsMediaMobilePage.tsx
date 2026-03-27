@@ -48,9 +48,10 @@ async function fetchMediaPage(
 	search?: string,
 	categoriesId?: number,
 ): Promise<{ items: WpMediaPost[]; totalPages: number | null }> {
+	console.log("fetchMediaPage", type, page, search, categoriesId);
 	const s = (search || "").trim();
 	const searchParam = s ? `&search=${encodeURIComponent(s)}` : "";
-	const categoriesParam =
+		const categoriesParam =
 		categoriesId && categoriesId > 0
 			? `&categories=${encodeURIComponent(String(categoriesId))}`
 			: "";
@@ -166,6 +167,9 @@ export default function IbsMediaMobilePage() {
 	const videoSearchRef = useRef("");
 	const podcastSearchRef = useRef("");
 	const webinarSearchRef = useRef("");
+	const videoCategoryRef = useRef(0);
+	const podcastCategoryRef = useRef(0);
+	const webinarCategoryRef = useRef(0);
 
 	useEffect(() => {
 		if (typeof window === "undefined") return undefined;
@@ -200,6 +204,7 @@ export default function IbsMediaMobilePage() {
 	}, []);
 
 	useEffect(() => {
+		// setLoadingVideos(true)		
 		if (typeof window === "undefined") return undefined;
 		window.sessionStorage.setItem(
 			"ibs-media-videos-category",
@@ -269,8 +274,11 @@ export default function IbsMediaMobilePage() {
 	}, [searchText]);
 
 	const loadFirstVideos = useCallback(
-		async (search: string) => {
-			if (videoSearchRef.current !== search) {
+		async (search: string, categoryId = videosCategoryId) => {
+			if (
+				videoSearchRef.current !== search ||
+				videoCategoryRef.current !== categoryId
+			) {
 				setVideos([]);
 				setVideoPage(0);
 				setHasMoreVideos(true);
@@ -282,13 +290,14 @@ export default function IbsMediaMobilePage() {
 					"videos",
 					1,
 					search,
-					videosCategoryId,
+					categoryId,
 				);
 				setVideos(items);
 				setVideoPage(1);
 				setHasMoreVideos(hasMoreAfterPage(1, items, totalPages));
 				videosLoadedRef.current = true;
 				videoSearchRef.current = search;
+				videoCategoryRef.current = categoryId;
 			} catch (e) {
 				setVideoError(e instanceof Error ? e.message : "Failed to load videos");
 			} finally {
@@ -299,8 +308,11 @@ export default function IbsMediaMobilePage() {
 	);
 
 	const loadFirstPodcasts = useCallback(
-		async (search: string) => {
-			if (podcastSearchRef.current !== search) {
+		async (search: string, categoryId = podcastsCategoryId) => {
+			if (
+				podcastSearchRef.current !== search ||
+				podcastCategoryRef.current !== categoryId
+			) {
 				setPodcasts([]);
 				setPodcastPage(0);
 				setHasMorePodcasts(true);
@@ -312,13 +324,14 @@ export default function IbsMediaMobilePage() {
 					"podcasts",
 					1,
 					search,
-					podcastsCategoryId,
+					categoryId,
 				);
 				setPodcasts(items);
 				setPodcastPage(1);
 				setHasMorePodcasts(hasMoreAfterPage(1, items, totalPages));
 				podcastsLoadedRef.current = true;
 				podcastSearchRef.current = search;
+				podcastCategoryRef.current = categoryId;
 			} catch (e) {
 				setPodcastError(
 					e instanceof Error ? e.message : "Failed to load podcasts",
@@ -331,8 +344,11 @@ export default function IbsMediaMobilePage() {
 	);
 
 	const loadFirstWebinars = useCallback(
-		async (search: string) => {
-			if (webinarSearchRef.current !== search) {
+		async (search: string, categoryId = webinarsCategoryId) => {
+			if (
+				webinarSearchRef.current !== search ||
+				webinarCategoryRef.current !== categoryId
+			) {
 				setWebinars([]);
 				setWebinarPage(0);
 				setHasMoreWebinars(true);
@@ -344,13 +360,14 @@ export default function IbsMediaMobilePage() {
 					"webinars",
 					1,
 					search,
-					webinarsCategoryId,
+					categoryId,
 				);
 				setWebinars(items);
 				setWebinarPage(1);
 				setHasMoreWebinars(hasMoreAfterPage(1, items, totalPages));
 				webinarsLoadedRef.current = true;
 				webinarSearchRef.current = search;
+				webinarCategoryRef.current = categoryId;
 			} catch (e) {
 				setWebinarError(
 					e instanceof Error ? e.message : "Failed to load webinars",
@@ -393,22 +410,37 @@ export default function IbsMediaMobilePage() {
 	useEffect(() => {
 		const s = debouncedSearch;
 		if (tab === 0) {
-			if (videosLoadedRef.current && videoSearchRef.current === s)
+			if (
+				videosLoadedRef.current &&
+				videoSearchRef.current === s &&
+				videoCategoryRef.current === videosCategoryId
+			)
 				return undefined;
-			loadFirstVideos(s);
+			loadFirstVideos(s, videosCategoryId).catch(() => undefined);
 		} else if (tab === 1) {
-			if (podcastsLoadedRef.current && podcastSearchRef.current === s)
+			if (
+				podcastsLoadedRef.current &&
+				podcastSearchRef.current === s &&
+				podcastCategoryRef.current === podcastsCategoryId
+			)
 				return undefined;
-			loadFirstPodcasts(s);
+			loadFirstPodcasts(s, podcastsCategoryId).catch(() => undefined);
 		} else {
-			if (webinarsLoadedRef.current && webinarSearchRef.current === s)
+			if (
+				webinarsLoadedRef.current &&
+				webinarSearchRef.current === s &&
+				webinarCategoryRef.current === webinarsCategoryId
+			)
 				return undefined;
-			loadFirstWebinars(s);
+			loadFirstWebinars(s, webinarsCategoryId).catch(() => undefined);
 		}
 		return undefined;
 	}, [
 		debouncedSearch,
 		tab,
+		videosCategoryId,
+		podcastsCategoryId,
+		webinarsCategoryId,
 		loadFirstVideos,
 		loadFirstPodcasts,
 		loadFirstWebinars,
@@ -626,17 +658,26 @@ export default function IbsMediaMobilePage() {
 											setVideosCategoryId(nextId);
 											videosLoadedRef.current = false;
 											videoSearchRef.current = "";
-											loadFirstVideos(debouncedSearch);
+											loadFirstVideos(
+												debouncedSearch,
+												nextId,
+											).catch(() => undefined);
 										} else if (tab === 1) {
 											setPodcastsCategoryId(nextId);
 											podcastsLoadedRef.current = false;
 											podcastSearchRef.current = "";
-											loadFirstPodcasts(debouncedSearch);
+											loadFirstPodcasts(
+												debouncedSearch,
+												nextId,
+											).catch(() => undefined);
 										} else {
 											setWebinarsCategoryId(nextId);
 											webinarsLoadedRef.current = false;
 											webinarSearchRef.current = "";
-											loadFirstWebinars(debouncedSearch);
+											loadFirstWebinars(
+												debouncedSearch,
+												nextId,
+											).catch(() => undefined);
 										}
 									}}
 								>
