@@ -22,6 +22,7 @@ export interface WpYoastHeadJson {
 export interface WpMediaPost {
 	id: number;
 	slug: string;
+	date?: string;
 	link?: string;
 	title: WpRenderedString;
 	content: WpRenderedString;
